@@ -1,8 +1,0 @@
-# Ignorar la carpeta de dependencias
-node_modules/
-
-# Archivos de entorno (variables secretas)
-.env
-
-
-

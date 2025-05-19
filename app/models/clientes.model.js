@@ -1,6 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
     const Clientes = sequelize.define('clientes', {
-      rut: { type: DataTypes.STRING },
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      rut: { 
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+      },
       razon_social: { type: DataTypes.STRING },
       direccion: { type: DataTypes.STRING },
       comuna: { type: DataTypes.STRING },

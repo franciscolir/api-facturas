@@ -1,5 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
     const DetallesFactura = sequelize.define('detalles_factura', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       factura_id: { type: DataTypes.INTEGER },
       producto_id: { type: DataTypes.INTEGER },
       cantidad: { type: DataTypes.INTEGER },
