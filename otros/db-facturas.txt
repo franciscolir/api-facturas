@@ -1,0 +1,119 @@
+-- 🔧 Configuramos motor y codificación
+SET NAMES utf8mb4;
+SET time_zone = '+00:00';
+
+-- -----------------------------
+-- 🧾 Tabla: clientes
+-- -----------------------------
+CREATE TABLE clientes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  rut VARCHAR(12) NOT NULL UNIQUE,
+  razon_social VARCHAR(255) NOT NULL,
+  direccion VARCHAR(255),
+  comuna VARCHAR(100),
+  ciudad VARCHAR(100),
+  giro VARCHAR(100),
+  email VARCHAR(150),
+  telefono VARCHAR(50),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- -----------------------------
+-- 👤 Tabla: vendedores
+-- -----------------------------
+CREATE TABLE vendedores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  email VARCHAR(150),
+  telefono VARCHAR(50),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- -----------------------------
+-- 📦 Tabla: productos
+-- -----------------------------
+CREATE TABLE productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  codigo VARCHAR(50) NOT NULL UNIQUE,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  stock INT DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 📌 Índices útiles
+CREATE INDEX idx_codigo_producto ON productos (codigo);
+
+-- -----------------------------
+-- 💳 Tabla: condiciones_pago
+-- -----------------------------
+CREATE TABLE condiciones_pago (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  codigo VARCHAR(20) NOT NULL UNIQUE,
+  descripcion VARCHAR(100) NOT NULL,
+  dias_venc INT DEFAULT 0, -- Ej: 30 días
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- -----------------------------
+-- 🧾 Tabla: facturas
+-- -----------------------------
+CREATE TABLE facturas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  folio INT UNIQUE,
+  fecha_emision DATE NOT NULL,
+  cliente_id INT NOT NULL,
+  vendedor_id INT NOT NULL,
+  condicion_pago_id INT NOT NULL,
+  total_neto DECIMAL(12,2) NOT NULL,
+  total_iva DECIMAL(12,2) NOT NULL,
+  total_bruto DECIMAL(12,2) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+  FOREIGN KEY (vendedor_id) REFERENCES vendedores(id),
+  FOREIGN KEY (condicion_pago_id) REFERENCES condiciones_pago(id)
+);
+
+-- Índices adicionales para facturas
+CREATE INDEX idx_fecha_factura ON facturas (fecha_emision);
+CREATE INDEX idx_cliente_factura ON facturas (cliente_id);
+
+-- -----------------------------
+-- 📑 Tabla: folios
+-- -----------------------------
+CREATE TABLE folios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  folio INT NOT NULL UNIQUE,
+  tipo_documento VARCHAR(50) NOT NULL,
+  usado BOOLEAN DEFAULT FALSE,
+  fecha_asignacion DATE,
+  id_factura INT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_factura) REFERENCES facturas(id)
+);
+
+-- -----------------------------
+-- 📋 Tabla: detalles_factura
+-- -----------------------------
+CREATE TABLE detalles_factura (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  factura_id INT NOT NULL,
+  producto_id INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(12,2) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (factura_id) REFERENCES facturas(id),
+  FOREIGN KEY (producto_id) REFERENCES productos(id)
+);
+
+-- Índice para búsqueda por factura
+CREATE INDEX idx_factura_detalle ON detalles_factura (factura_id);

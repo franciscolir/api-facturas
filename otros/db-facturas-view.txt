@@ -1,0 +1,27 @@
+CREATE TABLE configuraciones (
+  clave VARCHAR(50) PRIMARY KEY,
+  valor DECIMAL(5,2)
+);
+
+-- Insertamos el IVA inicial (19%)
+INSERT INTO configuraciones (clave, valor) VALUES ('IVA', 0.19);
+
+
+
+
+CREATE VIEW vista_facturas_totales AS
+SELECT 
+  f.id AS factura_id,
+  SUM(d.cantidad * d.precio_unitario) AS total_neto,
+  c.valor AS tasa_iva,
+  SUM(d.cantidad * d.precio_unitario) * c.valor AS total_iva,
+  SUM(d.cantidad * d.precio_unitario) * (1 + c.valor) AS total_bruto
+FROM facturas f
+JOIN detalles_factura d ON f.id = d.factura_id
+CROSS JOIN (SELECT valor FROM configuraciones WHERE clave = 'IVA') c
+GROUP BY f.id;
+
+
+
+
+SELECT * FROM vista_facturas_totales WHERE factura_id = 5;
