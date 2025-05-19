@@ -1,26 +1,37 @@
-const User = require('../models/user.model');
+const BaseService = require('./base.service');
+const { User } = require('../models');
 
-const getAllUsers = async () => await User.findAll();
+class UserService extends BaseService {
+    constructor() {
+        super(User);
+    }
 
-const getUserById = async (id) => await User.findByPk(id);
+    // Métodos específicos para User
+    async findByEmail(email) {
+        return await this.model.findOne({ where: { email } });
+    }
 
-const createUser = async (data) => await User.create(data);
+    async findByRol(rol) {
+        return await this.model.findAll({ where: { rol, activo: true } });
+    }
 
-const updateUser = async (id, data) => {
-  const user = await User.findByPk(id);
-  return user ? await user.update(data) : null;
-};
+    async findActiveVendedores() {
+        return await this.model.findAll({ 
+            where: { 
+                rol: 'vendedor',
+                activo: true 
+            }
+        });
+    }
 
-const deleteUser = async (id) => {
-  const user = await User.findByPk(id);
-  return user ? await user.destroy() : null;
-};
+    async toggleActivo(id) {
+        const user = await this.model.findByPk(id);
+        if (user) {
+            return await user.update({ activo: !user.activo });
+        }
+        return null;
+    }
+}
 
-module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-};
+module.exports = new UserService();
 

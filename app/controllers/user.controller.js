@@ -1,26 +1,55 @@
+const BaseController = require('./base.controller');
 const userService = require('../services/user.service');
 
-exports.getAll = async (req, res) => {
-  const users = await userService.getAllUsers();
-  res.json(users);
-};
+class UserController extends BaseController {
+    constructor() {
+        super(userService);
+    }
 
-exports.getOne = async (req, res) => {
-  const user = await userService.getUserById(req.params.id);
-  user ? res.json(user) : res.status(404).json({ message: 'Usuario no encontrado' });
-};
+    // Métodos específicos para User
+    async getByEmail(req, res) {
+        try {
+            const user = await this.service.findByEmail(req.params.email);
+            if (user) {
+                res.json(user);
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 
-exports.create = async (req, res) => {
-  const user = await userService.createUser(req.body);
-  res.status(201).json(user);
-};
+    async getByRol(req, res) {
+        try {
+            const users = await this.service.findByRol(req.params.rol);
+            res.json(users);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 
-exports.update = async (req, res) => {
-  const user = await userService.updateUser(req.params.id, req.body);
-  user ? res.json(user) : res.status(404).json({ message: 'Usuario no encontrado' });
-};
+    async getActiveVendedores(req, res) {
+        try {
+            const vendedores = await this.service.findActiveVendedores();
+            res.json(vendedores);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 
-exports.delete = async (req, res) => {
-  const user = await userService.deleteUser(req.params.id);
-  user ? res.json({ message: 'Usuario eliminado' }) : res.status(404).json({ message: 'Usuario no encontrado' });
-};
+    async toggleActivo(req, res) {
+        try {
+            const user = await this.service.toggleActivo(req.params.id);
+            if (user) {
+                res.json(user);
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+}
+
+module.exports = new UserController();
