@@ -4,19 +4,36 @@ class BaseService {
     }
 
     async findAll() {
-        return await this.model.findAll();
+        return await this.model.findAll({
+            where: {
+                activo: true
+            }
+        });
     }
 
     async findById(id) {
-        return await this.model.findByPk(id);
+        return await this.model.findOne({
+            where: {
+                id,
+                activo: true
+            }
+        });
     }
 
     async create(data) {
-        return await this.model.create(data);
+        return await this.model.create({
+            ...data,
+            activo: true
+        });
     }
 
     async update(id, data) {
-        const item = await this.model.findByPk(id);
+        const item = await this.model.findOne({
+            where: {
+                id,
+                activo: true
+            }
+        });
         if (item) {
             return await item.update(data);
         }
@@ -24,9 +41,14 @@ class BaseService {
     }
 
     async delete(id) {
-        const item = await this.model.findByPk(id);
+        const item = await this.model.findOne({
+            where: {
+                id,
+                activo: true
+            }
+        });
         if (item) {
-            await item.destroy();
+            await item.update({ activo: false });
             return true;
         }
         return false;

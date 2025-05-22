@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       telefono: { type: DataTypes.STRING },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      }
     }, {
       tableName: 'vendedores',
       timestamps: true,

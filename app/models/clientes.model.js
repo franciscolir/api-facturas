@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       giro: { type: DataTypes.STRING },
       email: { type: DataTypes.STRING },
       telefono: { type: DataTypes.STRING },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      }
     }, {
       tableName: 'clientes',
       timestamps: true,

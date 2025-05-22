@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       descripcion: { type: DataTypes.TEXT },
       precio_unitario: { type: DataTypes.DECIMAL },
       stock: { type: DataTypes.INTEGER },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      }
     }, {
       tableName: 'productos',
       timestamps: true,

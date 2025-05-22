@@ -6,7 +6,7 @@ class ClienteService extends BaseService {
         super(Cliente);
     }
 
-    // Aquí puedes agregar métodos específicos para Cliente
+    // Métodos específicos para Cliente
     async findByRut(rut) {
         return await this.model.findOne({ where: { rut } });
     }
