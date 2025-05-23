@@ -264,7 +264,7 @@ const options = {
             }
           }
         },
-        User: {
+        Usuario: {
           type: 'object',
           required: ['email', 'password', 'rol'],
           properties: {
@@ -297,7 +297,7 @@ const options = {
             }
           }
         },
-        DetalleFactura: {
+        DetallesFacturas: {
           type: 'object',
           required: ['factura_id', 'producto_id', 'cantidad', 'precio_unitario', 'total'],
           properties: {
@@ -347,20 +347,20 @@ const options = {
         description: 'Emisión, consulta y gestión de facturas. CRUD.'
       },
       {
+        name: 'Detalles de Facturas',
+        description: 'Items de cada factura (productos, cantidad, precio). CRUD.'
+      },
+      {
         name: 'Productos',
         description: 'Administración de productos y stock. CRUD.'
       },
       {
-        name: 'Vendedores',
-        description: 'Operaciones relacionadas con vendedores. CRUD.'
-      },
-      {
         name: 'Folios',
         description: 'Control de folios disponibles y usados. CRUD.'
-      },
+      }, 
       {
-        name: 'Detalle de Facturas',
-        description: 'Items de cada factura (productos, cantidad, precio). CRUD.'
+        name: 'Vendedores',
+        description: 'Operaciones relacionadas con vendedores. CRUD.'
       },
       {
         name: 'Usuarios',

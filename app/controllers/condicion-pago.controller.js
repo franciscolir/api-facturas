@@ -1,12 +1,36 @@
+/**
+ * Controlador de Condiciones de Pago
+ * Gestiona las operaciones relacionadas con las condiciones de pago
+ * Extiende el controlador base para operaciones CRUD
+ * Implementa métodos específicos para búsqueda por código, plazo y descripción
+ * 
+ * Características principales:
+ * - Operaciones CRUD heredadas del controlador base
+ * - Búsqueda específica por código, plazo y descripción
+ * - Manejo de errores consistente
+ * - Respuestas HTTP estandarizadas
+ */
 const BaseController = require('./base.controller');
 const condicionPagoService = require('../services/condicion-pago.service');
 
 class CondicionPagoController extends BaseController {
+    /**
+     * Constructor del controlador de condiciones de pago
+     * Inicializa el controlador con el servicio correspondiente
+     */
     constructor() {
         super(condicionPagoService);
     }
 
-    // Métodos específicos para CondicionPago
+    /**
+     * Obtiene una condición de pago por su código
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Object} Condición de pago encontrada
+     * 
+     * @example
+     * GET /api/condiciones-pago/codigo/CONTADO
+     */
     async getByCodigo(req, res) {
         try {
             const { codigo } = req.params;
@@ -27,6 +51,15 @@ class CondicionPagoController extends BaseController {
         }
     }
 
+    /**
+     * Obtiene condiciones de pago por plazo
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de condiciones de pago con el plazo indicado
+     * 
+     * @example
+     * GET /api/condiciones-pago/plazo/30
+     */
     async getByPlazo(req, res) {
         try {
             const { plazo } = req.params;
@@ -47,6 +80,15 @@ class CondicionPagoController extends BaseController {
         }
     }
 
+    /**
+     * Obtiene condiciones de pago por descripción
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de condiciones de pago con la descripción indicada
+     * 
+     * @example
+     * GET /api/condiciones-pago/descripcion/Transferencia
+     */
     async getByDescripcion(req, res) {
         try {
             const { descripcion } = req.params;

@@ -1,239 +1,159 @@
+/**
+ * Rutas para la gestión de folios
+ * Define los endpoints para operaciones CRUD y funcionalidades específicas
+ * 
+ * Características principales:
+ * - Operaciones CRUD básicas (GET, POST, PUT, DELETE)
+ * - Búsqueda por tipo, factura y número
+ * - Obtención del último folio disponible
+ * - Documentación OpenAPI/Swagger
+ * - Manejo de respuestas HTTP estandarizadas
+ * 
+ * @module folio.routes
+ */
 const express = require('express');
 const router = express.Router();
-const FolioController = require('../controllers/folio.controller');
-const folioController = new FolioController();
-
-// ==========================================
-// Rutas CRUD Base
-// ==========================================
+const folioController = require('../controllers/folio.controller');
 
 /**
- * @openapi
- * /api/folios:
- *   get:
- *     summary: Obtener todos los folios
- *     tags:
- *       - Folios
- *     responses:
- *       200:
- *         description: Lista de folios
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Folio'
+ * @swagger
+ * tags:
+ *   name: Folios
+ *   description: API para la gestión de folios de facturación
  */
-router.get('/', folioController.getAll.bind(folioController));
 
 /**
- * @openapi
- * /api/folios/{id}:
- *   get:
- *     summary: Obtener un folio por ID
- *     tags:
- *       - Folios
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del folio
- *     responses:
- *       200:
- *         description: Folio encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Folio'
- *       404:
- *         description: Folio no encontrado
- */
-router.get('/:id', folioController.getById.bind(folioController));
-
-/**
- * @openapi
- * /api/folios:
- *   post:
- *     summary: Crear un nuevo folio
- *     tags:
- *       - Folios
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Folio'
- *     responses:
- *       201:
- *         description: Folio creado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Folio'
- *       400:
- *         description: Datos inválidos
- */
-router.post('/', folioController.create.bind(folioController));
-
-/**
- * @openapi
- * /api/folios/{id}:
- *   put:
- *     summary: Actualizar un folio
- *     tags:
- *       - Folios
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del folio
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Folio'
- *     responses:
- *       200:
- *         description: Folio actualizado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Folio'
- *       400:
- *         description: Datos inválidos
- *       404:
- *         description: Folio no encontrado
- */
-router.put('/:id', folioController.update.bind(folioController));
-
-/**
- * @openapi
- * /api/folios/{id}:
- *   delete:
- *     summary: Eliminar un folio
- *     tags:
- *       - Folios
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del folio
- *     responses:
- *       204:
- *         description: Folio eliminado exitosamente
- *       404:
- *         description: Folio no encontrado
- */
-router.delete('/:id', folioController.delete.bind(folioController));
-
-// ==========================================
-// Rutas Específicas
-// ==========================================
-
-/**
- * @openapi
+ * @swagger
  * /api/folios/tipo/{tipo}:
  *   get:
- *     summary: Obtener folios por tipo
- *     tags:
- *       - Folios
+ *     summary: Obtiene folios por tipo
+ *     tags: [Folios]
  *     parameters:
  *       - in: path
  *         name: tipo
  *         required: true
  *         schema:
  *           type: string
- *         description: Tipo de folio
+ *         description: Tipo de folio (ej. FACTURA, BOLETA)
  *     responses:
  *       200:
- *         description: Lista de folios del tipo especificado
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Folio'
+ *         description: Lista de folios encontrados
  *       404:
- *         description: No se encontraron folios del tipo especificado
+ *         description: No se encontraron folios de este tipo
+ *       500:
+ *         description: Error del servidor
  */
-router.get('/tipo/:tipo', folioController.getByTipo.bind(folioController));
+router.get('/tipo/:tipo', folioController.getByTipo);
 
 /**
- * @openapi
- * /api/folios/factura/{facturaId}:
+ * @swagger
+ * /api/folios/tipo/{tipo}/serie/{serie}:
  *   get:
- *     summary: Obtener folio por ID de factura
- *     tags:
- *       - Folios
+ *     summary: Obtiene folios por tipo y serie
+ *     tags: [Folios]
  *     parameters:
  *       - in: path
- *         name: facturaId
+ *         name: tipo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tipo de folio (ej. FACTURA, BOLETA)
+ *       - in: path
+ *         name: serie
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Serie del folio
+ *     responses:
+ *       200:
+ *         description: Lista de folios encontrados
+ *       404:
+ *         description: No se encontraron folios con este tipo y serie
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/tipo/:tipo/serie/:serie', folioController.getByTipoAndSerie);
+
+/**
+ * @swagger
+ * /api/folios/siguiente/{tipo}/{serie}:
+ *   get:
+ *     summary: Obtiene el siguiente folio disponible
+ *     tags: [Folios]
+ *     parameters:
+ *       - in: path
+ *         name: tipo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tipo de folio (ej. FACTURA, BOLETA)
+ *       - in: path
+ *         name: serie
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Serie del folio
+ *     responses:
+ *       200:
+ *         description: Siguiente folio disponible
+ *       404:
+ *         description: No hay folios disponibles
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/siguiente/:tipo/:serie', folioController.getNextAvailable);
+
+/**
+ * @swagger
+ * /api/folios/{id}/usar:
+ *   put:
+ *     summary: Marca un folio como usado
+ *     tags: [Folios]
+ *     parameters:
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID de la factura
+ *         description: ID del folio
  *     responses:
  *       200:
- *         description: Folio encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Folio'
+ *         description: Folio marcado como usado
  *       404:
  *         description: Folio no encontrado
+ *       500:
+ *         description: Error del servidor
  */
-router.get('/factura/:facturaId', folioController.getByFacturaId.bind(folioController));
+router.put('/:id/usar', folioController.markAsUsed);
 
 /**
- * @openapi
- * /api/folios/numero/{numero}:
- *   get:
- *     summary: Obtener folio por número
- *     tags:
- *       - Folios
+ * @swagger
+ * /api/folios/{id}/anular:
+ *   put:
+ *     summary: Marca un folio como anulado
+ *     tags: [Folios]
  *     parameters:
  *       - in: path
- *         name: numero
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: Número del folio
+ *         description: ID del folio
  *     responses:
  *       200:
- *         description: Folio encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Folio'
+ *         description: Folio marcado como anulado
  *       404:
  *         description: Folio no encontrado
+ *       500:
+ *         description: Error del servidor
  */
-router.get('/numero/:numero', folioController.getByNumero.bind(folioController));
+router.put('/:id/anular', folioController.markAsAnulado);
 
-/**
- * @openapi
- * /api/folios/ultimo/folio:
- *   get:
- *     summary: Obtener el último folio generado
- *     tags:
- *       - Folios
- *     responses:
- *       200:
- *         description: Último folio encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Folio'
- *       404:
- *         description: No se encontró ningún folio
- */
-router.get('/ultimo/folio', folioController.getLastFolio.bind(folioController));
+// Rutas CRUD básicas
+router.get('/', folioController.getAll);
+router.get('/:id', folioController.getById);
+router.post('/', folioController.create);
+router.put('/:id', folioController.update);
+router.delete('/:id', folioController.delete);
 
 module.exports = router; 

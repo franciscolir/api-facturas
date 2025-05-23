@@ -1,12 +1,37 @@
+/**
+ * Controlador de Detalles de Factura
+ * Gestiona las operaciones relacionadas con los detalles de cada factura
+ * Extiende el controlador base para operaciones CRUD
+ * Implementa métodos específicos para búsquedas y creación masiva
+ * 
+ * Características principales:
+ * - Operaciones CRUD heredadas del controlador base
+ * - Búsqueda de detalles por factura y producto
+ * - Creación masiva de detalles
+ * - Manejo de errores consistente
+ * - Respuestas HTTP estandarizadas
+ */
 const BaseController = require('./base.controller');
 const detalleFacturaService = require('../services/detalle-factura.service');
 
 class DetalleFacturaController extends BaseController {
+    /**
+     * Constructor del controlador de detalles de factura
+     * Inicializa el controlador con el servicio correspondiente
+     */
     constructor() {
         super(detalleFacturaService);
     }
 
-    // Métodos específicos para DetalleFactura
+    /**
+     * Obtiene los detalles de una factura específica
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de detalles de la factura
+     * 
+     * @example
+     * GET /api/detalles-factura/factura/123
+     */
     async getByFacturaId(req, res) {
         try {
             const { facturaId } = req.params;
@@ -27,6 +52,15 @@ class DetalleFacturaController extends BaseController {
         }
     }
 
+    /**
+     * Obtiene los detalles de factura asociados a un producto específico
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de detalles para el producto
+     * 
+     * @example
+     * GET /api/detalles-factura/producto/456
+     */
     async getByProductoId(req, res) {
         try {
             const { productoId } = req.params;
@@ -47,6 +81,16 @@ class DetalleFacturaController extends BaseController {
         }
     }
 
+    /**
+     * Crea múltiples detalles de factura en una sola operación
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de detalles creados
+     * 
+     * @example
+     * POST /api/detalles-factura/bulk
+     * Body: [ { factura_id, producto_id, cantidad, precio_unitario }, ... ]
+     */
     async createBulk(req, res) {
         try {
             const detalles = req.body;

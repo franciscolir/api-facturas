@@ -1,8 +1,30 @@
+/**
+ * Controlador Base
+ * Proporciona la funcionalidad CRUD básica para todos los controladores
+ * Maneja las operaciones comunes de listar, crear, actualizar y eliminar
+ * Implementa el manejo de errores estándar
+ * 
+ * Características principales:
+ * - Operaciones CRUD completas
+ * - Manejo de errores consistente
+ * - Respuestas HTTP estandarizadas
+ * - Integración con servicios
+ */
 class BaseController {
+    /**
+     * Constructor del controlador base
+     * @param {Object} service - Servicio que maneja la lógica de negocio
+     */
     constructor(service) {
         this.service = service;
     }
 
+    /**
+     * Obtiene todos los registros
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de registros
+     */
     async getAll(req, res) {
         try {
             const items = await this.service.findAll();
@@ -12,6 +34,12 @@ class BaseController {
         }
     }
 
+    /**
+     * Obtiene un registro por su ID
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Object} Registro encontrado
+     */
     async getById(req, res) {
         try {
             const item = await this.service.findById(req.params.id);
@@ -25,6 +53,12 @@ class BaseController {
         }
     }
 
+    /**
+     * Crea un nuevo registro
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Object} Registro creado
+     */
     async create(req, res) {
         try {
             const item = await this.service.create(req.body);
@@ -34,6 +68,12 @@ class BaseController {
         }
     }
 
+    /**
+     * Actualiza un registro existente
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Object} Registro actualizado
+     */
     async update(req, res) {
         try {
             const item = await this.service.update(req.params.id, req.body);
@@ -47,6 +87,12 @@ class BaseController {
         }
     }
 
+    /**
+     * Elimina un registro
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {void}
+     */
     async delete(req, res) {
         try {
             const success = await this.service.delete(req.params.id);

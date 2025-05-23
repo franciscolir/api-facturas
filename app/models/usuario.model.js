@@ -1,4 +1,9 @@
-// usuario.model.js
+/**
+ * Modelo de Usuario
+ * Define la estructura y validaciones para los usuarios del sistema
+ * Permite gestionar usuarios con diferentes roles y permisos
+ * Incluye autenticación y control de acceso
+ */
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
@@ -8,10 +13,14 @@ module.exports = (sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
+        // Nombre real del usuario
+        // Se usa para identificación personal
         nombre: {
             type: DataTypes.STRING,
             allowNull: false
         },
+        // Email del usuario para login y comunicación
+        // Debe ser único y tener formato válido
         email: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -20,23 +29,30 @@ module.exports = (sequelize) => {
                 isEmail: true
             }
         },
+        // Contraseña encriptada para seguridad
+        // Se almacena con hash bcrypt
         password: {
             type: DataTypes.STRING,
             allowNull: false
         },
+        // Rol del usuario en el sistema
+        // Define permisos y acceso a funcionalidades
         rol: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 'usuario'
         },
+        // Estado del usuario en el sistema
+        // Permite activar/desactivar usuarios sin eliminarlos
         activo: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: true
         }
     }, {
+        // Configuración de la tabla y comportamiento
         tableName: 'usuarios',
-        timestamps: true
+        timestamps: true // Registra fecha de creación y actualización
     });
 
     return Usuario;
