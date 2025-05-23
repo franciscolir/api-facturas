@@ -19,6 +19,26 @@ class VendedorController extends BaseController {
             res.status(500).json({ message: error.message });
         }
     }
+
+    async getByRut(req, res) {
+        try {
+            const { rut } = req.params;
+            const vendedor = await vendedorService.findByRut(rut);
+            
+            if (!vendedor) {
+                return res.status(404).json({
+                    message: 'Vendedor no encontrado'
+                });
+            }
+
+            return res.status(200).json(vendedor);
+        } catch (error) {
+            return res.status(500).json({
+                message: 'Error al buscar vendedor por RUT',
+                error: error.message
+            });
+        }
+    }
 }
 
 module.exports = new VendedorController(); 

@@ -9,28 +9,66 @@ class DetalleFacturaController extends BaseController {
     // Métodos específicos para DetalleFactura
     async getByFacturaId(req, res) {
         try {
-            const detalles = await this.service.findByFacturaId(req.params.facturaId);
-            res.json(detalles);
+            const { facturaId } = req.params;
+            const detalles = await detalleFacturaService.findByFacturaId(facturaId);
+            
+            if (!detalles || detalles.length === 0) {
+                return res.status(404).json({
+                    message: 'No se encontraron detalles para esta factura'
+                });
+            }
+
+            return res.status(200).json(detalles);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return res.status(500).json({
+                message: 'Error al buscar detalles de factura',
+                error: error.message
+            });
         }
     }
 
     async getByProductoId(req, res) {
         try {
-            const detalles = await this.service.findByProductoId(req.params.productoId);
-            res.json(detalles);
+            const { productoId } = req.params;
+            const detalles = await this.service.findByProductoId(productoId);
+            
+            if (!detalles || detalles.length === 0) {
+                return res.status(404).json({
+                    message: 'No se encontraron detalles para este producto'
+                });
+            }
+
+            return res.status(200).json(detalles);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return res.status(500).json({
+                message: 'Error al buscar detalles de factura',
+                error: error.message
+            });
         }
     }
 
-    async createMany(req, res) {
+    async createBulk(req, res) {
         try {
-            const detalles = await this.service.createMany(req.body);
-            res.status(201).json(detalles);
+            const detalles = req.body;
+            
+            if (!Array.isArray(detalles)) {
+                return res.status(400).json({
+                    message: 'El cuerpo de la solicitud debe ser un array de detalles'
+                });
+            }
+
+            const detallesCreados = await detalleFacturaService.createBulk(detalles);
+            return res.status(201).json(detallesCreados);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            if (error.message.includes('campos requeridos')) {
+                return res.status(400).json({
+                    message: error.message
+                });
+            }
+            return res.status(500).json({
+                message: 'Error al crear detalles de factura',
+                error: error.message
+            });
         }
     }
 }

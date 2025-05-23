@@ -1,8 +1,9 @@
 const express = require('express');
 const { sequelize } = require('./models');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 // Importar rutas
-const userRoutes = require('./routes/user.routes');
 const clienteRoutes = require('./routes/cliente.routes');
 const vendedorRoutes = require('./routes/vendedor.routes');
 const productoRoutes = require('./routes/producto.routes');
@@ -10,6 +11,7 @@ const condicionPagoRoutes = require('./routes/condicion-pago.routes');
 const facturaRoutes = require('./routes/factura.routes');
 const folioRoutes = require('./routes/folio.routes');
 const detalleFacturaRoutes = require('./routes/detalle-factura.routes');
+const usuarioRoutes = require('./routes/usuario.routes');
 
 const app = express();
 
@@ -37,7 +39,6 @@ async function initializeDatabase() {
 }
 
 // Rutas
-app.use('/api/users', userRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/vendedores', vendedorRoutes);
 app.use('/api/productos', productoRoutes);
@@ -45,6 +46,9 @@ app.use('/api/condiciones-pago', condicionPagoRoutes);
 app.use('/api/facturas', facturaRoutes);
 app.use('/api/folios', folioRoutes);
 app.use('/api/detalles-factura', detalleFacturaRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Inicializar base de datos
 initializeDatabase();

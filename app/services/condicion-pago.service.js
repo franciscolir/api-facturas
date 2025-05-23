@@ -8,12 +8,16 @@ class CondicionPagoService extends BaseService {
     }
 
     // Métodos específicos para CondicionPago
+    async findByCodigo(codigo) {
+        return await this.model.findOne({ where: { codigo } });
+    }
+
     async findByPlazo(plazo) {
         return await this.model.findAll({ where: { plazo } });
     }
 
     async findByDescripcion(descripcion) {
-        return await this.model.findOne({ 
+        return await this.model.findAll({ 
             where: { 
                 descripcion: {
                     [Op.like]: `%${descripcion}%`
@@ -22,12 +26,8 @@ class CondicionPagoService extends BaseService {
         });
     }
 
-    async findByCodigo(codigo) {
-        return await this.model.findOne({ where: { codigo } });
-    }
-
     async create(data) {
-        // Verificar si ya existe una condición de pago con el mismo código
+        // Verificar si ya existe una condición con el mismo código
         const existingCondicion = await this.findByCodigo(data.codigo);
         if (existingCondicion) {
             throw new Error('Ya existe una condición de pago con este código');

@@ -21,8 +21,28 @@ class DetalleFacturaService extends BaseService {
         });
     }
 
-    async createMany(detalles) {
-        return await this.model.bulkCreate(detalles);
+    async createBulk(detalles) {
+        try {
+            // Validar que todos los detalles tengan los campos requeridos
+            for (const detalle of detalles) {
+                if (!detalle.factura_id || !detalle.producto_id || !detalle.cantidad || !detalle.precio_unitario) {
+                    throw new Error('Todos los detalles deben tener factura_id, producto_id, cantidad y precio_unitario');
+                }
+            }
+
+            // Crear todos los detalles en una transacción
+            const detallesCreados = await this.model.bulkCreate(detalles, {
+                returning: true,
+                validate: true
+            });
+
+            return detallesCreados;
+        } catch (error) {
+            if (error.name === 'SequelizeValidationError') {
+                throw new Error('Error de validación: ' + error.message);
+            }
+            throw new Error(`Error al crear detalles de factura: ${error.message}`);
+        }
     }
 }
 

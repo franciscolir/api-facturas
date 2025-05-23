@@ -8,7 +8,6 @@ const { DataTypes } = require('sequelize');
 
 
 // Cargar modelos
-const User = require('./user.model')(sequelize, DataTypes);
 const Cliente = require('./clientes.model')(sequelize, DataTypes);
 const Vendedor = require('./vendedores.model')(sequelize, DataTypes);
 const Producto = require('./productos.model')(sequelize, DataTypes);
@@ -16,6 +15,7 @@ const CondicionPago = require('./condicion-pago.model')(sequelize, DataTypes);
 const Factura = require('./facturas.models')(sequelize, DataTypes);
 const Folio = require('./folios.model')(sequelize, DataTypes);
 const DetalleFactura = require('./detalles-factura.model')(sequelize, DataTypes);
+const Usuario = require('./usuario.model')(sequelize, DataTypes);
 
 // Definir relaciones
 Cliente.hasMany(Factura, { foreignKey: 'cliente_id' });
@@ -39,12 +39,12 @@ Folio.belongsTo(Factura, { foreignKey: 'id_factura' });
 // Exportar todos los modelos y la instancia de sequelize
 module.exports = {
   sequelize,
-  User,
   Cliente,
   Vendedor,
   Producto,
   CondicionPago,
   Factura,
   Folio,
-  DetalleFactura
+  DetalleFactura,
+  Usuario
 }; 

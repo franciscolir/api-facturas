@@ -7,25 +7,63 @@ class CondicionPagoController extends BaseController {
     }
 
     // Métodos específicos para CondicionPago
+    async getByCodigo(req, res) {
+        try {
+            const { codigo } = req.params;
+            const condicion = await condicionPagoService.findByCodigo(codigo);
+            
+            if (!condicion) {
+                return res.status(404).json({
+                    message: 'Condición de pago no encontrada'
+                });
+            }
+
+            return res.status(200).json(condicion);
+        } catch (error) {
+            return res.status(500).json({
+                message: 'Error al buscar condición de pago por código',
+                error: error.message
+            });
+        }
+    }
+
     async getByPlazo(req, res) {
         try {
-            const condiciones = await this.service.findByPlazo(req.params.plazo);
-            res.json(condiciones);
+            const { plazo } = req.params;
+            const condiciones = await condicionPagoService.findByPlazo(plazo);
+            
+            if (!condiciones || condiciones.length === 0) {
+                return res.status(404).json({
+                    message: 'No se encontraron condiciones de pago con ese plazo'
+                });
+            }
+
+            return res.status(200).json(condiciones);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return res.status(500).json({
+                message: 'Error al buscar condiciones de pago por plazo',
+                error: error.message
+            });
         }
     }
 
     async getByDescripcion(req, res) {
         try {
-            const condicion = await this.service.findByDescripcion(req.params.descripcion);
-            if (condicion) {
-                res.json(condicion);
-            } else {
-                res.status(404).json({ message: 'Condición de pago not found' });
+            const { descripcion } = req.params;
+            const condiciones = await condicionPagoService.findByDescripcion(descripcion);
+            
+            if (!condiciones || condiciones.length === 0) {
+                return res.status(404).json({
+                    message: 'No se encontraron condiciones de pago con esa descripción'
+                });
             }
+
+            return res.status(200).json(condiciones);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return res.status(500).json({
+                message: 'Error al buscar condiciones de pago por descripción',
+                error: error.message
+            });
         }
     }
 }
