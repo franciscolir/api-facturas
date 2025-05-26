@@ -43,7 +43,7 @@ const detalleFacturaController = require('../controllers/detalle-factura.control
  *       500:
  *         description: Error del servidor
  */
-router.get('/', detalleFacturaController.getAll);
+router.get('/', detalleFacturaController.getAll.bind(detalleFacturaController));
 
 /**
  * @openapi
@@ -76,7 +76,7 @@ router.get('/', detalleFacturaController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', detalleFacturaController.getById);
+router.get('/:id', detalleFacturaController.getById.bind(detalleFacturaController));
 
 /**
  * @openapi
@@ -108,7 +108,7 @@ router.get('/:id', detalleFacturaController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', detalleFacturaController.create);
+router.post('/', detalleFacturaController.create.bind(detalleFacturaController));
 
 /**
  * @openapi
@@ -149,7 +149,7 @@ router.post('/', detalleFacturaController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', detalleFacturaController.update);
+router.put('/:id', detalleFacturaController.update.bind(detalleFacturaController));
 
 /**
  * @openapi
@@ -178,7 +178,7 @@ router.put('/:id', detalleFacturaController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', detalleFacturaController.delete);
+router.delete('/:id', detalleFacturaController.delete.bind(detalleFacturaController));
 
 // ==========================================
 // Rutas Específicas
@@ -217,7 +217,7 @@ router.delete('/:id', detalleFacturaController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.get('/factura/:facturaId', detalleFacturaController.getByFacturaId);
+router.get('/factura/:facturaId', detalleFacturaController.getByFacturaId.bind(detalleFacturaController));
 
 /**
  * @openapi
@@ -252,7 +252,7 @@ router.get('/factura/:facturaId', detalleFacturaController.getByFacturaId);
  *       500:
  *         description: Error del servidor
  */
-router.get('/producto/:productoId', detalleFacturaController.getByProductoId);
+router.get('/producto/:productoId', detalleFacturaController.getByProductoId.bind(detalleFacturaController));
 
 /**
  * @openapi
@@ -288,6 +288,6 @@ router.get('/producto/:productoId', detalleFacturaController.getByProductoId);
  *       500:
  *         description: Error del servidor
  */
-router.post('/bulk', detalleFacturaController.createBulk);
+router.post('/bulk', detalleFacturaController.createBulk.bind(detalleFacturaController));
 
 module.exports = router; 

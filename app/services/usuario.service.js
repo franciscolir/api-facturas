@@ -1,13 +1,17 @@
 /**
- * Servicio para la gestión de usuarios
- * Extiende BaseService para heredar operaciones CRUD básicas
+ * Servicio para la gestión de Usuarios
+ * Extiende BaseService e implementa lógica específica para usuarios.
+ * Permite búsquedas y operaciones relacionadas con usuarios del sistema.
  */
 const BaseService = require('./base.service');
-const { Usuario } = require('../models');
+const { User } = require('../models');
 
 class UsuarioService extends BaseService {
+    /**
+     * Inicializa el servicio con el modelo de Usuario
+     */
     constructor() {
-        super(Usuario);
+        super(User);
     }
 
     /**

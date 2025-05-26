@@ -152,32 +152,34 @@ class UsuarioController extends BaseController {
     }
 
     /**
-     * Crea un nuevo usuario
+     * Registra un nuevo usuario y genera un token JWT
      * @param {Object} req - Objeto de solicitud HTTP con datos del usuario
      * @param {Object} res - Objeto de respuesta HTTP
-     * @returns {Object} Usuario creado
+     * @returns {Object} Token JWT y datos del usuario creado
      * 
      * @example
-     * POST /api/usuarios
-     * Body: { "email": "usuario@ejemplo.com", "password": "contraseña", "username": "johndoe", "nombre": "John", "apellido": "Doe", "rol": "vendedor" }
+     * POST /api/usuarios/register
+     * Body: { "email": "usuario@ejemplo.com", "password": "contraseña", ... }
      */
-    async create(req, res) {
+    async register(req, res) {
         try {
             const { password, ...userData } = req.body;
 
             // Verificar unicidad de email y username
-            const existingEmail = await UsuarioService.findByEmail(userData.email);
+            const existingEmail = await this.service.findByEmail(userData.email);
             if (existingEmail) {
                 return res.status(400).json({
                     message: 'Ya existe un usuario con este email'
                 });
             }
 
-            const existingUsername = await UsuarioService.findByUsername(userData.username);
-            if (existingUsername) {
-                return res.status(400).json({
-                    message: 'Ya existe un usuario con este nombre de usuario'
-                });
+            if (userData.username) {
+                const existingUsername = await this.service.findByUsername(userData.username);
+                if (existingUsername) {
+                    return res.status(400).json({
+                        message: 'Ya existe un usuario con este nombre de usuario'
+                    });
+                }
             }
 
             // Encriptar password
@@ -185,24 +187,34 @@ class UsuarioController extends BaseController {
             const hashedPassword = await bcrypt.hash(password, salt);
 
             // Crear usuario
-            const usuario = await UsuarioService.create({
+            const usuario = await this.service.create({
                 ...userData,
                 password: hashedPassword
             });
 
-            // Retornar usuario creado (sin password)
+            // Generar token JWT
+            const token = jwt.sign(
+                { id: usuario.id, email: usuario.email },
+                process.env.JWT_SECRET || 'your-secret-key',
+                { expiresIn: '24h' }
+            );
+
+            // Retornar token y datos del usuario (sin password)
             res.status(201).json({
-                id: usuario.id,
-                email: usuario.email,
-                username: usuario.username,
-                nombre: usuario.nombre,
-                apellido: usuario.apellido,
-                rol: usuario.rol
+                token,
+                usuario: {
+                    id: usuario.id,
+                    email: usuario.email,
+                    username: usuario.username,
+                    nombre: usuario.nombre,
+                    apellido: usuario.apellido,
+                    rol: usuario.rol
+                }
             });
         } catch (error) {
-            console.error('Error al crear usuario:', error);
+            console.error('Error en registro:', error);
             res.status(500).json({
-                message: 'Error al crear usuario',
+                message: 'Error al registrar usuario',
                 error: error.message
             });
         }

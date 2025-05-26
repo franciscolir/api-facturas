@@ -108,6 +108,29 @@ class CondicionPagoController extends BaseController {
             });
         }
     }
+
+    /**
+     * Registra múltiples condiciones de pago en un solo POST
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de condiciones de pago creadas
+     * 
+     * @example
+     * POST /api/condiciones-pago/bulk
+     * Body: [ { codigo, descripcion, dias_venc }, ... ]
+     */
+    async createBulk(req, res) {
+        try {
+            const condiciones = req.body;
+            if (!Array.isArray(condiciones)) {
+                return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de condiciones de pago' });
+            }
+            const condicionesCreadas = await this.service.createMany(condiciones);
+            res.status(201).json(condicionesCreadas);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new CondicionPagoController(); 

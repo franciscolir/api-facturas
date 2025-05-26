@@ -153,6 +153,29 @@ class FolioController extends BaseController {
             });
         }
     }
+
+    /**
+     * Registra múltiples folios en un solo POST
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de folios creados
+     * 
+     * @example
+     * POST /api/folios/bulk
+     * Body: [ { numero, tipo, serie, ... }, ... ]
+     */
+    async createBulk(req, res) {
+        try {
+            const folios = req.body;
+            if (!Array.isArray(folios)) {
+                return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de folios' });
+            }
+            const foliosCreados = await this.service.createMany(folios);
+            res.status(201).json(foliosCreados);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new FolioController(); 

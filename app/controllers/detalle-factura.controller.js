@@ -35,7 +35,7 @@ class DetalleFacturaController extends BaseController {
     async getByFacturaId(req, res) {
         try {
             const { facturaId } = req.params;
-            const detalles = await detalleFacturaService.findByFacturaId(facturaId);
+            const detalles = await this.service.findByFacturaId(facturaId);
             
             if (!detalles || detalles.length === 0) {
                 return res.status(404).json({
@@ -101,7 +101,7 @@ class DetalleFacturaController extends BaseController {
                 });
             }
 
-            const detallesCreados = await detalleFacturaService.createBulk(detalles);
+            const detallesCreados = await this.service.createBulk(detalles);
             return res.status(201).json(detallesCreados);
         } catch (error) {
             if (error.message.includes('campos requeridos')) {

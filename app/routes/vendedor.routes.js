@@ -42,7 +42,7 @@ const vendedorController = require('../controllers/vendedor.controller');
  *       500:
  *         description: Error del servidor
  */
-router.get('/', vendedorController.getAll);
+router.get('/', vendedorController.getAll.bind(vendedorController));
 
 /**
  * @openapi
@@ -75,7 +75,7 @@ router.get('/', vendedorController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', vendedorController.getById);
+router.get('/:id', vendedorController.getById.bind(vendedorController));
 
 /**
  * @openapi
@@ -107,7 +107,7 @@ router.get('/:id', vendedorController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', vendedorController.create);
+router.post('/', vendedorController.create.bind(vendedorController));
 
 /**
  * @openapi
@@ -148,7 +148,7 @@ router.post('/', vendedorController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', vendedorController.update);
+router.put('/:id', vendedorController.update.bind(vendedorController));
 
 /**
  * @openapi
@@ -177,7 +177,7 @@ router.put('/:id', vendedorController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', vendedorController.delete);
+router.delete('/:id', vendedorController.delete.bind(vendedorController));
 
 // ==========================================
 // Rutas Específicas
@@ -214,7 +214,7 @@ router.delete('/:id', vendedorController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.get('/codigo/:codigo', vendedorController.getByCode);
+router.get('/codigo/:codigo', vendedorController.getByCode.bind(vendedorController));
 
 /**
  * @openapi
@@ -247,6 +247,8 @@ router.get('/codigo/:codigo', vendedorController.getByCode);
  *       500:
  *         description: Error del servidor
  */
-router.get('/rut/:rut', vendedorController.getByRut);
+router.get('/rut/:rut', vendedorController.getByRut.bind(vendedorController));
+
+router.post('/bulk', vendedorController.createBulk.bind(vendedorController));
 
 module.exports = router; 

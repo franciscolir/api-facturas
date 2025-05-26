@@ -42,7 +42,7 @@ const clienteController = require('../controllers/cliente.controller');
  *       500:
  *         description: Error del servidor
  */
-router.get('/', clienteController.getAll);
+router.get('/', clienteController.getAll.bind(clienteController));
 
 /**
  * @openapi
@@ -75,7 +75,7 @@ router.get('/', clienteController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', clienteController.getById);
+router.get('/:id', clienteController.getById.bind(clienteController));
 
 /**
  * @openapi
@@ -107,7 +107,7 @@ router.get('/:id', clienteController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', clienteController.create);
+router.post('/', clienteController.create.bind(clienteController));
 
 /**
  * @openapi
@@ -148,7 +148,7 @@ router.post('/', clienteController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', clienteController.update);
+router.put('/:id', clienteController.update.bind(clienteController));
 
 /**
  * @openapi
@@ -177,7 +177,7 @@ router.put('/:id', clienteController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', clienteController.delete);
+router.delete('/:id', clienteController.delete.bind(clienteController));
 
 // ==========================================
 // Rutas Específicas
@@ -214,6 +214,8 @@ router.delete('/:id', clienteController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.get('/rut/:rut', clienteController.getByRut);
+router.get('/rut/:rut', clienteController.getByRut.bind(clienteController));
+
+router.post('/bulk', clienteController.createBulk.bind(clienteController));
 
 module.exports = router; 

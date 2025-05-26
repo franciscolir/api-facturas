@@ -42,7 +42,7 @@ const condicionPagoController = require('../controllers/condicion-pago.controlle
  *       500:
  *         description: Error del servidor
  */
-router.get('/', condicionPagoController.getAll);
+router.get('/', condicionPagoController.getAll.bind(condicionPagoController));
 
 /**
  * @openapi
@@ -75,7 +75,7 @@ router.get('/', condicionPagoController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', condicionPagoController.getById);
+router.get('/:id', condicionPagoController.getById.bind(condicionPagoController));
 
 /**
  * @openapi
@@ -107,7 +107,7 @@ router.get('/:id', condicionPagoController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', condicionPagoController.create);
+router.post('/', condicionPagoController.create.bind(condicionPagoController));
 
 /**
  * @openapi
@@ -148,7 +148,7 @@ router.post('/', condicionPagoController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', condicionPagoController.update);
+router.put('/:id', condicionPagoController.update.bind(condicionPagoController));
 
 /**
  * @openapi
@@ -177,7 +177,7 @@ router.put('/:id', condicionPagoController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', condicionPagoController.delete);
+router.delete('/:id', condicionPagoController.delete.bind(condicionPagoController));
 
 // ==========================================
 // Rutas Específicas
@@ -214,7 +214,7 @@ router.delete('/:id', condicionPagoController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.get('/codigo/:codigo', condicionPagoController.getByCodigo);
+router.get('/codigo/:codigo', condicionPagoController.getByCodigo.bind(condicionPagoController));
 
 /**
  * @openapi
@@ -249,7 +249,7 @@ router.get('/codigo/:codigo', condicionPagoController.getByCodigo);
  *       500:
  *         description: Error del servidor
  */
-router.get('/plazo/:plazo', condicionPagoController.getByPlazo);
+router.get('/plazo/:plazo', condicionPagoController.getByPlazo.bind(condicionPagoController));
 
 /**
  * @openapi
@@ -285,5 +285,7 @@ router.get('/plazo/:plazo', condicionPagoController.getByPlazo);
  *         description: Error del servidor
  */
 router.get('/descripcion/:descripcion', condicionPagoController.getByDescripcion);
+
+router.post('/bulk', condicionPagoController.createBulk.bind(condicionPagoController));
 
 module.exports = router; 

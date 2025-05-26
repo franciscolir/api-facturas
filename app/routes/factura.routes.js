@@ -43,7 +43,7 @@ const facturaController = require('../controllers/factura.controller');
  *       500:
  *         description: Error del servidor
  */
-router.get('/', facturaController.getAll);
+router.get('/', facturaController.getAll.bind(facturaController));
 
 /**
  * @openapi
@@ -76,7 +76,7 @@ router.get('/', facturaController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', facturaController.getById);
+router.get('/:id', facturaController.getById.bind(facturaController));
 
 /**
  * @openapi
@@ -108,7 +108,7 @@ router.get('/:id', facturaController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', facturaController.create);
+router.post('/', facturaController.create.bind(facturaController));
 
 /**
  * @openapi
@@ -149,7 +149,7 @@ router.post('/', facturaController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', facturaController.update);
+router.put('/:id', facturaController.update.bind(facturaController));
 
 /**
  * @openapi
@@ -178,7 +178,7 @@ router.put('/:id', facturaController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', facturaController.delete);
+router.delete('/:id', facturaController.delete.bind(facturaController));
 
 // ==========================================
 // Rutas Específicas
@@ -208,7 +208,40 @@ router.delete('/:id', facturaController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.get('/with-details', facturaController.getAllWithDetails);
+router.get('/with-details', facturaController.getAllWithDetails.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/{id}/with-details:
+ *   get:
+ *     summary: Obtener una factura específica con sus detalles
+ *     description: Retorna los detalles de una factura específica basada en su ID
+ *     tags:
+ *       - Facturas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID único de la factura
+ *     responses:
+ *       200:
+ *         description: Factura encontrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FacturaWithDetails'
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: Factura no encontrada
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/:id/with-details', facturaController.getByIdWithDetails.bind(facturaController));
 
 /**
  * @openapi
@@ -243,7 +276,7 @@ router.get('/with-details', facturaController.getAllWithDetails);
  *       500:
  *         description: Error del servidor
  */
-router.get('/cliente/:clienteId', facturaController.getByClienteId);
+router.get('/cliente/:clienteId', facturaController.getByClienteId.bind(facturaController));
 
 /**
  * @openapi
@@ -278,7 +311,7 @@ router.get('/cliente/:clienteId', facturaController.getByClienteId);
  *       500:
  *         description: Error del servidor
  */
-router.get('/vendedor/:vendedorId', facturaController.getByVendedorId);
+router.get('/vendedor/:vendedorId', facturaController.getByVendedorId.bind(facturaController));
 
 /**
  * @openapi
@@ -316,6 +349,8 @@ router.get('/vendedor/:vendedorId', facturaController.getByVendedorId);
  *       500:
  *         description: Error del servidor
  */
-router.get('/fecha/:fecha', facturaController.getByFecha);
+router.get('/fecha/:fecha', facturaController.getByFecha.bind(facturaController));
+
+router.post('/bulk', facturaController.createBulk.bind(facturaController));
 
 module.exports = router; 

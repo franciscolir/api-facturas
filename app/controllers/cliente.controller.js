@@ -22,6 +22,78 @@ class ClienteController extends BaseController {
         super(clienteService);
     }
 
+    getAll = async (req, res) => {
+        try {
+            const items = await this.service.findAll();
+            res.json(items);
+        } catch (error) {
+            res.status(500).json({ 
+                message: error.message,
+                error: error
+            });
+        }
+    }
+
+    getById = async (req, res) => {
+        try {
+            const item = await this.service.findById(req.params.id);
+            if (item) {
+                res.json(item);
+            } else {
+                res.status(404).json({ message: 'Cliente not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ 
+                message: error.message,
+                error: error
+            });
+        }
+    }
+
+    create = async (req, res) => {
+        try {
+            const item = await this.service.create(req.body);
+            res.status(201).json(item);
+        } catch (error) {
+            res.status(400).json({ 
+                message: error.message,
+                error: error
+            });
+        }
+    }
+
+    update = async (req, res) => {
+        try {
+            const item = await this.service.update(req.params.id, req.body);
+            if (item) {
+                res.json(item);
+            } else {
+                res.status(404).json({ message: 'Cliente not found' });
+            }
+        } catch (error) {
+            res.status(400).json({ 
+                message: error.message,
+                error: error
+            });
+        }
+    }
+
+    delete = async (req, res) => {
+        try {
+            const success = await this.service.delete(req.params.id);
+            if (success) {
+                res.status(204).send();
+            } else {
+                res.status(404).json({ message: 'Cliente not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ 
+                message: error.message,
+                error: error
+            });
+        }
+    }
+
     /**
      * Obtiene un cliente por su RUT
      * @param {Object} req - Objeto de solicitud HTTP
@@ -31,7 +103,7 @@ class ClienteController extends BaseController {
      * @example
      * GET /api/clientes/rut/12345678-9
      */
-    async getByRut(req, res) {
+    getByRut = async (req, res) => {
         try {
             const cliente = await this.service.findByRut(req.params.rut);
             if (cliente) {
@@ -40,7 +112,36 @@ class ClienteController extends BaseController {
                 res.status(404).json({ message: 'Cliente not found' });
             }
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ 
+                message: error.message,
+                error: error
+            });
+        }
+    }
+
+    /**
+     * Registra múltiples clientes en un solo POST
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de clientes creados
+     * 
+     * @example
+     * POST /api/clientes/bulk
+     * Body: [ { nombre, rut, email, ... }, ... ]
+     */
+    createBulk = async (req, res) => {
+        try {
+            const clientes = req.body;
+            if (!Array.isArray(clientes)) {
+                return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de clientes' });
+            }
+            const clientesCreados = await this.service.createMany(clientes);
+            res.status(201).json(clientesCreados);
+        } catch (error) {
+            res.status(400).json({ 
+                message: error.message,
+                error: error
+            });
         }
     }
 }

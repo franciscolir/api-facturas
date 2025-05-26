@@ -61,6 +61,29 @@ class ProductoController extends BaseController {
             res.status(500).json({ message: error.message });
         }
     }
+
+    /**
+     * Registra múltiples productos en un solo POST
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de productos creados
+     * 
+     * @example
+     * POST /api/productos/bulk
+     * Body: [ { codigo, nombre, descripcion, precio_unitario, stock }, ... ]
+     */
+    async createBulk(req, res) {
+        try {
+            const productos = req.body;
+            if (!Array.isArray(productos)) {
+                return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de productos' });
+            }
+            const productosCreados = await this.service.createMany(productos);
+            res.status(201).json(productosCreados);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
 module.exports = new ProductoController(); 

@@ -42,7 +42,7 @@ const productoController = require('../controllers/producto.controller');
  *       500:
  *         description: Error del servidor
  */
-router.get('/', productoController.getAll);
+router.get('/', productoController.getAll.bind(productoController));
 
 /**
  * @openapi
@@ -75,7 +75,7 @@ router.get('/', productoController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', productoController.getById);
+router.get('/:id', productoController.getById.bind(productoController));
 
 /**
  * @openapi
@@ -107,7 +107,7 @@ router.get('/:id', productoController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', productoController.create);
+router.post('/', productoController.create.bind(productoController));
 
 /**
  * @openapi
@@ -148,7 +148,7 @@ router.post('/', productoController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', productoController.update);
+router.put('/:id', productoController.update.bind(productoController));
 
 /**
  * @openapi
@@ -177,7 +177,9 @@ router.put('/:id', productoController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', productoController.delete);
+router.delete('/:id', productoController.delete.bind(productoController));
+
+router.post('/bulk', productoController.createBulk.bind(productoController));
 
 // ==========================================
 // Rutas Específicas
@@ -214,6 +216,8 @@ router.delete('/:id', productoController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.get('/codigo/:codigo', productoController.getByCodigo);
+router.get('/codigo/:codigo', productoController.getByCodigo.bind(productoController));
+
+router.get('/categoria/:categoria', productoController.getByCategoria.bind(productoController));
 
 module.exports = router; 

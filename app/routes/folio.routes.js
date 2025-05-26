@@ -43,7 +43,7 @@ const folioController = require('../controllers/folio.controller');
  *       500:
  *         description: Error del servidor
  */
-router.get('/tipo/:tipo', folioController.getByTipo);
+router.get('/tipo/:tipo', folioController.getByTipo.bind(folioController));
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ router.get('/tipo/:tipo', folioController.getByTipo);
  *       500:
  *         description: Error del servidor
  */
-router.get('/tipo/:tipo/serie/:serie', folioController.getByTipoAndSerie);
+router.get('/tipo/:tipo/serie/:serie', folioController.getByTipoAndSerie.bind(folioController));
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.get('/tipo/:tipo/serie/:serie', folioController.getByTipoAndSerie);
  *       500:
  *         description: Error del servidor
  */
-router.get('/siguiente/:tipo/:serie', folioController.getNextAvailable);
+router.get('/siguiente/:tipo/:serie', folioController.getNextAvailable.bind(folioController));
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ router.get('/siguiente/:tipo/:serie', folioController.getNextAvailable);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id/usar', folioController.markAsUsed);
+router.put('/:id/usar', folioController.markAsUsed.bind(folioController));
 
 /**
  * @swagger
@@ -147,13 +147,15 @@ router.put('/:id/usar', folioController.markAsUsed);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id/anular', folioController.markAsAnulado);
+router.put('/:id/anular', folioController.markAsAnulado.bind(folioController));
 
 // Rutas CRUD básicas
-router.get('/', folioController.getAll);
-router.get('/:id', folioController.getById);
-router.post('/', folioController.create);
-router.put('/:id', folioController.update);
-router.delete('/:id', folioController.delete);
+router.get('/', folioController.getAll.bind(folioController));
+router.get('/:id', folioController.getById.bind(folioController));
+router.post('/', folioController.create.bind(folioController));
+router.put('/:id', folioController.update.bind(folioController));
+router.delete('/:id', folioController.delete.bind(folioController));
+
+router.post('/bulk', folioController.createBulk.bind(folioController));
 
 module.exports = router; 

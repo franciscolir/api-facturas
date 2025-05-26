@@ -1,10 +1,65 @@
+/**
+ * Servicio para la gestión de Folios
+ * Extiende BaseService e implementa lógica específica para folios.
+ * Permite la administración de folios para facturación electrónica y su asignación a facturas.
+ */
 const BaseService = require('./base.service');
 const { Folio } = require('../models');
 const { Op } = require('sequelize');
 
 class FolioService extends BaseService {
+    /**
+     * Inicializa el servicio con el modelo de Folio
+     */
     constructor() {
         super(Folio);
+    }
+
+    /**
+     * Sobreescribe el método findAll del BaseService
+     * para no usar el campo activo que no existe en Folio
+     * @returns {Promise<Array>} Lista de folios
+     */
+    async findAll() {
+        return await this.model.findAll({
+            order: [['numero', 'ASC']]
+        });
+    }
+
+    /**
+     * Sobreescribe el método findById del BaseService
+     * para no usar el campo activo que no existe en Folio
+     * @param {number} id - ID del folio a buscar
+     * @returns {Promise<Object|null>} Folio encontrado o null
+     */
+    async findById(id) {
+        return await this.model.findByPk(id);
+    }
+
+    /**
+     * Crea múltiples folios a partir de un array
+     * Valida unicidad de numero, tipo y serie para cada folio
+     * @param {Array<Object>} folios - Array de folios a crear
+     * @returns {Promise<Array>} Folios creados
+     * @throws {Error} Si algún folio ya existe
+     */
+    async createMany(folios) {
+        const foliosCreados = [];
+        for (const data of folios) {
+            const existingFolio = await this.model.findOne({
+                where: {
+                    numero: data.numero,
+                    tipo: data.tipo,
+                    serie: data.serie
+                }
+            });
+            if (existingFolio) {
+                throw new Error(`Ya existe un folio con el número: ${data.numero}, tipo: ${data.tipo}, serie: ${data.serie}`);
+            }
+            const folio = await super.create(data);
+            foliosCreados.push(folio);
+        }
+        return foliosCreados;
     }
 
     // Métodos específicos para Folio
@@ -78,20 +133,17 @@ class FolioService extends BaseService {
         return await super.update(id, data);
     }
 
+    /**
+     * Marca un folio como usado y asigna la fecha de uso
+     * @param {number} id - ID del folio a actualizar
+     * @returns {Promise<Object|null>} Folio actualizado o null si no existe
+     */
     async markAsUsed(id) {
-        const folio = await this.findById(id);
-        if (!folio) {
-            throw new Error('Folio no encontrado');
+        const folio = await this.model.findByPk(id);
+        if (folio) {
+            return await folio.update({ estado: 'usado', fecha_uso: new Date() });
         }
-
-        if (folio.estado !== 'disponible') {
-            throw new Error('El folio no está disponible para uso');
-        }
-
-        return await this.update(id, {
-            estado: 'usado',
-            fecha_uso: new Date()
-        });
+        return null;
     }
 
     async markAsAnulado(id) {
@@ -107,6 +159,15 @@ class FolioService extends BaseService {
         return await this.update(id, {
             estado: 'anulado'
         });
+    }
+
+    /**
+     * Busca todos los folios asignados a una factura específica
+     * @param {number} facturaId - ID de la factura
+     * @returns {Promise<Array>} Lista de folios asignados
+     */
+    async findByFacturaId(facturaId) {
+        return await this.model.findAll({ where: { id_factura: facturaId } });
     }
 }
 

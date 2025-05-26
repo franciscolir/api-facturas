@@ -43,7 +43,7 @@ const usuarioController = require('../controllers/usuario.controller');
  *       500:
  *         description: Error del servidor
  */
-router.get('/', usuarioController.getAll);
+router.get('/', usuarioController.getAll.bind(usuarioController));
 
 /**
  * @openapi
@@ -76,7 +76,7 @@ router.get('/', usuarioController.getAll);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', usuarioController.getById);
+router.get('/:id', usuarioController.getById.bind(usuarioController));
 
 /**
  * @openapi
@@ -108,7 +108,7 @@ router.get('/:id', usuarioController.getById);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', usuarioController.create);
+router.post('/', usuarioController.create.bind(usuarioController));
 
 /**
  * @openapi
@@ -149,7 +149,7 @@ router.post('/', usuarioController.create);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', usuarioController.update);
+router.put('/:id', usuarioController.update.bind(usuarioController));
 
 /**
  * @openapi
@@ -178,7 +178,7 @@ router.put('/:id', usuarioController.update);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', usuarioController.delete);
+router.delete('/:id', usuarioController.delete.bind(usuarioController));
 
 // ==========================================
 // Rutas Específicas
@@ -230,7 +230,7 @@ router.delete('/:id', usuarioController.delete);
  *       500:
  *         description: Error del servidor
  */
-router.post('/login', usuarioController.login);
+router.post('/login', usuarioController.login.bind(usuarioController));
 
 /**
  * @openapi
@@ -264,7 +264,7 @@ router.post('/login', usuarioController.login);
  *       500:
  *         description: Error del servidor
  */
-router.post('/register', usuarioController.create);
+router.post('/register', usuarioController.register.bind(usuarioController));
 
 /**
  * @openapi
@@ -288,6 +288,12 @@ router.post('/register', usuarioController.create);
  *       500:
  *         description: Error del servidor
  */
-router.get('/me', usuarioController.getById);
+router.get('/me', usuarioController.getById.bind(usuarioController));
+
+router.get('/email/:email', usuarioController.getByEmail.bind(usuarioController));
+router.get('/username/:username', usuarioController.getByUsername.bind(usuarioController));
+router.get('/rol/:rol', usuarioController.getByRol.bind(usuarioController));
+router.get('/vendedores/activos', usuarioController.getActiveVendedores.bind(usuarioController));
+router.put('/:id/toggle-activo', usuarioController.toggleActivo.bind(usuarioController));
 
 module.exports = router; 
