@@ -1,8 +1,9 @@
 // swagger.js
 const swaggerJSDoc = require('swagger-jsdoc');
-require('dotenv').config();
+//require('dotenv').config();
 
-const url = process.env.URL;
+//const url = process.env.URL;
+const URL = "//localhost:3000"
 
 const options = {
   definition: {
@@ -370,7 +371,7 @@ const options = {
       }   
     ],
 
-    servers: [{ url: url }],
+    servers: [{ url: URL }],
   },
   apis: ['./app/routes/*.js'],
 };
