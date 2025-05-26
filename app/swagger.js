@@ -1,9 +1,5 @@
 // swagger.js
 const swaggerJSDoc = require('swagger-jsdoc');
-require('dotenv').config();
-const URL = process.env.URL;
-const PORT =process.env.PORT;
-const url = '${URL}:${PORT}';
 
 const options = {
   definition: {
@@ -350,7 +346,7 @@ const options = {
         description: 'Emisión, consulta y gestión de facturas. CRUD.'
       },
       {
-        name: 'Detalles de Facturas',
+        name: 'Detalles de Factura',
         description: 'Items de cada factura (productos, cantidad, precio). CRUD.'
       },
       {
@@ -371,7 +367,7 @@ const options = {
       }   
     ],
 
-    servers: [{ url }],
+   //  servers: [{ url }],
   },
   apis: ['./app/routes/*.js'],
 };
