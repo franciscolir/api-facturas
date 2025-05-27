@@ -297,7 +297,7 @@ const options = {
             }
           }
         },
-        DetallesFacturas: {
+        DetallesFactura: {
           type: 'object',
           required: ['factura_id', 'producto_id', 'cantidad', 'precio_unitario', 'total'],
           properties: {
@@ -347,7 +347,7 @@ const options = {
         description: 'Emisión, consulta y gestión de facturas. CRUD.'
       },
       {
-        name: 'Detalles de Facturas',
+        name: 'Detalles de Factura',
         description: 'Items de cada factura (productos, cantidad, precio). CRUD.'
       },
       {

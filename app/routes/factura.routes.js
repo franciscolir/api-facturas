@@ -79,35 +79,73 @@ router.get('/', facturaController.getAll.bind(facturaController));
 router.get('/:id', facturaController.getById.bind(facturaController));
 
 /**
- * @openapi
+ * @swagger
  * /api/facturas:
  *   post:
- *     summary: Crear una nueva factura
- *     description: Crea una nueva factura en el sistema con los datos proporcionados
  *     tags:
  *       - Facturas
- *     security:
- *       - bearerAuth: []
+ *     summary: Crear una factura con sus detalles
+ *     description: Crea una sola factura con detalles asociados y recalcula automáticamente los totales (subtotal, IVA, total).
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Factura'
+ *             type: object
+ *             properties:
+ *               cliente_id:
+ *                 type: integer
+ *                 example: 1
+ *               fecha:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-05-26"
+ *               detalles:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:                    
+ *                     producto_id:
+ *                       type: integer
+ *                       description: ID del producto relacionado con el detalle
+ *                       example: 42
+ *                     descripcion:
+ *                       type: string
+ *                       description: Descripción del producto o servicio facturado
+ *                       example: "Servicio de consultoría"
+ *                     cantidad:
+ *                       type: integer
+ *                       description: Cantidad de unidades del producto (entero positivo)
+ *                       example: 3
+ *                     precio_unitario:
+ *                       type: number
+ *                       format: decimal
+ *                       description: Precio por unidad del producto al momento de la factura
+ *                       example: 150.00
+ *                     subtotal:
+ *                       type: number
+ *                       format: decimal
+ *                       description: Subtotal calculado como cantidad * precio_unitario
+ *                       example: 450.00
  *     responses:
  *       201:
  *         description: Factura creada exitosamente
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Factura'
+ *               $ref: '#/components/schemas/FacturaConDetalles'
  *       400:
- *         description: Datos inválidos
- *       401:
- *         description: No autorizado
- *       500:
- *         description: Error del servidor
+ *         description: Error de validación o datos incorrectos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Datos inválidos para la creación de factura"
  */
+
 router.post('/', facturaController.create.bind(facturaController));
 
 /**
@@ -350,6 +388,66 @@ router.get('/vendedor/:vendedorId', facturaController.getByVendedorId.bind(factu
  *         description: Error del servidor
  */
 router.get('/fecha/:fecha', facturaController.getByFecha.bind(facturaController));
+
+/**
+ * @swagger
+ * /api/facturas/bulk:
+ *   post:
+ *     tags:
+ *       - Facturas
+ *     summary: Crear múltiples facturas con sus detalles
+ *     description: Crea varias facturas incluyendo sus detalles y recalcula automáticamente los totales (subtotal, IVA, total) por cada una.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 cliente_id:
+ *                   type: integer
+ *                   example: 1
+ *                 fecha:
+ *                   type: string
+ *                   format: date
+ *                   example: "2025-05-26"
+ *                 detalles:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       descripcion:
+ *                         type: string
+ *                         example: "Producto A"
+ *                       cantidad:
+ *                         type: number
+ *                         example: 2
+ *                       precio_unitario:
+ *                         type: number
+ *                         example: 100.00
+ *     responses:
+ *       201:
+ *         description: Facturas creadas exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/FacturaConDetalles'
+ *       400:
+ *         description: Error de validación o estructura de datos incorrecta
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: El cuerpo de la solicitud debe ser un array de facturas
+ */
+
 
 router.post('/bulk', facturaController.createBulk.bind(facturaController));
 

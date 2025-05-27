@@ -5,7 +5,6 @@
  * Características principales:
  * - Operaciones CRUD básicas (GET, POST, PUT, DELETE)
  * - Búsqueda por factura y producto
- * - Creación masiva de detalles
  * - Documentación OpenAPI/Swagger
  * - Manejo de respuestas HTTP estandarizadas
  * 
@@ -254,40 +253,4 @@ router.get('/factura/:facturaId', detalleFacturaController.getByFacturaId.bind(d
  */
 router.get('/producto/:productoId', detalleFacturaController.getByProductoId.bind(detalleFacturaController));
 
-/**
- * @openapi
- * /api/detalles-factura/bulk:
- *   post:
- *     summary: Crear múltiples detalles de factura
- *     description: Crea varios detalles de factura en una sola operación
- *     tags:
- *       - Detalles de Factura
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: array
- *             items:
- *               $ref: '#/components/schemas/DetalleFactura'
- *     responses:
- *       201:
- *         description: Detalles de factura creados exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/DetalleFactura'
- *       400:
- *         description: Datos inválidos
- *       401:
- *         description: No autorizado
- *       500:
- *         description: Error del servidor
- */
-router.post('/bulk', detalleFacturaController.createBulk.bind(detalleFacturaController));
-
-module.exports = router; 
+module.exports = router;

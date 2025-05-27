@@ -80,41 +80,6 @@ class DetalleFacturaController extends BaseController {
             });
         }
     }
-
-    /**
-     * Crea múltiples detalles de factura en una sola operación
-     * @param {Object} req - Objeto de solicitud HTTP
-     * @param {Object} res - Objeto de respuesta HTTP
-     * @returns {Array} Lista de detalles creados
-     * 
-     * @example
-     * POST /api/detalles-factura/bulk
-     * Body: [ { factura_id, producto_id, cantidad, precio_unitario }, ... ]
-     */
-    async createBulk(req, res) {
-        try {
-            const detalles = req.body;
-            
-            if (!Array.isArray(detalles)) {
-                return res.status(400).json({
-                    message: 'El cuerpo de la solicitud debe ser un array de detalles'
-                });
-            }
-
-            const detallesCreados = await this.service.createBulk(detalles);
-            return res.status(201).json(detallesCreados);
-        } catch (error) {
-            if (error.message.includes('campos requeridos')) {
-                return res.status(400).json({
-                    message: error.message
-                });
-            }
-            return res.status(500).json({
-                message: 'Error al crear detalles de factura',
-                error: error.message
-            });
-        }
-    }
 }
 
 module.exports = new DetalleFacturaController(); 

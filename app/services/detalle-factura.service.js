@@ -39,16 +39,6 @@ class DetalleFacturaService extends BaseService {
             include: [{ model: Factura }]
         });
     }
-
-    /**
-     * Crea múltiples detalles de factura en una sola operación
-     * Útil para crear todos los detalles de una factura de una vez
-     * @param {Array<Object>} detalles - Array de detalles a crear
-     * @returns {Promise<Array>} Detalles creados
-     */
-    async createMany(detalles) {
-        return await this.model.bulkCreate(detalles);
-    }
 }
 
 module.exports = new DetalleFacturaService(); 
