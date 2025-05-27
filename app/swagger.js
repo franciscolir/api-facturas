@@ -1,6 +1,5 @@
 // swagger.js
 const swaggerJSDoc = require('swagger-jsdoc');
-const URL = 'http://localhost:3000';
 
 const options = {
   definition: {
@@ -368,7 +367,7 @@ const options = {
       }   
     ],
 
-    servers: [{ url: URL }],
+   //  servers: [{ url }],
   },
   apis: ['./app/routes/*.js'],
 };

@@ -27,7 +27,7 @@ const detalleFacturaRoutes = require('./routes/detalle-factura.routes');
 const usuarioRoutes = require('./routes/usuario.routes');
 
 const app = express();
-
+app.disable('x-powered-by');
 // Middleware para procesar JSON en las peticiones
 app.use(express.json());
 
