@@ -4,7 +4,7 @@
  * 
  * Características principales:
  * - Operaciones CRUD básicas (GET, POST, PUT, DELETE)
- * - Búsqueda por código y RUT
+ * - Búsqueda por código
  * - Documentación OpenAPI/Swagger
  * - Manejo de respuestas HTTP estandarizadas
  * 
@@ -101,7 +101,7 @@ router.get('/:id', vendedorController.getById.bind(vendedorController));
  *             schema:
  *               $ref: '#/components/schemas/Vendedor'
  *       400:
- *         description: Datos inválidos o RUT ya existe
+ *         description: Datos inválidos 
  *       401:
  *         description: No autorizado
  *       500:
@@ -140,7 +140,7 @@ router.post('/', vendedorController.create.bind(vendedorController));
  *             schema:
  *               $ref: '#/components/schemas/Vendedor'
  *       400:
- *         description: Datos inválidos o RUT ya existe
+ *         description: Datos inválidos
  *       401:
  *         description: No autorizado
  *       404:
@@ -216,38 +216,6 @@ router.delete('/:id', vendedorController.delete.bind(vendedorController));
  */
 router.get('/codigo/:codigo', vendedorController.getByCode.bind(vendedorController));
 
-/**
- * @openapi
- * /api/vendedores/rut/{rut}:
- *   get:
- *     summary: Obtener vendedor por RUT
- *     description: Retorna el vendedor con un RUT específico
- *     tags:
- *       - Vendedores
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: rut
- *         required: true
- *         schema:
- *           type: string
- *         description: RUT único del vendedor
- *     responses:
- *       200:
- *         description: Vendedor encontrado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Vendedor'
- *       401:
- *         description: No autorizado
- *       404:
- *         description: Vendedor no encontrado
- *       500:
- *         description: Error del servidor
- */
-router.get('/rut/:rut', vendedorController.getByRut.bind(vendedorController));
 
 router.post('/bulk', vendedorController.createBulk.bind(vendedorController));
 

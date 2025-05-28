@@ -2,11 +2,11 @@
  * Controlador de Vendedores
  * Gestiona las operaciones relacionadas con los vendedores
  * Extiende el controlador base para operaciones CRUD
- * Implementa métodos específicos para búsqueda por código y RUT
+ * Implementa métodos específicos para búsqueda por código 
  * 
  * Características principales:
  * - Operaciones CRUD heredadas del controlador base
- * - Búsqueda de vendedores por código y RUT
+ * - Búsqueda de vendedores por código
  * - Manejo de errores consistente
  * - Respuestas HTTP estandarizadas
  */
@@ -140,35 +140,6 @@ class VendedorController extends BaseController {
         }
     }
 
-    /**
-     * Obtiene un vendedor por su RUT
-     * GET /api/vendedores/rut/:rut
-     * @param {Object} req - Objeto de solicitud HTTP
-     * @param {Object} res - Objeto de respuesta HTTP
-     * @returns {Object} Vendedor encontrado
-     * 
-     * @example
-     * GET /api/vendedores/rut/12345678-9
-     */
-    getByRut = async (req, res) => {
-        try {
-            const { rut } = req.params;
-            const vendedor = await this.service.findByRut(rut);
-            
-            if (!vendedor) {
-                return res.status(404).json({
-                    message: 'Vendedor no encontrado'
-                });
-            }
-
-            return res.status(200).json(vendedor);
-        } catch (error) {
-            return res.status(500).json({
-                message: 'Error al buscar vendedor por RUT',
-                error: error.message
-            });
-        }
-    }
 
     /**
      * Registra múltiples vendedores en un solo POST

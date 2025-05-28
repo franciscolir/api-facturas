@@ -43,20 +43,13 @@ class VendedorService extends BaseService {
         return await this.model.findOne({ where: { email } });
     }
 
-    async findByRut(rut) {
-        return await this.model.findOne({ where: { rut } });
-    }
+
 
     async create(data) {
         // Verificar si ya existe un vendedor con el mismo email
         const existingVendedor = await this.findByEmail(data.email);
         if (existingVendedor) {
             throw new Error('Ya existe un vendedor con este email');
-        }
-        // Verificar si ya existe un vendedor con el mismo RUT
-        const existingVendedorRut = await this.findByRut(data.rut);
-        if (existingVendedorRut) {
-            throw new Error('Ya existe un vendedor con este RUT');
         }
         return await super.create(data);
     }
@@ -69,14 +62,7 @@ class VendedorService extends BaseService {
                 throw new Error('Ya existe un vendedor con este email');
             }
         }
-        // Si se está actualizando el RUT, verificar que no exista
-        if (data.rut) {
-            const existingVendedorRut = await this.findByRut(data.rut);
-            if (existingVendedorRut && existingVendedorRut.id !== id) {
-                throw new Error('Ya existe un vendedor con este RUT');
-            }
-        }
-        return await super.update(id, data);
+       return await super.update(id, data);
     }
 }
 
