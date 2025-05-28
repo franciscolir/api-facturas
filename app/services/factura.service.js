@@ -71,6 +71,59 @@ class FacturaService extends BaseService {
         await this.recalcularTotales(facturaId);
     }
 
+/**
+ * Asigna folios disponibles a todas las facturas en estado borrador.
+ * Cambia el estado de cada factura a 'emitida' y guarda el número de folio.
+ * @returns {Promise<Array>} Lista de facturas actualizadas
+ */
+async asignarFoliosABorradores() {
+    const { Folio } = require('../models');
+    // Obtiene todas las facturas en estado borrador y activas
+    const borradores = await this.model.findAll({
+        where: { estado: 'borrador', activo: true }
+    });
+
+    const facturasActualizadas = [];
+
+    for (const factura of borradores) {
+        // Busca un folio disponible
+        const folio = await Folio.findOne({ where: { usado: false, tipo: 'FACTURA' } });
+        if (!folio) break; // Si no hay más folios, detiene el proceso
+
+        // Asigna el folio a la factura y marca el folio como usado
+        folio.usado = true;
+        folio.id_factura = factura.id;
+        await folio.save();
+
+        factura.estado = 'emitida';
+        factura.folio = folio.numero;
+        await factura.save();
+
+        facturasActualizadas.push(factura);
+    }
+
+    return facturasActualizadas;
+}
+
+/**
+ * Obtiene todas las facturas en estado borrador
+ * @returns {Promise<Array>} Lista de facturas en estado borrador
+ */
+async findBorrador() {
+    return await this.model.findAll({
+        where: { estado: 'borrador', activo: true },
+        include: [
+            { model: Cliente },
+            { model: Vendedor },
+            { model: CondicionPago },
+            { model: DetalleFactura }
+        ]
+    });
+}
+
+
+
+
     /**
      * Obtiene todas las facturas con sus relaciones
      * Incluye información de cliente, vendedor, condición de pago y detalles

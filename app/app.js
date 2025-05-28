@@ -25,6 +25,7 @@ const facturaRoutes = require('./routes/factura.routes');
 const folioRoutes = require('./routes/folio.routes');
 const detalleFacturaRoutes = require('./routes/detalle-factura.routes');
 const usuarioRoutes = require('./routes/usuario.routes');
+const pagoFacturaRoutes = require('./routes/pago-factura.routes'); // <-- Agrega esta línea
 
 const app = express();
 app.disable('x-powered-by');
@@ -67,19 +68,24 @@ async function initializeDatabase() {
 }
 
 // Configuración de rutas de la API
-app.use('/api/clientes', clienteRoutes);
-app.use('/api/vendedores', vendedorRoutes);
-app.use('/api/productos', productoRoutes);
-app.use('/api/condiciones-pago', condicionPagoRoutes);
-app.use('/api/facturas', facturaRoutes);
-app.use('/api/folios', folioRoutes);
-app.use('/api/detalles-factura', detalleFacturaRoutes);
-app.use('/api/usuarios', usuarioRoutes);
+// Cada línea asocia un grupo de rutas (módulo) con un prefijo de URL.
+// Esto permite organizar y acceder a los recursos de la API de forma estructurada.
+app.use('/api/clientes', clienteRoutes); // Rutas para gestión de clientes
+app.use('/api/vendedores', vendedorRoutes); // Rutas para gestión de vendedores
+app.use('/api/productos', productoRoutes); // Rutas para gestión de productos
+app.use('/api/condiciones-pago', condicionPagoRoutes); // Rutas para condiciones de pago
+app.use('/api/facturas', facturaRoutes); // Rutas para facturación
+app.use('/api/folios', folioRoutes); // Rutas para folios de documentos
+app.use('/api/detalles-factura', detalleFacturaRoutes); // Rutas para detalles de factura
+app.use('/api/usuarios', usuarioRoutes); // Rutas para usuarios del sistema
+app.use('/api/pagos-factura', pagoFacturaRoutes); // Rutas para pagos de factura (estados, vencimientos, etc.)
 
 // Configuración de la documentación Swagger
+// Expone la documentación interactiva de la API en /api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Inicializar base de datos
+// Sincroniza los modelos Sequelize con la base de datos al iniciar la aplicación
 initializeDatabase();
 
 module.exports = app;

@@ -111,6 +111,102 @@ const options = {
             }
           }
         },
+        DetallesFactura: {
+          type: 'object',
+          required: ['factura_id', 'producto_id', 'cantidad', 'precio_unitario', 'total'],
+          properties: {
+            factura_id: {
+              type: 'integer',
+              example: 1001,
+              description: 'ID de la factura a la que pertenece este detalle'
+            },
+            producto_id: {
+              type: 'integer',
+              example: 501,
+              description: 'ID del producto incluido en la factura'
+            },
+            cantidad: {
+              type: 'integer',
+              example: 3,
+              description: 'Cantidad de unidades del producto'
+            },
+            precio_unitario: {
+              type: 'number',
+              format: 'float',
+              example: 2500.75,
+              description: 'Precio unitario del producto'
+            },
+            total: {
+              type: 'number',
+              format: 'float',
+              example: 7502.25,
+              description: 'Total del detalle (cantidad x precio unitario)'
+            }
+          }
+        },
+        PagoFactura: {
+          type: 'object',
+          required: [
+            'factura_id',
+            'factura_fecha',
+            'condicion_pago_id_facturas',
+            'cliente_id_facturas',
+            'vencimiento',
+            'estado'
+          ],
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1,
+              description: 'ID único del pago de factura'
+            },
+            factura_id: {
+              type: 'integer',
+              example: 1001,
+              description: 'ID de la factura asociada'
+            },
+            factura_fecha: {
+              type: 'string',
+              format: 'date',
+              example: '2024-03-20',
+              description: 'Fecha de emisión de la factura'
+            },
+            condicion_pago_id_facturas: {
+              type: 'integer',
+              example: 2,
+              description: 'ID de la condición de pago utilizada'
+            },
+            cliente_id_facturas: {
+              type: 'integer',
+              example: 5,
+              description: 'ID del cliente asociado al pago'
+            },
+            vencimiento: {
+              type: 'string',
+              format: 'date',
+              example: '2024-04-20',
+              description: 'Fecha de vencimiento del pago'
+            },
+            estado: {
+              type: 'string',
+              enum: ['pendiente', 'pagada', 'vencida'],
+              example: 'pendiente',
+              description: 'Estado actual del pago de factura'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-03-20T10:00:00Z',
+              description: 'Fecha de creación del registro'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              example: '2024-03-21T12:00:00Z',
+              description: 'Fecha de última actualización del registro'
+            }
+          }
+        },
         Producto: {
           type: 'object',
           required: ['codigo', 'nombre', 'precio'],
@@ -293,39 +389,6 @@ const options = {
               type: 'boolean',
               example: true,
               description: 'Estado del usuario'
-            }
-          }
-        },
-        DetallesFactura: {
-          type: 'object',
-          required: ['factura_id', 'producto_id', 'cantidad', 'precio_unitario', 'total'],
-          properties: {
-            factura_id: {
-              type: 'integer',
-              example: 1001,
-              description: 'ID de la factura a la que pertenece este detalle'
-            },
-            producto_id: {
-              type: 'integer',
-              example: 501,
-              description: 'ID del producto incluido en la factura'
-            },
-            cantidad: {
-              type: 'integer',
-              example: 3,
-              description: 'Cantidad de unidades del producto'
-            },
-            precio_unitario: {
-              type: 'number',
-              format: 'float',
-              example: 2500.75,
-              description: 'Precio unitario del producto'
-            },
-            total: {
-              type: 'number',
-              format: 'float',
-              example: 7502.25,
-              description: 'Total del detalle (cantidad x precio unitario)'
             }
           }
         }

@@ -162,6 +162,44 @@ class FacturaController extends BaseController {
             res.status(500).json({ message: error.message });
         }
     }
+
+    /**
+     * Obtiene todas las facturas en estado borrador
+     * GET /api/facturas/borrador
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de facturas en estado borrador
+     * 
+     * @example
+     * GET /api/facturas/borrador
+     */
+    async getBorrador(req, res) {
+        try {
+            const borradores = await this.service.findBorrador();
+            res.status(200).json(borradores);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+    /**
+     * Asigna folios disponibles a todas las facturas en estado borrador
+     * PATCH /api/facturas/asignar-folios-borrador
+     * @param {Object} req - Objeto de solicitud HTTP
+     * @param {Object} res - Objeto de respuesta HTTP
+     * @returns {Array} Lista de facturas actualizadas con folio asignado
+     * 
+     * @example
+     * PATCH /api/facturas/asignar-folios-borrador
+     */
+    async asignarFoliosABorradores(req, res) {
+        try {
+            const actualizadas = await this.service.asignarFoliosABorradores();
+            res.status(200).json(actualizadas);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 }
 
-module.exports = new FacturaController(); 
+module.exports = new FacturaController();

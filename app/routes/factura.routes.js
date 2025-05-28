@@ -451,4 +451,45 @@ router.get('/fecha/:fecha', facturaController.getByFecha.bind(facturaController)
 
 router.post('/bulk', facturaController.createBulk.bind(facturaController));
 
+/**
+ * @openapi
+ * /api/facturas/borrador:
+ *   get:
+ *     summary: Obtener todas las facturas en estado borrador
+ *     description: Retorna una lista de todas las facturas que están en estado borrador.
+ *     tags:
+ *       - Facturas
+ *     responses:
+ *       200:
+ *         description: Lista de facturas en estado borrador obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ */
+router.get('/borrador', facturaController.getBorrador.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/asignar-folios-borrador:
+ *   patch:
+ *     summary: Asignar folios a todas las facturas en estado borrador
+ *     description: Asigna folios disponibles a todas las facturas en estado borrador y las cambia a estado emitida.
+ *     tags:
+ *       - Facturas
+ *     responses:
+ *       200:
+ *         description: Facturas actualizadas con folios asignados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ *       400:
+ *         description: Error al asignar folios
+ */
+router.patch('/asignar-folios-borrador', facturaController.asignarFoliosABorradores.bind(facturaController));
 module.exports = router; 
