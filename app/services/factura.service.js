@@ -110,18 +110,18 @@ async asignarFoliosABorradores() {
  * @returns {Promise<Array>} Lista de facturas en estado borrador
  */
 async findBorrador() {
-    return await this.model.findAll({
+    const borradores = await this.model.findAll({
         where: { estado: 'borrador', activo: true },
         include: [
-            { model: Cliente },
-            { model: Vendedor },
-            { model: CondicionPago },
-            { model: DetalleFactura }
+            { model: Cliente, required: false },
+            { model: Vendedor, required: false },
+            { model: CondicionPago, required: false },
+            { model: DetalleFactura, required: false }
         ]
     });
+    console.log('Borradores encontrados:', borradores.length);
+    return borradores;
 }
-
-
 
 
     /**

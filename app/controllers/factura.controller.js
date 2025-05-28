@@ -15,6 +15,8 @@ const BaseController = require('./base.controller');
 const facturaService = require('../services/factura.service');
 
 class FacturaController extends BaseController {
+    
+
     /**
      * Constructor del controlador de facturas
      * Inicializa el controlador con el servicio de facturas
@@ -172,12 +174,25 @@ class FacturaController extends BaseController {
      * 
      * @example
      * GET /api/facturas/borrador
-     */
+     */ 
+ 
+    
     async getBorrador(req, res) {
-        try {
+        console.log('Obteniendo facturas en estado borrador');
+        console.log('Parámetros de solicitud:', req.params);
+        try {   
+            console.log('Llamando al servicio para obtener borradores');
             const borradores = await this.service.findBorrador();
-            res.status(200).json(borradores);
+            console.log('Borradores encontrados:', borradores.length);
+            res.status(200).json(borradores);   
+            console.log('Respuesta enviada con éxito');
         } catch (error) {
+
+            console.error('Error al obtener borradores:', error);
+            console.error('Detalles del error:', {
+                message: error.message,
+                stack: error.stack
+            });
             res.status(500).json({ message: error.message });
         }
     }
