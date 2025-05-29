@@ -121,31 +121,15 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true, // Registra fecha de creación y actualización
         hooks: {
             // Hook que se ejecuta antes de crear una factura
-            // Asigna automáticamente un folio disponible
-            // Solo si la factura se está emitiendo
+            // Ya no asigna folio automáticamente al crear
+            // La factura se crea siempre como 'borrador' y sin folio asignado
             beforeCreate: async (factura) => {
-                if (factura.estado === 'emitida' && !factura.folio_id) {
-                    const Folio = sequelize.models.Folio;
-                    const folio = await Folio.findOne({
-                        where: { estado: 'disponible' },
-                        order: [['numero', 'ASC']]
-                    });
-                    
-                    if (!folio) {
-                        throw new Error('No hay folios disponibles');
-                    }
-
-                    await folio.update({
-                        estado: 'usado',
-                        fecha_uso: new Date()
-                    });
-
-                    factura.folio_id = folio.id;
-                }
+                // Si la factura se crea, debe quedar como 'borrador' y sin folio
+                factura.estado = 'borrador';
+                factura.folio_id = null;
             }
         }
     });
 
     return Factura;
 };
-  

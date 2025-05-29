@@ -25,41 +25,101 @@ class FacturaService extends BaseService {
         // Obtener todos los detalles de la factura
         const detalles = await DetalleFactura.findAll({ where: { factura_id: facturaId } });
         // Calcular subtotal sumando los subtotales de los detalles
-        const subtotal = detalles.reduce((sum, d) => sum + parseFloat(d.subtotal), 0);
+        const subtotal = detalles.reduce((sum, d) => sum + parseFloat(d.subtotal || 0), 0);
         const iva = subtotal * TASA_IVA;
         const total = subtotal + iva;
         // Actualizar la cabecera de la factura
         await Factura.update(
-            { subtotal, iva, total },
+            { subtotal: subtotal.toFixed(2), iva: iva.toFixed(2), total: total.toFixed(2) },
             { where: { id: facturaId } }
         );
+        // Log para depuración
+        const facturaActualizada = await Factura.findByPk(facturaId);
+        console.log('Totales actualizados:', facturaActualizada.subtotal, facturaActualizada.iva, facturaActualizada.total);
     }
 
-    /**
-     * Crea una factura y recalcula los totales después de crear los detalles
-     * @param {Object} data - Datos de la factura, incluyendo detalles
-     * @returns {Promise<Object>} Factura creada con totales correctos
+
+        /**
+     * Crea una factura junto con sus detalles asociados.
+     * Para cada detalle, obtiene el precio_unitario actual del producto correspondiente,
+     * lo almacena en el detalle (como decimal, no como referencia), y calcula el subtotal.
+     * Finalmente, recalcula los totales de la factura (subtotal, iva, total) y retorna
+     * la factura creada con todos sus detalles.
+     *
+     * @param {Object} data - Objeto con los datos de la factura y un array de detalles.
+     *   data = {
+     *     cliente_id,
+     *     vendedor_id,
+     *     condicion_pago_id,
+     *     ...otrosCamposFactura,
+     *     detalles: [
+     *       { producto_id, cantidad, ...otrosCamposDetalle }
+     *     ]
+     *   }
+     * @returns {Promise<Object>} Factura creada con detalles y totales correctos.
+     * @throws {Error} Si algún producto no existe.
      */
     async createWithDetalles(data) {
-        // Extraer detalles y datos de cabecera
-        const { detalles, ...cabecera } = data;
-        // Crear la factura (cabecera)
-        const factura = await Factura.create(cabecera);
-        // Crear los detalles asociados
-        if (Array.isArray(detalles)) {
-            for (const det of detalles) {
-                // Calcular subtotal de cada detalle
-                const subtotalDetalle = det.cantidad * det.precio_unitario;
-                await DetalleFactura.create({
-                    ...det,
-                    factura_id: factura.id,
-                    subtotal: subtotalDetalle
-                });
+        // Validación de datos de entrada
+        const { detalles, cliente_id, vendedor_id, condicion_pago_id, fecha, ...cabecera } = data;
+
+        // Validar campos obligatorios de cabecera
+        if (!cliente_id || !vendedor_id || !condicion_pago_id) {
+            throw new Error('Faltan campos obligatorios en la cabecera: cliente_id, vendedor_id o condicion_pago_id');
+        }
+        // Validar detalles
+        if (!Array.isArray(detalles) || detalles.length === 0) {
+            throw new Error('Debe incluir al menos un detalle en la factura');
+        }
+
+        // Validar cada detalle
+        for (const [i, det] of detalles.entries()) {
+            if (!det.producto_id) {
+                throw new Error(`El detalle #${i + 1} no tiene producto_id`);
+            }
+            if (typeof det.cantidad !== 'number' || det.cantidad <= 0) {
+                throw new Error(`El detalle #${i + 1} debe tener una cantidad mayor a 0`);
             }
         }
-        // Recalcular totales de la factura
+
+        // Crea la cabecera de la factura en la base de datos
+        const factura = await Factura.create({
+            cliente_id,
+            vendedor_id,
+            condicion_pago_id,
+            fecha,
+            ...cabecera
+        });
+
+        // Procesa cada detalle
+        for (const det of detalles) {
+            // Busca el producto por su ID para obtener el precio_unitario actual
+            const producto = await Producto.findByPk(det.producto_id);
+            if (!producto) {
+                throw new Error(`Producto con id ${det.producto_id} no encontrado`);
+            }
+            // Obtiene el precio_unitario actual y lo asegura como decimal compatible con la base de datos
+            // Usar string para DECIMAL en SQLite y la mayoría de los motores
+            const precioUnitarioActual = producto.precio_unitario !== null
+                ? producto.precio_unitario.toString()
+                : "0.00";
+            // Calcula el subtotal del detalle (cantidad * precio_unitario)
+            const subtotalDetalle = (parseFloat(det.cantidad) * parseFloat(precioUnitarioActual)).toFixed(2);
+
+            // Crea el detalle de factura, almacenando el precio_unitario actual y el subtotal como string decimal
+            await DetalleFactura.create({
+                factura_id: factura.id,
+                producto_id: det.producto_id,
+                cantidad: det.cantidad,
+                precio_unitario: parseFloat(precioUnitarioActual).toFixed(2), // string decimal
+                subtotal: subtotalDetalle // string decimal
+            });
+        }
+
+        // Recalcula los totales de la factura (subtotal, iva, total)
         await this.recalcularTotales(factura.id);
-        // Retornar la factura con los totales actualizados
+
+        // Retorna la factura creada, incluyendo todos sus detalles
         return await Factura.findByPk(factura.id, { include: [DetalleFactura] });
     }
 
@@ -213,4 +273,4 @@ async findBorrador() {
     }
 }
 
-module.exports = new FacturaService(); 
+module.exports = new FacturaService();

@@ -35,14 +35,22 @@ class FacturaController extends BaseController {
      * POST /api/facturas
      * Body: { cabecera y detalles }
      */
-    async create(req, res) {
-        try {
-            const factura = await this.service.createWithDetalles(req.body);
-            res.status(201).json(factura);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
+  async create(req, res) {
+    try {
+        const factura = await facturaService.createWithDetalles(req.body);
+        res.status(201).json(factura);
+    } catch (error) {
+        console.error('Error al crear factura:', error); // <--- Agrega esto
+        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({
+                message: 'Validation error',
+                errors: error.errors || [],
+                errorMessage: error.message // <--- Agrega esto para ver el mensaje
+            });
         }
+        res.status(500).json({ message: error.message, stack: error.stack }); // <--- Agrega stack para depuración
     }
+}
 
     /**
      * Crea múltiples facturas con sus detalles en un solo POST
