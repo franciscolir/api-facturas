@@ -1,0 +1,24 @@
+{
+  "id": 1,
+  "codigo": "CONTADO",
+  "descripcion": "Pago al contado",
+  "plazo": 0
+}
+{
+  "id": 2,
+  "codigo": "15D",
+  "descripcion": "Pago a 15 dias",
+  "plazo": 15
+}
+{
+  "id": 3,
+  "codigo": "30D",
+  "descripcion": "Pago a 30 dias",
+  "plazo": 30
+}
+{
+  "id": 4,
+  "codigo": "60D",
+  "descripcion": "Pago a 60 dias",
+  "plazo": 60
+}

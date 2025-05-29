@@ -30,22 +30,31 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false
       },
-      // Nombre del producto
+      // Nombre del producto (requerido)
       // Se usa para identificación y búsqueda
       // Debe ser descriptivo y claro
-      nombre: { type: DataTypes.STRING },
+      nombre: { 
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       // Descripción detallada del producto
       // Puede incluir características, especificaciones
       // y otra información relevante
       descripcion: { type: DataTypes.TEXT },
-      // Precio de venta unitario
+      // Precio de venta unitario (requerido)
       // Se usa para calcular totales en facturas
       // Debe ser un valor positivo
-      precio_unitario: { type: DataTypes.DECIMAL },
-      // Cantidad disponible en inventario
+      precio_unitario: { 
+        type: DataTypes.DECIMAL,
+        allowNull: false
+      },
+      // Cantidad disponible en inventario (requerido)
       // Se actualiza con cada venta
       // Debe ser un número entero no negativo
-      stock: { type: DataTypes.INTEGER },
+      stock: { 
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       // Estado del producto en el sistema
       // Permite desactivar productos sin eliminarlos
       // Útil para mantener historial
@@ -65,4 +74,3 @@ module.exports = (sequelize, DataTypes) => {
   
     return Productos;
   };
-  

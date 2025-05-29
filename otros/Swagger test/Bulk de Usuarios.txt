@@ -1,0 +1,35 @@
+
+
+[
+  
+{
+    "nombre": "Ana Torres",
+    "email": "ana.torres@empresa.com",
+    "password": "1234",
+    "rol": "administrador"
+  },
+  {
+    "nombre": "Luis Pérez",
+    "email": "luis.perez@empresa.com",
+    "password": "1234",
+    "rol": "usuario"
+  },
+  {
+    "nombre": "María López",
+    "email": "maria.lopez@empresa.com",
+    "password": "1234",
+    "rol": "usuario"
+  },
+  {
+    "nombre": "Carlos Ruiz",
+    "email": "carlos.ruiz@empresa.com",
+    "password": "1234",
+    "rol": "usuario"
+  },
+  {
+    "nombre": "Sofía Herrera",
+    "email": "sofia.herrera@empresa.com",
+    "password": "1234",
+    "rol": "usuario"
+  }
+]

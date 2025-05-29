@@ -148,52 +148,6 @@ router.delete('/:id', pagoFacturaController.delete.bind(pagoFacturaController));
 // Rutas Específicas
 // ==========================================
 
-/**
- * @openapi
- * /api/pagos-factura/with-details:
- *   get:
- *     summary: Obtener todos los pagos de factura con detalles relacionados
- *     description: Retorna una lista de pagos de factura incluyendo información de factura, cliente y condición de pago.
- *     tags:
- *       - Pagos de Factura
- *     responses:
- *       200:
- *         description: Lista de pagos de factura con detalles obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/PagoFactura'
- */
-router.get('/with-details', pagoFacturaController.getAllWithDetails.bind(pagoFacturaController));
-
-/**
- * @openapi
- * /api/pagos-factura/{id}/with-details:
- *   get:
- *     summary: Obtener un pago de factura específico con detalles relacionados
- *     description: Retorna un pago de factura con información de factura, cliente y condición de pago.
- *     tags:
- *       - Pagos de Factura
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del pago de factura
- *     responses:
- *       200:
- *         description: Pago de factura con detalles encontrado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/PagoFactura'
- *       404:
- *         description: Pago de factura no encontrado
- */
-router.get('/:id/with-details', pagoFacturaController.getByIdWithDetails.bind(pagoFacturaController));
 
 /**
  * @openapi
@@ -226,7 +180,7 @@ router.get('/factura/:facturaId', pagoFacturaController.getByFacturaId.bind(pago
 
 /**
  * @openapi
- * /api/pagos-factura/{id}/pagar:
+ * /api/pagos-factura/{id}/pagada:
  *   patch:
  *     summary: Marcar un pago de factura como pagado
  *     description: Cambia el estado de un pago de factura a "pagada".
@@ -249,11 +203,11 @@ router.get('/factura/:facturaId', pagoFacturaController.getByFacturaId.bind(pago
  *       404:
  *         description: Pago de factura no encontrado
  */
-router.patch('/:id/pagar', pagoFacturaController.marcarComoPagada.bind(pagoFacturaController));
+router.patch('/:id/pagada', pagoFacturaController.marcarComoPagada.bind(pagoFacturaController));
 
 /**
  * @openapi
- * /api/pagos-factura/{id}/vencer:
+ * /api/pagos-factura/{id}/vencida:
  *   patch:
  *     summary: Marcar un pago de factura como vencido
  *     description: Cambia el estado de un pago de factura a "vencida".
@@ -276,37 +230,8 @@ router.patch('/:id/pagar', pagoFacturaController.marcarComoPagada.bind(pagoFactu
  *       404:
  *         description: Pago de factura no encontrado
  */
-router.patch('/:id/vencer', pagoFacturaController.marcarComoVencida.bind(pagoFacturaController));
+router.patch('/:id/vencida', pagoFacturaController.marcarComoVencida.bind(pagoFacturaController));
 
-/**
- * @openapi
- * /api/pagos-factura/estado/{estado}:
- *   get:
- *     summary: Obtener lista de pagos de factura por estado
- *     description: Retorna todos los pagos de factura filtrados por estado (pagada, pendiente, vencida).
- *     tags:
- *       - Pagos de Factura
- *     parameters:
- *       - in: path
- *         name: estado
- *         required: true
- *         schema:
- *           type: string
- *           enum: [pagada, pendiente, vencida]
- *         description: Estado de la factura a consultar
- *     responses:
- *       200:
- *         description: Lista de pagos de factura por estado obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/PagoFactura'
- *       400:
- *         description: Estado no válido
- */
-router.get('/estado/:estado', pagoFacturaController.getByEstado.bind(pagoFacturaController));
 
 /**
  * @openapi
@@ -326,7 +251,7 @@ router.get('/estado/:estado', pagoFacturaController.getByEstado.bind(pagoFactura
  *               items:
  *                 $ref: '#/components/schemas/PagoFactura'
  */
-router.get('/vencidas-hoy', pagoFacturaController.getVencidas.bind(pagoFacturaController));
+router.get('/vencidas-hoy', pagoFacturaController.getVencidasHoy.bind(pagoFacturaController));
 
 /**
  * @openapi
@@ -362,6 +287,6 @@ router.get('/vencidas-hoy', pagoFacturaController.getVencidas.bind(pagoFacturaCo
  *       400:
  *         description: Estado no válido
  */
-router.get('/cliente/:clienteId/:estado', pagoFacturaController.getByEstadoYCliente.bind(pagoFacturaController));
+router.get('/cliente/:clienteId/:estado', pagoFacturaController.getByEstado.bind(pagoFacturaController));
 
 module.exports = router;

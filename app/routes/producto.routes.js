@@ -179,8 +179,6 @@ router.put('/:id', productoController.update.bind(productoController));
  */
 router.delete('/:id', productoController.delete.bind(productoController));
 
-router.post('/bulk', productoController.createBulk.bind(productoController));
-
 // ==========================================
 // Rutas Específicas
 // ==========================================
@@ -217,7 +215,53 @@ router.post('/bulk', productoController.createBulk.bind(productoController));
  *         description: Error del servidor
  */
 router.get('/codigo/:codigo', productoController.getByCodigo.bind(productoController));
-
-router.get('/categoria/:categoria', productoController.getByCategoria.bind(productoController));
+/**
+ * @openapi
+ * /api/productos/bulk:
+ *   post:
+ *     summary: Crear múltiples productos
+ *     description: Permite crear varios productos en una sola solicitud.
+ *     tags:
+ *       - Productos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/Producto'
+ *           example:
+ *             - codigo: "PROD001"
+ *               nombre: "Producto 1"
+ *               descripcion: "Descripción del producto 1"
+ *               precio_unitario: 100.00
+ *               stock: 50
+ *               activo: true
+ *             - codigo: "PROD002"
+ *               nombre: "Producto 2"
+ *               descripcion: "Descripción del producto 2"
+ *               precio_unitario: 200.00
+ *               stock: 30
+ *               activo: true
+ *     responses:
+ *       201:
+ *         description: Productos creados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Producto'
+ *       400:
+ *         description: Datos inválidos o error de validación
+ *       401:
+ *         description: No autorizado
+ *       500:
+ *         description: Error del servidor
+ */
+router.post('/bulk', productoController.createBulk.bind(productoController));
 
 module.exports = router; 

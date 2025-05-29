@@ -11,35 +11,47 @@
  * - Cálculo automático de subtotales
  * - Relaciones con facturas y productos
  * - Auditoría de creación y modificación
+ * - Todos los campos son requeridos para garantizar la integridad de los datos
  */
 module.exports = (sequelize, DataTypes) => {
     const DetallesFactura = sequelize.define('detalles_factura', {
-      // Identificador único autoincremental
+      // Identificador único autoincremental para cada detalle
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      // ID de la factura a la que pertenece el detalle
-      // Relación con la tabla facturas
-      // Campo obligatorio para asociar el detalle a una factura
-      factura_id: { type: DataTypes.INTEGER },
-      // ID del producto incluido en el detalle
-      // Relación con la tabla productos
-      // Campo obligatorio para identificar el producto
-      producto_id: { type: DataTypes.INTEGER },
-      // Cantidad de unidades del producto
-      // Debe ser un número entero positivo
-      // Se usa para calcular el subtotal
-      cantidad: { type: DataTypes.INTEGER },
-      // Precio por unidad del producto
-      // Se almacena al momento de crear la factura
-      // Permite mantener histórico de precios
-      precio_unitario: { type: DataTypes.DECIMAL },
-      // Subtotal calculado para esta línea
-      // Resultado de cantidad * precio_unitario
-      // Se usa para totalizar la factura
-      subtotal: { type: DataTypes.DECIMAL },
+      // ID de la factura a la que pertenece el detalle (requerido)
+      factura_id: { 
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      // ID del producto incluido en el detalle (requerido)
+      producto_id: { 
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      // Cantidad de unidades del producto (requerido)
+      cantidad: { 
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      // Indica si el detalle está activo (borrado lógico, requerido)
+      activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      // Precio por unidad del producto (requerido)
+      precio_unitario: { 
+        type: DataTypes.DECIMAL,
+        allowNull: false
+      },
+      // Subtotal calculado para esta línea (requerido)
+      subtotal: { 
+        type: DataTypes.DECIMAL,
+        allowNull: false
+      },
     }, {
       // Configuración de la tabla y comportamiento
       tableName: 'detalles_factura',
@@ -50,4 +62,3 @@ module.exports = (sequelize, DataTypes) => {
   
     return DetallesFactura;
   };
-  

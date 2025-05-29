@@ -68,9 +68,23 @@ class ClienteController extends BaseController {
             const item = await this.service.create(req.body);
             res.status(201).json(item);
         } catch (error) {
-            res.status(400).json({ 
-                message: error.message,
-                error: error
+            // Control detallado de errores y validaciones
+            console.error('Error al crear cliente:', error);
+            if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({
+                    message: 'Validation error',
+                    errors: error.errors ? error.errors.map(e => ({
+                        message: e.message,
+                        path: e.path,
+                        value: e.value
+                    })) : [],
+                    errorMessage: error.message
+                });
+            }
+            res.status(500).json({
+                message: 'Error interno al crear cliente',
+                errorMessage: error.message,
+                stack: error.stack
             });
         }
     }

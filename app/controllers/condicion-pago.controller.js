@@ -44,9 +44,22 @@ class CondicionPagoController extends BaseController {
 
             return res.status(200).json(condicion);
         } catch (error) {
+            console.error('Error al buscar condición de pago por código:', error);
+            if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({
+                    message: 'Validation error',
+                    errors: error.errors ? error.errors.map(e => ({
+                        message: e.message,
+                        path: e.path,
+                        value: e.value
+                    })) : [],
+                    errorMessage: error.message
+                });
+            }
             return res.status(500).json({
                 message: 'Error al buscar condición de pago por código',
-                error: error.message
+                errorMessage: error.message,
+                stack: error.stack
             });
         }
     }
@@ -125,12 +138,47 @@ class CondicionPagoController extends BaseController {
             if (!Array.isArray(condiciones)) {
                 return res.status(400).json({ message: 'El cuerpo de la solicitud debe ser un array de condiciones de pago' });
             }
+            if (condiciones.length === 0) {
+                return res.status(400).json({ message: 'El array de condiciones de pago no puede estar vacío' });
+            }
+            // Validación básica de cada elemento
+            const errores = [];
+            condiciones.forEach((c, i) => {
+                if (!c.codigo || !c.descripcion || typeof c.dias_venc !== 'number') {
+                    errores.push({
+                        index: i,
+                        message: 'Faltan campos requeridos: codigo, descripcion o dias_venc'
+                    });
+                }
+            });
+            if (errores.length > 0) {
+                return res.status(400).json({
+                    message: 'Errores de validación en el array de condiciones de pago',
+                    errors: errores
+                });
+            }
             const condicionesCreadas = await this.service.createMany(condiciones);
             res.status(201).json(condicionesCreadas);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            console.error('Error al crear condiciones de pago en bulk:', error);
+            if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+                return res.status(400).json({
+                    message: 'Validation error',
+                    errors: error.errors ? error.errors.map(e => ({
+                        message: e.message,
+                        path: e.path,
+                        value: e.value
+                    })) : [],
+                    errorMessage: error.message
+                });
+            }
+            res.status(500).json({
+                message: 'Error interno al crear condiciones de pago en bulk',
+                errorMessage: error.message,
+                stack: error.stack
+            });
         }
     }
 }
 
-module.exports = new CondicionPagoController(); 
+module.exports = new CondicionPagoController();

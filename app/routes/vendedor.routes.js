@@ -216,7 +216,49 @@ router.delete('/:id', vendedorController.delete.bind(vendedorController));
  */
 router.get('/codigo/:codigo', vendedorController.getByCode.bind(vendedorController));
 
-
+/**
+ * @openapi
+ * /api/vendedores/bulk:
+ *   post:
+ *     summary: Crear múltiples vendedores
+ *     description: Permite crear varios vendedores en una sola solicitud.
+ *     tags:
+ *       - Vendedores
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/Vendedor'
+ *           example:
+ *             - codigo: "VEN001"
+ *               nombre: "Juan Pérez"
+ *               email: "juan@empresa.com"
+ *               telefono: "123456789"
+ *             - codigo: "VEN002"
+ *               nombre: "Ana López"
+ *               email: "ana@empresa.com"
+ *               telefono: "987654321"
+ *     responses:
+ *       201:
+ *         description: Vendedores creados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Vendedor'
+ *       400:
+ *         description: Datos inválidos o error de validación
+ *       401:
+ *         description: No autorizado
+ *       500:
+ *         description: Error del servidor
+ */
 router.post('/bulk', vendedorController.createBulk.bind(vendedorController));
 
 module.exports = router; 

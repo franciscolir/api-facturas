@@ -1,0 +1,32 @@
+[
+  {
+    "nombre": "Juan Pérez",
+    "email": "juan.perez1@empresa.com",
+    "telefono": "+56 9 1111 0001"
+  },
+  {
+    "nombre": "Ana López",
+    "email": "ana.lopez2@empresa.com",
+    "telefono": "+56 9 1111 0002"
+  },
+  {
+    "nombre": "Carlos Soto",
+    "email": "carlos.soto3@empresa.com",
+    "telefono": "+56 9 1111 0003"
+  },
+  {
+    "nombre": "María Torres",
+    "email": "maria.torres4@empresa.com",
+    "telefono": "+56 9 1111 0004"
+  },
+  {
+    "nombre": "Pedro González",
+    "email": "pedro.gonzalez5@empresa.com",
+    "telefono": "+56 9 1111 0005"
+  },
+  {
+    "nombre": "Lucía Ramírez",
+    "email": "lucia.ramirez6@empresa.com",
+    "telefono": "+56 9 1111 0006"
+  }
+  ]

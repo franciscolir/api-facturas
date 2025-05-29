@@ -1,0 +1,222 @@
+[
+  {
+    "id": 1,
+    "rut": "12345678-9",
+    "razon_social": "Comercial Pérez Ltda.",
+    "direccion": "Calle Falsa 123",
+    "comuna": "Providencia",
+    "ciudad": "Santiago",
+    "giro": "Venta de artículos electrónicos",
+    "email": "juan@correo.com",
+    "telefono": "123456789"
+  },
+  {
+    "id": 2,
+    "rut": "98765432-1",
+    "razon_social": "Servicios López SpA",
+    "direccion": "Avenida Siempre Viva 742",
+    "comuna": "Ñuñoa",
+    "ciudad": "Santiago",
+    "giro": "Consultoría informática",
+    "email": "ana@correo.com",
+    "telefono": "987654321"
+  },
+  {
+    "id": 3,
+    "rut": "11222333-4",
+    "razon_social": "Ramírez y Cía Ltda.",
+    "direccion": "Pasaje Los Olmos 45",
+    "comuna": "Puente Alto",
+    "ciudad": "Santiago",
+    "giro": "Construcción",
+    "email": "carlos@correo.com",
+    "telefono": "998877665"
+  },
+  {
+    "id": 4,
+    "rut": "22334455-6",
+    "razon_social": "Rombo Spa",
+    "direccion": "Camino del Sol 100",
+    "comuna": "Rancagua",
+    "ciudad": "Rancagua",
+    "giro": "Transporte de carga",
+    "email": "laura@correo.com",
+    "telefono": "912345678"
+  },
+  {
+    "id": 5,
+    "rut": "33445566-7",
+    "razon_social": "González Hermanos",
+    "direccion": "Ruta 5 Sur Km 30",
+    "comuna": "Talca",
+    "ciudad": "Talca",
+    "giro": "Construcción",
+    "email": "pedro@correo.com",
+    "telefono": "934567891"
+  },
+  {
+    "id": 6,
+    "rut": "44556677-8",
+    "razon_social": "Herrera Servicios Generales",
+    "direccion": "Villa Los Aromos 56",
+    "comuna": "La Florida",
+    "ciudad": "Santiago",
+    "giro": "Servicios de limpieza",
+    "email": "maria@correo.com",
+    "telefono": "956789123"
+  },
+  {
+    "id": 7,
+    "rut": "55667788-9",
+    "razon_social": "Conce Ltda",
+    "direccion": "Las Rosas 789",
+    "comuna": "Concepcion",
+    "ciudad": "Concepción",
+    "giro": "Construcción",
+    "email": "diego@correo.com",
+    "telefono": "978901234"
+  },
+  {
+    "id": 8,
+    "rut": "66778899-0",
+    "razon_social": "Casac Spa",
+    "direccion": "Calle Luna 33",
+    "comuna": "Quilicura",
+    "ciudad": "Santiago",
+    "giro": "Construcción",
+    "email": "fernanda@correo.com",
+    "telefono": "901234567"
+  },
+  {
+    "id": 9,
+    "rut": "77889900-1",
+    "razon_social": "Rojas Importaciones",
+    "direccion": "Camino Viejo 88",
+    "comuna": "Maipú",
+    "ciudad": "Santiago",
+    "giro": "Importación de repuestos",
+    "email": "jose@correo.com",
+    "telefono": "923456789"
+  },
+  {
+    "id": 10,
+    "rut": "88990011-2",
+    "razon_social": "Vargas Spa",
+    "direccion": "Pje. Las Hortensias 15",
+    "comuna": "Temuco",
+    "ciudad": "Temuco",
+    "giro": "Asesorías contables",
+    "email": "valentina@correo.com",
+    "telefono": "945678901"
+  },
+  {
+    "id": 11,
+    "rut": "99001122-3",
+    "razon_social": "Navarro Producciones",
+    "direccion": "Altos del Parque 10",
+    "comuna": "Providencia",
+    "ciudad": "Santiago",
+    "giro": "Organización de eventos",
+    "email": "felipe@correo.com",
+    "telefono": "967890123"
+  },
+  {
+    "id": 12,
+    "rut": "10111213-4",
+    "razon_social": "Ruta Ltda",
+    "direccion": "Las Palmeras 300",
+    "comuna": "San Miguel",
+    "ciudad": "Santiago",
+    "giro": "Consultoría legal",
+    "email": "camila@correo.com",
+    "telefono": "989012345"
+  },
+  {
+    "id": 13,
+    "rut": "11121314-5",
+    "razon_social": "Silva & Asociados",
+    "direccion": "Los Copihues 9",
+    "comuna": "Paine",
+    "ciudad": "Santiago",
+    "giro": "Abogados",
+    "email": "tomas@correo.com",
+    "telefono": "912398456"
+  },
+  {
+    "id": 14,
+    "rut": "12131415-6",
+    "razon_social": "Martínez Inversiones",
+    "direccion": "Av. Principal 456",
+    "comuna": "Viña del Mar",
+    "ciudad": "Valparaíso",
+    "giro": "Inversiones inmobiliarias",
+    "email": "isidora@correo.com",
+    "telefono": "934567890"
+  },
+  {
+    "id": 15,
+    "rut": "13141516-7",
+    "razon_social": "Fuentes Diseño",
+    "direccion": "Av. Independencia 789",
+    "comuna": "Independencia",
+    "ciudad": "Santiago",
+    "giro": "Diseño gráfico",
+    "email": "ignacio@correo.com",
+    "telefono": "956789012"
+  },
+  {
+    "id": 16,
+    "rut": "14151617-8",
+    "razon_social": "Andes SPA",
+    "direccion": "Calle Sur 202",
+    "comuna": "La Serena",
+    "ciudad": "La Serena",
+    "giro": "Construcción",
+    "email": "daniela@correo.com",
+    "telefono": "978901234"
+  },
+  {
+    "id": 17,
+    "rut": "15161718-9",
+    "razon_social": "Paredes Muebles",
+    "direccion": "Monte Alegre 67",
+    "comuna": "Curicó",
+    "ciudad": "Curicó",
+    "giro": "Fabricación de muebles",
+    "email": "matias@correo.com",
+    "telefono": "901234567"
+  },
+  {
+    "id": 18,
+    "rut": "16171819-0",
+    "razon_social": "Cáceres y Compañía",
+    "direccion": "Plaza Central 11",
+    "comuna": "Quillota",
+    "ciudad": "Valparaíso",
+    "giro": "Distribución de alimentos",
+    "email": "sofia@correo.com",
+    "telefono": "923456789"
+  },
+  {
+    "id": 19,
+    "rut": "17181920-1",
+    "razon_social": "Araya Textiles",
+    "direccion": "Los Castaños 120",
+    "comuna": "Colina",
+    "ciudad": "Santiago",
+    "giro": "Venta de ropa",
+    "email": "vicente@correo.com",
+    "telefono": "945678901"
+  },
+  {
+    "id": 20,
+    "rut": "18192021-2",
+    "razon_social": "Saavedra Software",
+    "direccion": "Camino Real 101",
+    "comuna": "San Bernardo",
+    "ciudad": "Santiago",
+    "giro": "Desarrollo de software",
+    "email": "antonia@correo.com",
+    "telefono": "967890123"
+  }
+]

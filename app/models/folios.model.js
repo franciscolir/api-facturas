@@ -56,6 +56,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 'disponible'
         },
+        // Estado de activación del folio (borrado lógico)
+        activo: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
+        },
         // Fecha en que el folio fue usado
         // Se registra al asignar a una factura
         // Puede ser nulo si el folio no se ha usado

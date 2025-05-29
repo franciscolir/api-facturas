@@ -1,0 +1,352 @@
+[
+  {
+    "codigo": "PROD001",
+    "nombre": "Producto 1",
+    "descripcion": "Descripción del producto 1",
+    "precio_unitario": 100.00,
+    "stock": 50
+  },
+  {
+    "codigo": "PROD002",
+    "nombre": "Producto 2",
+    "descripcion": "Descripción del producto 2",
+    "precio_unitario": 110.00,
+    "stock": 49
+  },
+  {
+    "codigo": "PROD003",
+    "nombre": "Producto 3",
+    "descripcion": "Descripción del producto 3",
+    "precio_unitario": 120.00,
+    "stock": 48
+  },
+  {
+    "codigo": "PROD004",
+    "nombre": "Producto 4",
+    "descripcion": "Descripción del producto 4",
+    "precio_unitario": 130.00,
+    "stock": 47
+  },
+  {
+    "codigo": "PROD005",
+    "nombre": "Producto 5",
+    "descripcion": "Descripción del producto 5",
+    "precio_unitario": 140.00,
+    "stock": 46
+  },
+  {
+    "codigo": "PROD006",
+    "nombre": "Producto 6",
+    "descripcion": "Descripción del producto 6",
+    "precio_unitario": 150.00,
+    "stock": 45
+  },
+  {
+    "codigo": "PROD007",
+    "nombre": "Producto 7",
+    "descripcion": "Descripción del producto 7",
+    "precio_unitario": 160.00,
+    "stock": 44
+  },
+  {
+    "codigo": "PROD008",
+    "nombre": "Producto 8",
+    "descripcion": "Descripción del producto 8",
+    "precio_unitario": 170.00,
+    "stock": 43
+  },
+  {
+    "codigo": "PROD009",
+    "nombre": "Producto 9",
+    "descripcion": "Descripción del producto 9",
+    "precio_unitario": 180.00,
+    "stock": 42
+  },
+  {
+    "codigo": "PROD010",
+    "nombre": "Producto 10",
+    "descripcion": "Descripción del producto 10",
+    "precio_unitario": 190.00,
+    "stock": 41
+  },
+  {
+    "codigo": "PROD011",
+    "nombre": "Producto 11",
+    "descripcion": "Descripción del producto 11",
+    "precio_unitario": 200.00,
+    "stock": 40
+  },
+  {
+    "codigo": "PROD012",
+    "nombre": "Producto 12",
+    "descripcion": "Descripción del producto 12",
+    "precio_unitario": 210.00,
+    "stock": 39
+  },
+  {
+    "codigo": "PROD013",
+    "nombre": "Producto 13",
+    "descripcion": "Descripción del producto 13",
+    "precio_unitario": 220.00,
+    "stock": 38
+  },
+  {
+    "codigo": "PROD014",
+    "nombre": "Producto 14",
+    "descripcion": "Descripción del producto 14",
+    "precio_unitario": 230.00,
+    "stock": 37
+  },
+  {
+    "codigo": "PROD015",
+    "nombre": "Producto 15",
+    "descripcion": "Descripción del producto 15",
+    "precio_unitario": 240.00,
+    "stock": 36
+  },
+  {
+    "codigo": "PROD016",
+    "nombre": "Producto 16",
+    "descripcion": "Descripción del producto 16",
+    "precio_unitario": 250.00,
+    "stock": 35
+  },
+  {
+    "codigo": "PROD017",
+    "nombre": "Producto 17",
+    "descripcion": "Descripción del producto 17",
+    "precio_unitario": 260.00,
+    "stock": 34
+  },
+  {
+    "codigo": "PROD018",
+    "nombre": "Producto 18",
+    "descripcion": "Descripción del producto 18",
+    "precio_unitario": 270.00,
+    "stock": 33
+  },
+  {
+    "codigo": "PROD019",
+    "nombre": "Producto 19",
+    "descripcion": "Descripción del producto 19",
+    "precio_unitario": 280.00,
+    "stock": 32
+  },
+  {
+    "codigo": "PROD020",
+    "nombre": "Producto 20",
+    "descripcion": "Descripción del producto 20",
+    "precio_unitario": 290.00,
+    "stock": 31
+  },
+  {
+    "codigo": "PROD021",
+    "nombre": "Producto 21",
+    "descripcion": "Descripción del producto 21",
+    "precio_unitario": 300.00,
+    "stock": 30
+  },
+  {
+    "codigo": "PROD022",
+    "nombre": "Producto 22",
+    "descripcion": "Descripción del producto 22",
+    "precio_unitario": 310.00,
+    "stock": 29
+  },
+  {
+    "codigo": "PROD023",
+    "nombre": "Producto 23",
+    "descripcion": "Descripción del producto 23",
+    "precio_unitario": 320.00,
+    "stock": 28
+  },
+  {
+    "codigo": "PROD024",
+    "nombre": "Producto 24",
+    "descripcion": "Descripción del producto 24",
+    "precio_unitario": 330.00,
+    "stock": 27
+  },
+  {
+    "codigo": "PROD025",
+    "nombre": "Producto 25",
+    "descripcion": "Descripción del producto 25",
+    "precio_unitario": 340.00,
+    "stock": 26
+  },
+  {
+    "codigo": "PROD026",
+    "nombre": "Producto 26",
+    "descripcion": "Descripción del producto 26",
+    "precio_unitario": 350.00,
+    "stock": 25
+  },
+  {
+    "codigo": "PROD027",
+    "nombre": "Producto 27",
+    "descripcion": "Descripción del producto 27",
+    "precio_unitario": 360.00,
+    "stock": 24
+  },
+  {
+    "codigo": "PROD028",
+    "nombre": "Producto 28",
+    "descripcion": "Descripción del producto 28",
+    "precio_unitario": 370.00,
+    "stock": 23
+  },
+  {
+    "codigo": "PROD029",
+    "nombre": "Producto 29",
+    "descripcion": "Descripción del producto 29",
+    "precio_unitario": 380.00,
+    "stock": 22
+  },
+  {
+    "codigo": "PROD030",
+    "nombre": "Producto 30",
+    "descripcion": "Descripción del producto 30",
+    "precio_unitario": 390.00,
+    "stock": 21
+  },
+  {
+    "codigo": "PROD031",
+    "nombre": "Producto 31",
+    "descripcion": "Descripción del producto 31",
+    "precio_unitario": 400.00,
+    "stock": 20
+  },
+  {
+    "codigo": "PROD032",
+    "nombre": "Producto 32",
+    "descripcion": "Descripción del producto 32",
+    "precio_unitario": 410.00,
+    "stock": 19
+  },
+  {
+    "codigo": "PROD033",
+    "nombre": "Producto 33",
+    "descripcion": "Descripción del producto 33",
+    "precio_unitario": 420.00,
+    "stock": 18
+  },
+  {
+    "codigo": "PROD034",
+    "nombre": "Producto 34",
+    "descripcion": "Descripción del producto 34",
+    "precio_unitario": 430.00,
+    "stock": 17
+  },
+  {
+    "codigo": "PROD035",
+    "nombre": "Producto 35",
+    "descripcion": "Descripción del producto 35",
+    "precio_unitario": 440.00,
+    "stock": 16
+  },
+  {
+    "codigo": "PROD036",
+    "nombre": "Producto 36",
+    "descripcion": "Descripción del producto 36",
+    "precio_unitario": 450.00,
+    "stock": 15
+  },
+  {
+    "codigo": "PROD037",
+    "nombre": "Producto 37",
+    "descripcion": "Descripción del producto 37",
+    "precio_unitario": 460.00,
+    "stock": 14
+  },
+  {
+    "codigo": "PROD038",
+    "nombre": "Producto 38",
+    "descripcion": "Descripción del producto 38",
+    "precio_unitario": 470.00,
+    "stock": 13
+  },
+  {
+    "codigo": "PROD039",
+    "nombre": "Producto 39",
+    "descripcion": "Descripción del producto 39",
+    "precio_unitario": 480.00,
+    "stock": 12
+  },
+  {
+    "codigo": "PROD040",
+    "nombre": "Producto 40",
+    "descripcion": "Descripción del producto 40",
+    "precio_unitario": 490.00,
+    "stock": 11
+  },
+  {
+    "codigo": "PROD041",
+    "nombre": "Producto 41",
+    "descripcion": "Descripción del producto 41",
+    "precio_unitario": 500.00,
+    "stock": 10
+  },
+  {
+    "codigo": "PROD042",
+    "nombre": "Producto 42",
+    "descripcion": "Descripción del producto 42",
+    "precio_unitario": 510.00,
+    "stock": 9
+  },
+  {
+    "codigo": "PROD043",
+    "nombre": "Producto 43",
+    "descripcion": "Descripción del producto 43",
+    "precio_unitario": 520.00,
+    "stock": 8
+  },
+  {
+    "codigo": "PROD044",
+    "nombre": "Producto 44",
+    "descripcion": "Descripción del producto 44",
+    "precio_unitario": 530.00,
+    "stock": 7
+  },
+  {
+    "codigo": "PROD045",
+    "nombre": "Producto 45",
+    "descripcion": "Descripción del producto 45",
+    "precio_unitario": 540.00,
+    "stock": 6
+  },
+  {
+    "codigo": "PROD046",
+    "nombre": "Producto 46",
+    "descripcion": "Descripción del producto 46",
+    "precio_unitario": 550.00,
+    "stock": 5
+  },
+  {
+    "codigo": "PROD047",
+    "nombre": "Producto 47",
+    "descripcion": "Descripción del producto 47",
+    "precio_unitario": 560.00,
+    "stock": 4
+  },
+  {
+    "codigo": "PROD048",
+    "nombre": "Producto 48",
+    "descripcion": "Descripción del producto 48",
+    "precio_unitario": 570.00,
+    "stock": 3
+  },
+  {
+    "codigo": "PROD049",
+    "nombre": "Producto 49",
+    "descripcion": "Descripción del producto 49",
+    "precio_unitario": 580.00,
+    "stock": 2
+  },
+  {
+    "codigo": "PROD050",
+    "nombre": "Producto 50",
+    "descripcion": "Descripción del producto 50",
+    "precio_unitario": 590.00,
+    "stock": 1
+  }
+]

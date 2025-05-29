@@ -55,6 +55,18 @@ module.exports = (sequelize) => {
         timestamps: true // Registra fecha de creación y actualización
     });
 
+        // Método de instancia para exponer solo los atributos públicos
+    Usuario.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            nombre: this.nombre,
+            email: this.email,
+            rol: this.rol
+            // agrega aquí otros campos públicos si lo necesitas
+        };
+    };
+
+
     return Usuario;
 };
 

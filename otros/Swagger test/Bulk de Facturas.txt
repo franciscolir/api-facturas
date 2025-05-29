@@ -1,0 +1,208 @@
+[
+  {
+    "cliente_id": 5,
+    "vendedor_id": 2,
+    "condicion_pago_id": 1,
+    "fecha": "2024-06-03",
+    "detalles": [
+      { "producto_id": 12, "cantidad": 3 },
+      { "producto_id": 7, "cantidad": 1 }
+    ]
+  },
+  {
+    "cliente_id": 11,
+    "vendedor_id": 4,
+    "condicion_pago_id": 2,
+    "fecha": "2024-06-14",
+    "detalles": [
+      { "producto_id": 22, "cantidad": 4 },
+      { "producto_id": 5, "cantidad": 2 },
+      { "producto_id": 33, "cantidad": 1 }
+    ]
+  },
+  {
+    "cliente_id": 18,
+    "vendedor_id": 1,
+    "condicion_pago_id": 3,
+    "fecha": "2024-06-21",
+    "detalles": [
+      { "producto_id": 3, "cantidad": 5 },
+      { "producto_id": 27, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 2,
+    "vendedor_id": 3,
+    "condicion_pago_id": 4,
+    "fecha": "2024-06-06",
+    "detalles": [
+      { "producto_id": 19, "cantidad": 1 },
+      { "producto_id": 9, "cantidad": 3 },
+      { "producto_id": 31, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 16,
+    "vendedor_id": 6,
+    "condicion_pago_id": 2,
+    "fecha": "2024-06-10",
+    "detalles": [
+      { "producto_id": 11, "cantidad": 6 },
+      { "producto_id": 40, "cantidad": 1 }
+    ]
+  },
+  {
+    "cliente_id": 8,
+    "vendedor_id": 5,
+    "condicion_pago_id": 3,
+    "fecha": "2024-06-13",
+    "detalles": [
+      { "producto_id": 24, "cantidad": 4 },
+      { "producto_id": 2, "cantidad": 5 }
+    ]
+  },
+  {
+    "cliente_id": 14,
+    "vendedor_id": 4,
+    "condicion_pago_id": 1,
+    "fecha": "2024-06-02",
+    "detalles": [
+      { "producto_id": 14, "cantidad": 2 },
+      { "producto_id": 38, "cantidad": 3 },
+      { "producto_id": 17, "cantidad": 1 }
+    ]
+  },
+  {
+    "cliente_id": 7,
+    "vendedor_id": 1,
+    "condicion_pago_id": 2,
+    "fecha": "2024-06-05",
+    "detalles": [
+      { "producto_id": 8, "cantidad": 2 },
+      { "producto_id": 36, "cantidad": 4 }
+    ]
+  },
+  {
+    "cliente_id": 19,
+    "vendedor_id": 3,
+    "condicion_pago_id": 4,
+    "fecha": "2024-06-15",
+    "detalles": [
+      { "producto_id": 6, "cantidad": 3 },
+      { "producto_id": 29, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 1,
+    "vendedor_id": 2,
+    "condicion_pago_id": 3,
+    "fecha": "2024-06-01",
+    "detalles": [
+      { "producto_id": 10, "cantidad": 2 },
+      { "producto_id": 15, "cantidad": 5 }
+    ]
+  },
+  {
+    "cliente_id": 3,
+    "vendedor_id": 5,
+    "condicion_pago_id": 1,
+    "fecha": "2024-06-20",
+    "detalles": [
+      { "producto_id": 23, "cantidad": 6 },
+      { "producto_id": 16, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 6,
+    "vendedor_id": 6,
+    "condicion_pago_id": 4,
+    "fecha": "2024-06-09",
+    "detalles": [
+      { "producto_id": 35, "cantidad": 1 },
+      { "producto_id": 20, "cantidad": 7 },
+      { "producto_id": 13, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 20,
+    "vendedor_id": 2,
+    "condicion_pago_id": 3,
+    "fecha": "2024-06-12",
+    "detalles": [
+      { "producto_id": 1, "cantidad": 2 },
+      { "producto_id": 37, "cantidad": 4 }
+    ]
+  },
+  {
+    "cliente_id": 10,
+    "vendedor_id": 3,
+    "condicion_pago_id": 2,
+    "fecha": "2024-06-07",
+    "detalles": [
+      { "producto_id": 26, "cantidad": 3 },
+      { "producto_id": 30, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 13,
+    "vendedor_id": 1,
+    "condicion_pago_id": 1,
+    "fecha": "2024-06-18",
+    "detalles": [
+      { "producto_id": 18, "cantidad": 1 },
+      { "producto_id": 28, "cantidad": 6 },
+      { "producto_id": 4, "cantidad": 3 }
+    ]
+  },
+  {
+    "cliente_id": 9,
+    "vendedor_id": 4,
+    "condicion_pago_id": 2,
+    "fecha": "2024-06-04",
+    "detalles": [
+      { "producto_id": 39, "cantidad": 3 },
+      { "producto_id": 25, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 4,
+    "vendedor_id": 5,
+    "condicion_pago_id": 4,
+    "fecha": "2024-06-17",
+    "detalles": [
+      { "producto_id": 21, "cantidad": 5 },
+      { "producto_id": 34, "cantidad": 1 }
+    ]
+  },
+  {
+    "cliente_id": 15,
+    "vendedor_id": 6,
+    "condicion_pago_id": 1,
+    "fecha": "2024-06-19",
+    "detalles": [
+      { "producto_id": 32, "cantidad": 4 },
+      { "producto_id": 19, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 12,
+    "vendedor_id": 3,
+    "condicion_pago_id": 3,
+    "fecha": "2024-06-16",
+    "detalles": [
+      { "producto_id": 5, "cantidad": 3 },
+      { "producto_id": 14, "cantidad": 1 },
+      { "producto_id": 10, "cantidad": 2 }
+    ]
+  },
+  {
+    "cliente_id": 17,
+    "vendedor_id": 1,
+    "condicion_pago_id": 2,
+    "fecha": "2024-06-11",
+    "detalles": [
+      { "producto_id": 2, "cantidad": 6 },
+      { "producto_id": 6, "cantidad": 3 }
+    ]
+  }
+]

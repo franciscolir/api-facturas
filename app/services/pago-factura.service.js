@@ -4,40 +4,11 @@
  */
 const BaseService = require('./base.service');
 const { PagoFactura, Factura, CondicionesPago, Cliente } = require('../models');
+const { Op } = require('sequelize');
 
 class PagoFacturaService extends BaseService {
     constructor() {
         super(PagoFactura);
-    }
-
-    /**
-     * Obtiene todos los pagos de factura con sus relaciones
-     * @returns {Promise<Array>} Lista de pagos de factura con relaciones
-     */
-    async findAllWithDetails() {
-        return await this.model.findAll({
-            include: [
-                { model: Factura },
-                { model: CondicionesPago },
-                { model: Cliente }
-            ]
-        });
-    }
-
-    /**
-     * Obtiene un pago de factura específico con sus relaciones
-     * @param {number} id - ID del pago de factura
-     * @returns {Promise<Object>} Pago de factura con relaciones
-     */
-    async findByIdWithDetails(id) {
-        return await this.model.findOne({
-            where: { id, activo: true },
-            include: [
-                { model: Factura },
-                { model: CondicionesPago },
-                { model: Cliente }
-            ]
-        });
     }
 
     /**
@@ -105,13 +76,24 @@ class PagoFacturaService extends BaseService {
         return pagosVencidos;
     }
 
+
+
     /**
-     * Obtiene todos los pagos de factura marcados como vencidos
-     * @returns {Promise<Array>} Lista de pagos vencidos
+     * Consulta pagos de factura por estado y opcionalmente por cliente.
+     * @param {string} estado - Estado del pago ('vencida', 'pagada', 'pendiente')
+     * @param {number|null} clienteId - ID del cliente (opcional)
+     * @returns {Promise<Array>} Lista de pagos filtrados
      */
-    async findVencidas() {
+    async findByEstado({ estado, clienteId = null }) {
+        const where = {
+            estado,
+            activo: true
+        };
+        if (clienteId && !isNaN(clienteId)) {
+            where.cliente_id_facturas = clienteId;
+        }
         return await this.model.findAll({
-            where: { estado: 'vencida', activo: true },
+            where,
             include: [
                 { model: Factura },
                 { model: CondicionesPago },
@@ -121,93 +103,23 @@ class PagoFacturaService extends BaseService {
     }
 
     /**
-     * Obtiene todos los pagos de factura marcados como vencidos en el día de hoy
+     * Consulta pagos de factura vencidos hoy (estado = 'vencida' y vencimiento = hoy)
      * @returns {Promise<Array>} Lista de pagos vencidos hoy
      */
     async findVencidasHoy() {
         const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0); // Inicio del día
+        hoy.setHours(0, 0, 0, 0);
         const manana = new Date(hoy);
-        manana.setDate(hoy.getDate() + 1); // Siguiente día
+        manana.setDate(hoy.getDate() + 1);
 
         return await this.model.findAll({
             where: {
                 estado: 'vencida',
                 activo: true,
                 vencimiento: {
-                    [this.model.sequelize.Op.gte]: hoy,
-                    [this.model.sequelize.Op.lt]: manana
+                    [Op.gte]: hoy,
+                    [Op.lt]: manana
                 }
-            },
-            include: [
-                { model: Factura },
-                { model: CondicionesPago },
-                { model: Cliente }
-            ]
-        });
-    }
-
-    /**
-     * Obtiene todos los pagos de factura marcados como pagados
-     * @returns {Promise<Array>} Lista de pagos pagados
-     */
-    async findPagadas() {
-        return await this.model.findAll({
-            where: { estado: 'pagada', activo: true },
-            include: [
-                { model: Factura },
-                { model: CondicionesPago },
-                { model: Cliente }
-            ]
-        });
-    }
-
-    /**
-     * Obtiene todos los pagos de factura en estado pendiente
-     * @returns {Promise<Array>} Lista de pagos pendientes
-     */
-    async findPendientes() {
-        return await this.model.findAll({
-            where: { estado: 'pendiente', activo: true },
-            include: [
-                { model: Factura },
-                { model: CondicionesPago },
-                { model: Cliente }
-            ]
-        });
-    }
-
-    /**
-     * Obtiene los pagos de factura por estado y cliente
-     * @param {string} estado - Estado del pago ('vencida', 'pagada', 'pendiente')
-     * @param {number} clienteId - ID del cliente
-     * @returns {Promise<Array>} Lista de pagos filtrados
-     */
-    async findByEstadoYCliente(estado, clienteId) {
-        return await this.model.findAll({
-            where: {
-                estado,
-                activo: true,
-                cliente_id_facturas: clienteId
-            },
-            include: [
-                { model: Factura },
-                { model: CondicionesPago },
-                { model: Cliente }
-            ]
-        });
-    }
-
-    /**
-     * Obtiene los pagos de factura por estado
-     * @param {string} estado - Estado del pago ('vencida', 'pagada', 'pendiente')
-     * @returns {Promise<Array>} Lista de pagos filtrados
-     */
-    async findByEstado(estado) {
-        return await this.model.findAll({
-            where: {
-                estado,
-                activo: true
             },
             include: [
                 { model: Factura },
@@ -218,6 +130,4 @@ class PagoFacturaService extends BaseService {
     }
 }
 
-
-module.exports = PagoFacturaService;
 module.exports = new PagoFacturaService();

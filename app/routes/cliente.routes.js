@@ -108,6 +108,54 @@ router.get('/:id', clienteController.getById.bind(clienteController));
  *         description: Error del servidor
  */
 router.post('/', clienteController.create.bind(clienteController));
+/**
+ * @openapi
+ * /api/clientes/bulk:
+ *   post:
+ *     summary: Crear múltiples clientes
+ *     description: Permite crear varios clientes en una sola solicitud.
+ *     tags:
+ *       - Clientes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/Cliente'
+ *           example:
+ *             - rut: "12345678-9"
+ *               nombre: "Juan Pérez"
+ *               email: "juan@correo.com"
+ *               telefono: "123456789"
+ *               direccion: "Calle Falsa 123"
+ *               activo: true
+ *             - rut: "98765432-1"
+ *               nombre: "Ana López"
+ *               email: "ana@correo.com"
+ *               telefono: "987654321"
+ *               direccion: "Avenida Siempre Viva 742"
+ *               activo: true
+ *     responses:
+ *       201:
+ *         description: Clientes creados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Cliente'
+ *       400:
+ *         description: Datos inválidos o error de validación
+ *       401:
+ *         description: No autorizado
+ *       500:
+ *         description: Error del servidor
+ */
+router.post('/bulk', clienteController.createBulk.bind(clienteController));
 
 /**
  * @openapi
@@ -216,6 +264,6 @@ router.delete('/:id', clienteController.delete.bind(clienteController));
  */
 router.get('/rut/:rut', clienteController.getByRut.bind(clienteController));
 
-router.post('/bulk', clienteController.createBulk.bind(clienteController));
+
 
 module.exports = router; 
