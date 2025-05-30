@@ -76,9 +76,11 @@ module.exports = (sequelize, DataTypes) => {
     Productos.prototype.toPublicJSON = function() {
         return {
             id: this.id,
+            codigo: this.codigo,
             nombre: this.nombre,
-            email: this.email,
-            rol: this.rol
+            descripcion: this.descripcion,
+            precio_unitario: this.precio_unitario,
+            stock: this.stock,
             // agrega aquí otros campos públicos si lo necesitas
         };
     };
