@@ -68,7 +68,7 @@ class UsuarioController extends BaseController {
             if (!usuario) {
                 return res.status(404).json({ message: 'No se encontró el usuario' });
             }
-            res.json(usuario);
+            res.json(usuario ? usuario.toPublicJSON() : {});
         } catch (error) {
             res.status(500).json({ message: 'Error al obtener usuario', error: error.message });
         }

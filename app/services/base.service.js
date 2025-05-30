@@ -31,7 +31,7 @@ class BaseService {
      * @param {number} id - ID del registro a buscar
      * @returns {Promise<Object|null>} Registro encontrado o null
      */
-    async findById(id) {
+    async findByPk(id) {
         return await this.model.findOne({
             where: {
                 id,

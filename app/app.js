@@ -15,6 +15,7 @@ const express = require('express');
 const { sequelize } = require('./models');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
+const cors = require('cors');
 
 // Importar rutas
 const clienteRoutes = require('./routes/cliente.routes');
@@ -31,6 +32,8 @@ const app = express();
 app.disable('x-powered-by');
 // Middleware para procesar JSON en las peticiones
 app.use(express.json());
+app.use(cors());
+app.use(express.static('public'));
 
 /**
  * Middleware para el manejo centralizado de errores

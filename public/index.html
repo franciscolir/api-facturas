@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>API Test UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .json-view { background: #222; color: #fff; padding: 1rem; border-radius: 8px; font-size: 0.95rem; }
+        .attr-list { background: #fff; border-radius: 8px; padding: 1rem; }
+        .pagination { margin-top: 1rem; }
+        .model-list { background: #fff; border-radius: 8px; padding: 1rem; min-height: 200px; }
+        .model-list .active { background: #0d6efd; color: #fff; }
+        .param-inline { width: 220px; display: inline-block; margin-left: 8px; }
+        .endpoint-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .endpoint-row .btn { min-width: 120px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">API Facturas Test UI</span>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        <!-- Main Body: 2 Rows -->
+        <div class="row mb-3" style="min-height: 320px;">
+            <!-- Columna 1: Lista de modelos -->
+            <div class="col-4">
+                <div class="model-list">
+                    <div id="modelList"></div>
+                </div>
+            </div>
+            <!-- Columna 2: Endpoints -->
+            <div class="col-8">
+                <div class="accordion" id="endpointsAccordion">
+                    <!-- GET -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingGet">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGet" aria-expanded="true" aria-controls="collapseGet">
+                                GET
+                            </button>
+                        </h2>
+                        <div id="collapseGet" class="accordion-collapse collapse show" aria-labelledby="headingGet" data-bs-parent="#endpointsAccordion">
+                            <div class="accordion-body" id="getEndpoints"></div>
+                        </div>
+                    </div>
+                    <!-- POST -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPost">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePost" aria-expanded="false" aria-controls="collapsePost">
+                                POST
+                            </button>
+                        </h2>
+                        <div id="collapsePost" class="accordion-collapse collapse" aria-labelledby="headingPost" data-bs-parent="#endpointsAccordion">
+                            <div class="accordion-body" id="postEndpoints"></div>
+                        </div>
+                    </div>
+                    <!-- PUT -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPut">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePut" aria-expanded="false" aria-controls="collapsePut">
+                                PUT
+                            </button>
+                        </h2>
+                        <div id="collapsePut" class="accordion-collapse collapse" aria-labelledby="headingPut" data-bs-parent="#endpointsAccordion">
+                            <div class="accordion-body" id="putEndpoints"></div>
+                        </div>
+                    </div>
+                    <!-- DELETE -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDelete">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
+                                DELETE
+                            </button>
+                        </h2>
+                        <div id="collapseDelete" class="accordion-collapse collapse" aria-labelledby="headingDelete" data-bs-parent="#endpointsAccordion">
+                            <div class="accordion-body" id="deleteEndpoints"></div>
+                        </div>
+                    </div>
+                    <!-- PATCH opcional -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPatch">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePatch" aria-expanded="false" aria-controls="collapsePatch">
+                                PATCH
+                            </button>
+                        </h2>
+                        <div id="collapsePatch" class="accordion-collapse collapse" aria-labelledby="headingPatch" data-bs-parent="#endpointsAccordion">
+                            <div class="accordion-body" id="patchEndpoints"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Resultados -->
+        <div class="row" style="min-height: 320px;">
+            <div class="col-6">
+                <h2>Modelo</h2>
+                <div class="attr-list" id="attrList">
+                    <!-- Lista de atributos de un registro o paginación -->
+                </div>
+            </div>
+            <div class="col-6">
+                <h2>Json</h2>
+                <div class="json-view" id="jsonView">
+                    <!-- JSON completo -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuración de endpoints por modelo
+        const apiBase = '/api';
+        const endpoints = {
+            usuario: {
+                GET: [
+                    { name: 'Obtener todos', path: '/usuarios', params: '' },
+                    { name: 'Obtener por ID', path: '/usuarios/{id}', params: '{ "id": 1 }' },
+                    { name: 'Mi usuario', path: '/usuarios/me', params: '' }
+                ],
+                POST: [
+                    { name: 'Crear usuario', path: '/usuarios', params: '{ "nombre": "Ejemplo", "email": "ejemplo@mail.com", "password": "123456", "rol": "usuario" }' },
+                    { name: 'Login', path: '/usuarios/login', params: '{ "email": "ejemplo@mail.com", "password": "123456" }' }
+                ],
+                PUT: [
+                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "nombre": "Nuevo Nombre" }' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar usuario', path: '/usuarios/{id}', params: '{ "id": 1 }' }
+                ]
+            },
+            producto: {
+                GET: [
+                    { name: 'Obtener todos', path: '/productos', params: '' },
+                    { name: 'Obtener por ID', path: '/productos/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por código', path: '/productos/codigo/{codigo}', params: '{ "codigo": "P001" }' }
+                ],
+                POST: [
+                    { name: 'Crear producto', path: '/productos', params: '{ "codigo": "P001", "nombre": "Producto", "precio_unitario": 100, "stock": 10 }' },
+                    { name: 'Crear múltiples productos', path: '/productos/bulk', params: '[{ "codigo": "P002", "nombre": "Producto 2", "precio_unitario": 200, "stock": 20 }]' }
+                ],
+                PUT: [
+                    { name: 'Actualizar producto', path: '/productos/{id}', params: '{ "nombre": "Nuevo Producto" }' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar producto', path: '/productos/{id}', params: '{ "id": 1 }' }
+                ]
+            },
+            vendedor: {
+                GET: [
+                    { name: 'Obtener todos', path: '/vendedores', params: '' },
+                    { name: 'Obtener por ID', path: '/vendedores/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por código', path: '/vendedores/codigo/{codigo}', params: '{ "codigo": "VEN001" }' }
+                ],
+                POST: [
+                    { name: 'Crear vendedor', path: '/vendedores', params: '{ "nombre": "Vendedor", "email": "vendedor@mail.com", "telefono": "912345678" }' },
+                    { name: 'Crear múltiples vendedores', path: '/vendedores/bulk', params: '[{ "nombre": "Vendedor 2", "email": "v2@mail.com", "telefono": "912345679" }]' }
+                ],
+                PUT: [
+                    { name: 'Actualizar vendedor', path: '/vendedores/{id}', params: '{ "nombre": "Nuevo Vendedor" }' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar vendedor', path: '/vendedores/{id}', params: '{ "id": 1 }' }
+                ]
+            },
+            folios: {
+                GET: [
+                    { name: 'Obtener todos', path: '/folios', params: '' },
+                    { name: 'Obtener por ID', path: '/folios/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por tipo', path: '/folios/tipo/{tipo}', params: '{ "tipo": "FACTURA" }' },
+                    { name: 'Obtener por tipo y serie', path: '/folios/tipo/{tipo}/serie/{serie}', params: '{ "tipo": "FACTURA", "serie": "A" }' },
+                    { name: 'Obtener siguiente disponible', path: '/folios/siguiente/{tipo}/{serie}', params: '{ "tipo": "FACTURA", "serie": "A" }' }
+                ],
+                POST: [
+                    { name: 'Crear folio', path: '/folios', params: '{ "numero": 123456, "serie": "A", "tipo": "FACTURA" }' },
+                    { name: 'Crear múltiples folios', path: '/folios/bulk', params: '[{ "numero": 123457, "serie": "A", "tipo": "FACTURA" }]' }
+                ],
+                PUT: [
+                    { name: 'Actualizar folio', path: '/folios/{id}', params: '{ "estado": "usado" }' },
+                    { name: 'Usar folio', path: '/folios/{id}/usar', params: '{ "id": 1 }' },
+                    { name: 'Anular folio', path: '/folios/{id}/anular', params: '{ "id": 1 }' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar folio', path: '/folios/{id}', params: '{ "id": 1 }' }
+                ]
+            },
+            condicion_pago: {
+                GET: [
+                    { name: 'Obtener todos', path: '/condiciones-pago', params: '' },
+                    { name: 'Obtener por ID', path: '/condiciones-pago/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por código', path: '/condiciones-pago/codigo/{codigo}', params: '{ "codigo": "CONTADO" }' },
+                    { name: 'Obtener por plazo', path: '/condiciones-pago/plazo/{plazo}', params: '{ "plazo": 30 }' },
+                    { name: 'Obtener por descripción', path: '/condiciones-pago/descripcion/{descripcion}', params: '{ "descripcion": "contado" }' }
+                ],
+                POST: [
+                    { name: 'Crear condición', path: '/condiciones-pago', params: '{ "codigo": "CONTADO", "descripcion": "Pago al contado", "plazo": 0 }' },
+                    { name: 'Crear múltiples condiciones', path: '/condiciones-pago/bulk', params: '[{ "codigo": "CREDITO", "descripcion": "Pago a crédito", "plazo": 30 }]' }
+                ],
+                PUT: [
+                    { name: 'Actualizar condición', path: '/condiciones-pago/{id}', params: '{ "descripcion": "Pago inmediato" }' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar condición', path: '/condiciones-pago/{id}', params: '{ "id": 1 }' }
+                ]
+            },
+            clientes: {
+                GET: [
+                    { name: 'Obtener todos', path: '/clientes', params: '' },
+                    { name: 'Obtener por ID', path: '/clientes/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por RUT', path: '/clientes/rut/{rut}', params: '{ "rut": "12345678-9" }' }
+                ],
+                POST: [
+                    { name: 'Crear cliente', path: '/clientes', params: '{ "rut": "12345678-9", "razon_social": "Empresa", "direccion": "Calle 123", "comuna": "Comuna", "ciudad": "Ciudad", "giro": "Comercio", "email": "cliente@mail.com", "telefono": "912345678" }' },
+                    { name: 'Crear múltiples clientes', path: '/clientes/bulk', params: '[{ "rut": "98765432-1", "razon_social": "Empresa 2", "direccion": "Calle 456", "comuna": "Comuna", "ciudad": "Ciudad", "giro": "Servicios", "email": "cliente2@mail.com", "telefono": "912345679" }]' }
+                ],
+                PUT: [
+                    { name: 'Actualizar cliente', path: '/clientes/{id}', params: '{ "razon_social": "Nuevo Nombre" }' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar cliente', path: '/clientes/{id}', params: '{ "id": 1 }' }
+                ]
+            },
+            factura: {
+                GET: [
+                    { name: 'Obtener todas', path: '/facturas', params: '' },
+                    { name: 'Obtener por ID', path: '/facturas/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener todas con detalles', path: '/facturas/with-details', params: '' },
+                    { name: 'Obtener por ID con detalles', path: '/facturas/{id}/with-details', params: '{ "id": 1 }' },
+                    { name: 'Obtener por cliente', path: '/facturas/cliente/{clienteId}', params: '{ "clienteId": 1 }' },
+                    { name: 'Obtener por vendedor', path: '/facturas/vendedor/{vendedorId}', params: '{ "vendedorId": 1 }' },
+                    { name: 'Obtener por fecha', path: '/facturas/fecha/{fecha}', params: '{ "fecha": "2025-05-26" }' },
+                    { name: 'Obtener borrador', path: '/facturas/borrador', params: '' }
+                ],
+                POST: [
+                    { name: 'Crear factura', path: '/facturas', params: '{ "cliente_id": 1, "vendedor_id": 1, "condicion_pago_id": 1, "detalles": [ { "producto_id": 1, "cantidad": 2, "precio_unitario": 100 } ] }' },
+                    { name: 'Crear múltiples facturas', path: '/facturas/bulk', params: '[{ "cliente_id": 1, "vendedor_id": 1, "condicion_pago_id": 1, "detalles": [ { "producto_id": 1, "cantidad": 2, "precio_unitario": 100 } ] }]' }
+                ],
+                PUT: [
+                    { name: 'Actualizar factura', path: '/facturas/{id}', params: '{ "estado": "emitida" }' }
+                ],
+                PATCH: [
+                    { name: 'Asignar folios a borrador', path: '/facturas/asignar-folios-borrador', params: '' }
+                ],
+                DELETE: [
+                    { name: 'Eliminar factura', path: '/facturas/{id}', params: '{ "id": 1 }' }
+                ]
+            }
+        };
+
+        let currentModel = 'usuario';
+        let lastResult = null;
+        let currentPage = 1;
+        let pageSize = 10;
+        let formMode = null; // 'form' o 'json'
+        let currentVerb = null;
+        let currentEndpointIdx = null;
+
+        function renderModelList() {
+            const models = Object.keys(endpoints);
+            const list = models.map(model =>
+                `<button class="list-group-item list-group-item-action${model === currentModel ? ' active' : ''}" onclick="selectModel('${model}')">${capitalize(model.replace('_', ' '))}</button>`
+            ).join('');
+            document.getElementById('modelList').innerHTML = `<div class="list-group">${list}</div>`;
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function selectModel(model) {
+            currentModel = model;
+            renderModelList();
+            renderEndpoints();
+            clearResults();
+        }
+
+        function renderEndpoints() {
+            ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].forEach(verb => {
+                const container = document.getElementById(verb.toLowerCase() + 'Endpoints');
+                if (!container) return;
+                container.innerHTML = '';
+                (endpoints[currentModel]?.[verb] || []).forEach((ep, idx) => {
+                    const needsParams = ep.path.match(/{(\w+)}/g);
+                    let paramPlaceholder = '';
+                    let paramId = `${verb}_${currentModel}_${idx}_param`;
+                    let btnDisabled = false;
+
+                    if ((verb === 'GET' || verb === 'DELETE') && needsParams) {
+                        paramPlaceholder = `<input type="number" class="form-control param-inline" id="${paramId}" placeholder='${ep.params ? ep.params : "Número"}' oninput="validateParamsNumber('${paramId}', '${verb}', '${ep.path}', ${idx})">`;
+                        btnDisabled = true;
+                    }
+
+                    // Elimina el botón Formulario/JSON del acordeón, deja solo el principal
+                    let extraBtns = '';
+
+                    container.innerHTML += `
+                        <div class="endpoint-row">
+                            <button class="btn btn-outline-${verb === 'GET' ? 'primary' : verb === 'POST' ? 'success' : verb === 'PUT' ? 'warning' : verb === 'PATCH' ? 'info' : 'danger'} btn-sm"
+                                id="btn_${paramId}"
+                                data-paramid="${paramId}"
+                                onclick="${(verb === 'POST' || verb === 'PUT') ? `showFormOrJson('${verb}', ${idx}, 'form')` : `callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}')`}"
+                                ${btnDisabled ? 'disabled' : ''}>
+                                ${ep.name}
+                            </button>
+                            ${paramPlaceholder}
+                            ${extraBtns}
+                            <small class="text-muted ms-2">${ep.path}</small>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // Habilita el botón solo si el input tiene un número válido (GET/DELETE)
+        function validateParamsNumber(paramId, verb, path, idx) {
+            const input = document.getElementById(paramId);
+            const btn = document.getElementById('btn_' + paramId);
+            let valid = false;
+            if (input.value.trim() && !isNaN(Number(input.value))) {
+                valid = true;
+            }
+            btn.disabled = !valid;
+        }
+
+        function showFormOrJson(verb, idx, mode) {
+            formMode = mode;
+            currentVerb = verb;
+            currentEndpointIdx = idx;
+            renderFormOrJson();
+        }
+
+        function renderFormOrJson() {
+            const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
+            let formHtml = '';
+            let jsonHtml = '';
+            let example = {};
+            try {
+                example = ep.params ? JSON.parse(ep.params) : {};
+            } catch { example = {}; }
+
+            // Botones arriba de cada columna
+            let formBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('form')">Formulario</button>`;
+            let jsonBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('json')">JSON</button>`;
+
+            if (formMode === 'form') {
+                formHtml = formBtn + `<form id="mainForm" oninput="syncFormToJson()">
+                    ${Object.keys(example).map(field => `
+                        <div class="mb-2">
+                            <label class="form-label">${field}</label>
+                            <input type="text" class="form-control" name="${field}" id="formField_${field}">
+                        </div>
+                    `).join('')}
+                    <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('form')">Enviar</button>
+                </form>`;
+                jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(example, null, 2)}</textarea>`;
+            } else {
+                formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
+                jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(example, null, 2)}</textarea>
+                    <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('json')">Enviar</button>`;
+            }
+
+            document.getElementById('attrList').innerHTML = formHtml;
+            document.getElementById('jsonView').innerHTML = jsonHtml;
+        }
+
+        function setFormMode(mode) {
+            formMode = mode;
+            renderFormOrJson();
+        }
+
+        function syncFormToJson() {
+            const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
+            let example = {};
+            try {
+                example = ep.params ? JSON.parse(ep.params) : {};
+            } catch { example = {}; }
+            let obj = {};
+            Object.keys(example).forEach(field => {
+                obj[field] = document.getElementById(`formField_${field}`).value;
+            });
+            document.getElementById('jsonInput').value = JSON.stringify(obj, null, 2);
+        }
+
+        function submitFormOrJson(mode) {
+            const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
+            let url = apiBase + ep.path;
+            let body = {};
+            if (mode === 'form') {
+                const form = document.getElementById('mainForm');
+                const formData = new FormData(form);
+                formData.forEach((value, key) => {
+                    body[key] = value;
+                });
+            } else {
+                try {
+                    body = JSON.parse(document.getElementById('jsonInput').value);
+                } catch {
+                    alert('JSON inválido');
+                    return;
+                }
+            }
+            let options = { method: currentVerb, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+            fetch(url, options)
+                .then(r => r.json().then(data => ({ status: r.status, data })))
+                .then(({ status, data }) => {
+                    lastResult = data;
+                    currentPage = 1;
+                    renderResult(data, status);
+                    if (status >= 200 && status < 300) {
+                        alert('Registro exitoso');
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('attrList').innerHTML = '<div class="text-danger">Error en la petición</div>';
+                    document.getElementById('jsonView').innerHTML = '';
+                });
+        }
+
+        function clearResults() {
+            document.getElementById('attrList').innerHTML = '';
+            document.getElementById('jsonView').innerHTML = '';
+        }
+
+        function callEndpoint(verb, path, idx, paramId) {
+            // Busca el input de params asociado usando el id recibido
+            const input = document.getElementById(paramId);
+            let params = {};
+            let url = apiBase + path;
+
+            // Si hay input, procesa params
+            if (input && input.value.trim()) {
+                params = { id: Number(input.value) };
+            }
+
+            // Reemplaza {id} y otros params en la ruta
+            url = url.replace(/{(\w+)}/g, (_, k) => {
+                if (params[k] !== undefined && params[k] !== null) {
+                    const val = params[k];
+                    delete params[k];
+                    return val;
+                }
+                return `{${k}}`;
+            });
+
+            let options = { method: verb, headers: { 'Content-Type': 'application/json' } };
+            fetch(url, options)
+                .then(r => r.json().then(data => ({ status: r.status, data })))
+                .then(({ status, data }) => {
+                    lastResult = data;
+                    currentPage = 1;
+                    renderResult(data, status);
+                })
+                .catch(err => {
+                    document.getElementById('attrList').innerHTML = '<div class="text-danger">Error en la petición</div>';
+                    document.getElementById('jsonView').innerHTML = '';
+                });
+        }
+
+        function renderResult(data, status) {
+            // Si es array, paginar y mostrar la página actual
+            if (Array.isArray(data)) {
+                renderPagination(data);
+                renderAttrList(data.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+                renderJsonView(data);
+            } else {
+                renderAttrList(data);
+                renderJsonView(data);
+            }
+        }
+
+        function renderAttrList(obj) {
+            const attrList = document.getElementById('attrList');
+            // Si recibe un array, muestra tabla paginada
+            if (Array.isArray(obj)) {
+                if (!obj.length) {
+                    attrList.innerHTML = '<div class="text-muted">Sin datos</div>';
+                    return;
+                }
+                // Encabezados de tabla
+                const headers = Object.keys(obj[0]);
+                let html = '<div class="table-responsive"><table class="table table-bordered table-sm mb-0">';
+                html += '<thead class="table-light"><tr>';
+                headers.forEach(h => html += `<th>${h}</th>`);
+                html += '</tr></thead><tbody>';
+                obj.forEach(item => {
+                    html += '<tr>';
+                    headers.forEach(h => {
+                        let val = item[h];
+                        if (typeof val === 'object' && val !== null) val = JSON.stringify(val);
+                        html += `<td>${val !== undefined ? val : ''}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+                attrList.innerHTML = html;
+            } else if (!obj) {
+                attrList.innerHTML = '<div class="text-muted">Sin datos</div>';
+            } else {
+                // Muestra como formulario simple (solo lectura)
+                let html = '<form>';
+                Object.entries(obj).forEach(([k, v]) => {
+                    html += `
+                        <div class="mb-2">
+                            <label class="form-label">${k}</label>
+                            <input type="text" class="form-control" value="${typeof v === 'object' ? JSON.stringify(v) : v}" readonly>
+                        </div>
+                    `;
+                });
+                html += '</form>';
+                attrList.innerHTML = html;
+            }
+        }
+
+        function renderJsonView(obj) {
+            document.getElementById('jsonView').innerHTML = `<pre>${JSON.stringify(obj, null, 2)}</pre>`;
+        }
+
+        function renderPagination(arr) {
+            const totalPages = Math.ceil(arr.length / pageSize);
+            let html = '';
+            if (totalPages > 1) {
+                html += '<nav><ul class="pagination">';
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<li class="page-item${i === currentPage ? ' active' : ''}">
+                        <button class="page-link" onclick="goToPage(${i})">${i}</button>
+                    </li>`;
+                }
+                html += '</ul></nav>';
+            }
+            // Agrega la paginación arriba de la tabla
+            const attrList = document.getElementById('attrList');
+            if (attrList) {
+                attrList.innerHTML = html + attrList.innerHTML;
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            if (Array.isArray(lastResult)) {
+                renderPagination(lastResult);
+                renderAttrList(lastResult.slice((page - 1) * pageSize, page * pageSize));
+                renderJsonView(lastResult);
+            }
+        }
+
+        // Inicialización
+        renderModelList();
+        renderEndpoints();
+    </script>
+</body>
+</html>
