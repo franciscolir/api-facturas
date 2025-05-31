@@ -60,5 +60,16 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: 'updated_at'  // Nombre de la columna para fecha de actualización
     });
   
+ DetallesFactura.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            factura_id: this.factura_id,
+            producto_id: this.producto_id,
+            cantidad: this.cantidad,
+            precio_unitario: this.precio_unitario,
+            subtotal: this.subtotal       
+        };
+    }
+
     return DetallesFactura;
   };

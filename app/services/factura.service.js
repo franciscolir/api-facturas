@@ -191,18 +191,37 @@ async findBorrador() {
      * @returns {Promise<Array>} Lista de facturas con todas sus relaciones
      */
     async findAllWithDetails() {
-        return await this.model.findAll({
-            include: [
-                { model: Cliente },
-                { model: Vendedor },
-                { model: CondicionPago },
-                { 
-                    model: DetalleFactura,
-                    include: [{ model: Producto }]
-                }
-            ]
-        });
-    }
+    return await this.model.findAll({
+        where: { activo: true },
+        attributes: ['fecha', 'total', 'subtotal', 'iva', 'folio_id', 'estado'],
+        include: [
+            {
+                model: Cliente,
+                attributes: ['rut', 'razon_social', 'direccion', 'giro'],
+                required: true
+            },
+            {
+                model: Vendedor,
+                attributes: ['nombre']
+            },
+            {
+                model: CondicionPago,
+                attributes: ['descripcion']
+            },
+            {
+                model: DetalleFactura,
+                attributes: ['cantidad', 'precio_unitario', 'subtotal'],
+                include: [
+                    {
+                        model: Producto,
+                        attributes: ['nombre', 'codigo']
+                    }
+                ]
+            }
+        ]
+    });
+}
+
 
     /**
      * Busca facturas por ID de cliente
@@ -257,20 +276,38 @@ async findBorrador() {
      * @param {number} id - ID de la factura a buscar
      * @returns {Promise<Object>} Factura con todas sus relaciones
      */
-    async findByPkWithDetails(id) {
-        return await this.model.findOne({
-            where: { id, activo: true },
-            include: [
-                { model: Cliente },
-                { model: Vendedor },
-                { model: CondicionPago },
-                { 
-                    model: DetalleFactura,
-                    include: [{ model: Producto }]
-                }
-            ]
-        });
-    }
+ async findByPkWithDetails(id) {
+    return await this.model.findOne({
+        where: { id, activo: true },
+        attributes: ['fecha', 'total','subtotal', 'iva', 'folio_id', 'estado'], // Atributos del modelo principal (ej. Factura)
+        include: [
+            {
+                model: Cliente,
+                attributes: ['rut','razon_social', 'direccion', 'giro'], // Atributos del cliente
+                required: true // Asegura que siempre se incluya el cliente
+            },
+            {
+                model: Vendedor,
+                attributes: ['nombre']
+            },
+            {
+                model: CondicionPago,
+                attributes: ['descripcion']
+            },
+            {
+                model: DetalleFactura,
+                attributes: ['cantidad', 'precio_unitario', 'subtotal'], // Atributos del detalle
+                include: [
+                    {
+                        model: Producto,
+                        attributes: ['nombre', 'codigo']
+                    }
+                ]
+            }
+        ]
+    });
+}
+
 }
 
 module.exports = new FacturaService();

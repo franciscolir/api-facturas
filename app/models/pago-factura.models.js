@@ -97,5 +97,19 @@ module.exports = (sequelize, DataTypes) => {
         PagoFactura.belongsTo(models.Cliente, { foreignKey: 'cliente_id_facturas' });
     };
 
+            // Método de instancia para exponer solo los atributos públicos
+    PagoFactura.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            factura_id: this.factura_id,
+            factura_fecha: this.factura_fecha,
+            factura_total: this.Factura.total,// Asegúrate de que este campo exista en el modelo Factura
+            condicion_pago_id_facturas: this.condicion_pago_id_facturas,
+            cliente_id_facturas: this.cliente_id_facturas,
+            vencimiento: this.vencimiento,
+            estado: this.estado
+            // agrega aquí otros campos públicos si lo necesitas
+        };
+    };
     return PagoFactura;
 };

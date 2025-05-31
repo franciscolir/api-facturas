@@ -98,6 +98,16 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     });
+   Folio.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            numero: this.numero,
+            serie: this.serie,
+            tipo: this.tipo,
+            estado: this.estado,
+            fecha_uso: this.fecha_uso 
+         };
+    };
 
     return Folio;
 };

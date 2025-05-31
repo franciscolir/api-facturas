@@ -65,6 +65,17 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
+            // Método de instancia para exponer solo los atributos públicos
+    CondicionPago.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            codigo: this.codigo,
+            descripcion: this.descripcion,
+            plazo: this.plazo,
+    
+            // agrega aquí otros campos públicos si lo necesitas
+        };
+    };
     return CondicionPago;
 };
   

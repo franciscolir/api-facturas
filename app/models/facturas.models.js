@@ -130,6 +130,17 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     });
-
+       Factura.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            fecha: this.fecha,
+            subtotal: this.subtotal,
+            iva: this.iva,
+            total: this.total,
+            vendedor_id: this.vendedor_id,
+            folio_id: this.folio_id,
+            estado: this.estado        
+        };
+    }
     return Factura;
 };

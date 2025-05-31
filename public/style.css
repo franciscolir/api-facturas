@@ -1,0 +1,135 @@
+     body { background: #f8f9fa; }
+    .json-view {
+        background: #222;
+        color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        overflow-x: auto;
+    }
+    .attr-list {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    .pagination {
+        margin-top: 1rem;
+    }
+    .model-list {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+        min-height: 200px;
+        margin-bottom: 1rem;
+    }
+    .model-list .active {
+        background: #0d6efd;
+        color: #fff;
+    }
+    .param-inline {
+        width: 220px;
+        display: inline-block;
+        margin-left: 8px;
+    }
+    .endpoint-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+    .endpoint-row .btn {
+        min-width: 120px;
+    }
+    .accordion-button.get {
+        background-color: #0d6efd; /* primary */
+        color: white;
+        font-weight: bold;
+    }
+    .accordion-button.post {
+        background-color: #198754; /* success */
+        color: white;
+        font-weight: bold;
+    }
+    .accordion-button.put {
+        background-color: #ffc107; /* warning */
+        color: black;
+        font-weight: bold;
+    }
+    .accordion-button.patch {
+        background-color: #0dcaf0; /* info */
+        color: black;
+        font-weight: bold;
+    }
+    .accordion-button.delete {
+        background-color: #dc3545; /* danger */
+        color: white;
+        font-weight: bold;
+    }
+     #facturaSection {
+        margin-top: 1rem;
+      display: none;
+    }
+    .factura-box {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    .factura-header {
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+    }
+    .factura-total {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .table-sm td, .table-sm th {
+      padding: 0.3rem;
+    }
+
+
+    @media (max-width: 767px) {
+        .param-inline {
+            width: 100%;
+            margin-left: 0;
+        }
+        .endpoint-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .col-4, .col-6, .col-8 {
+            width: 100% !important;
+        }
+        .json-view, .attr-list, .model-list {
+            margin-bottom: 1rem;
+        }
+        .accordion-button {
+            font-size: 1rem;
+        }
+        @media (max-width: 767px) {
+    .endpoint-row {
+        display: block;
+    }
+    .endpoint-row .btn, .param-inline {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-bottom: 0.5rem;
+    }
+}@media (max-width: 768px) {
+  details summary.btn {
+    background-color: #000;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+  }
+
+  details[open] summary.btn {
+    background-color: #333; /* un poco más claro cuando está abierto */
+  }
+}
+    }

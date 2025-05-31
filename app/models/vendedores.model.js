@@ -55,7 +55,14 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: 'created_at', // Nombre de la columna para fecha de creación
       updatedAt: 'updated_at'  // Nombre de la columna para fecha de actualización
     });
-  
+     Vendedores.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            nombre: this.nombre,
+            email: this.email,
+            telefono: this.telefono
+           };
+    };
     return Vendedores;
   };
   

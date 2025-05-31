@@ -91,7 +91,9 @@ class FacturaController extends BaseController {
     async getAllWithDetails(req, res) {
         try {
             const facturas = await this.service.findAllWithDetails();
-            res.json(facturas);
+            //res.json(facturas);
+            
+            res.json(facturas.map(u => u.toPublicJSON()));
         } catch (error) {
             res.status(500).json({ message: error.message });
         }

@@ -28,8 +28,8 @@ class VendedorController extends BaseController {
      */
     getAll = async (req, res) => {
         try {
-            const items = await this.service.findAll();
-            res.json(items);
+            const vendedores = await this.service.findAll();
+            res.json(vendedores.map(u => u.toPublicJSON()));
         } catch (error) {
             res.status(500).json({ 
                 message: error.message,
@@ -46,7 +46,7 @@ class VendedorController extends BaseController {
         try {
             const item = await this.service.findByPk(req.params.id);
             if (item) {
-                res.json(item);
+                res.json(item ? item.toPublicJSON() : {});
             } else {
                 res.status(404).json({ message: 'Vendedor not found' });
             }

@@ -69,6 +69,19 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: 'created_at', // Nombre de la columna para fecha de creación
       updatedAt: 'updated_at'  // Nombre de la columna para fecha de actualización
     });
+            // Método de instancia para exponer solo los atributos públicos
+    Clientes.prototype.toPublicJSON = function() {
+        return {
+            id: this.id,
+            rut: this.rut,
+            razon_social: this.razon_social,
+            direccion: this.direccion,
+            comuna: this.comuna,
+            giro: this.giro,
+            telefono: this.telefono,
+            email: this.email
+        };
+    };
   
     return Clientes;
   };
