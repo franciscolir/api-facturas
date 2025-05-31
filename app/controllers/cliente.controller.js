@@ -43,9 +43,9 @@ class ClienteController extends BaseController {
      * Obtiene un cliente por su ID
      * GET /api/clientes/:id
      */
-    getById = async (req, res) => {
+    getByPk = async (req, res) => {
         try {
-            const item = await this.service.findById(req.params.id);
+            const item = await this.service.findByPk(req.params.id);
             if (item) {
                 res.json(item);
             } else {

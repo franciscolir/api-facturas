@@ -75,7 +75,7 @@ router.get('/', clienteController.getAll.bind(clienteController));
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', clienteController.getById.bind(clienteController));
+router.get('/:id', clienteController.getByPk.bind(clienteController));
 
 /**
  * @openapi

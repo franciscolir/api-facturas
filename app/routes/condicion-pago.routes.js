@@ -75,7 +75,7 @@ router.get('/', condicionPagoController.getAll.bind(condicionPagoController));
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', condicionPagoController.getById.bind(condicionPagoController));
+router.get('/:id', condicionPagoController.getByPk.bind(condicionPagoController));
 
 /**
  * @openapi

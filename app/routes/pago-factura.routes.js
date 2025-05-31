@@ -58,7 +58,7 @@ router.get('/', pagoFacturaController.getAll.bind(pagoFacturaController));
  *       404:
  *         description: Pago de factura no encontrado
  */
-router.get('/:id', pagoFacturaController.getById.bind(pagoFacturaController));
+router.get('/:id', pagoFacturaController.getByPk.bind(pagoFacturaController));
 
 /**
  * @openapi

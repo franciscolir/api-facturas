@@ -257,7 +257,7 @@ async findBorrador() {
      * @param {number} id - ID de la factura a buscar
      * @returns {Promise<Object>} Factura con todas sus relaciones
      */
-    async findByIdWithDetails(id) {
+    async findByPkWithDetails(id) {
         return await this.model.findOne({
             where: { id, activo: true },
             include: [

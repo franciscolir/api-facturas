@@ -76,7 +76,7 @@ router.get('/', facturaController.getAll.bind(facturaController));
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', facturaController.getById.bind(facturaController));
+router.get('/:id', facturaController.getByPk.bind(facturaController));
 
 /**
  * @swagger
@@ -339,7 +339,7 @@ router.get('/with-details', facturaController.getAllWithDetails.bind(facturaCont
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id/with-details', facturaController.getByIdWithDetails.bind(facturaController));
+router.get('/:id/with-details', facturaController.getByPkWithDetails.bind(facturaController));
 
 /**
  * @openapi

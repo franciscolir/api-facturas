@@ -62,7 +62,7 @@ class UsuarioController extends BaseController {
     }
 
     // GET USUARIO POR ID
-    async getById(req, res) {
+    async getByPk(req, res) {
         try {
             const usuario = await this.service.findByPk(req.params.id);
             if (!usuario) {

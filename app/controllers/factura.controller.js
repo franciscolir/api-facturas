@@ -160,9 +160,9 @@ class FacturaController extends BaseController {
      * @example
      * GET /api/facturas/123/with-details
      */
-    async getByIdWithDetails(req, res) {
+    async getByPkWithDetails(req, res) {
         try {
-            const factura = await this.service.findByIdWithDetails(req.params.id);
+            const factura = await this.service.findByPkWithDetails(req.params.id);
             if (factura) {
                 res.json(factura);
             } else {

@@ -42,9 +42,9 @@ class VendedorController extends BaseController {
      * Obtiene un vendedor por su ID
      * GET /api/vendedores/:id
      */
-    getById = async (req, res) => {
+    getByPk = async (req, res) => {
         try {
-            const item = await this.service.findById(req.params.id);
+            const item = await this.service.findByPk(req.params.id);
             if (item) {
                 res.json(item);
             } else {

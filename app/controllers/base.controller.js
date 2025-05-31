@@ -28,7 +28,9 @@ class BaseController {
     async getAll(req, res) {
         try {
             const items = await this.service.findAll();
-            res.json(items);
+            //res.json(items);
+            
+            res.json(items.map(u => u.toPublicJSON()));
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
@@ -40,11 +42,12 @@ class BaseController {
      * @param {Object} res - Objeto de respuesta HTTP
      * @returns {Object} Registro encontrado
      */
-    async getById(req, res) {
+    async getByPk(req, res) {
         try {
-            const item = await this.service.findById(req.params.id);
+            const item = await this.service.findByPk(req.params.id);
             if (item) {
-                res.json(item);
+                //res.json(item);
+                res.json(item ? item.toPublicJSON() : {});
             } else {
                 res.status(404).json({ message: 'Item not found' });
             }

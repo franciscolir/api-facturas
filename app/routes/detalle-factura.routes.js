@@ -75,7 +75,7 @@ router.get('/', detalleFacturaController.getAll.bind(detalleFacturaController));
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', detalleFacturaController.getById.bind(detalleFacturaController));
+router.get('/:id', detalleFacturaController.getByPk.bind(detalleFacturaController));
 
 /**
  * @openapi

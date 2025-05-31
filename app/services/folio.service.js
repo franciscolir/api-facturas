@@ -27,12 +27,12 @@ class FolioService extends BaseService {
     }
 
     /**
-     * Sobreescribe el método findById del BaseService
+     * Sobreescribe el método findByPk del BaseService
      * para no usar el campo activo que no existe en Folio
      * @param {number} id - ID del folio a buscar
      * @returns {Promise<Object|null>} Folio encontrado o null
      */
-    async findById(id) {
+    async findByPk(id) {
         return await this.model.findByPk(id);
     }
 
@@ -147,7 +147,7 @@ class FolioService extends BaseService {
     }
 
     async markAsAnulado(id) {
-        const folio = await this.findById(id);
+        const folio = await this.findByPk(id);
         if (!folio) {
             throw new Error('Folio no encontrado');
         }
