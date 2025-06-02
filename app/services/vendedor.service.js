@@ -5,6 +5,7 @@
  */
 const BaseService = require('./base.service');
 const { Vendedor } = require('../models');
+const { Op } = require('sequelize');
 
 class VendedorService extends BaseService {
     /**
@@ -35,9 +36,15 @@ class VendedorService extends BaseService {
     }
 
     // Métodos específicos para Vendedor
-    async findByCode(codigo) {
-        return await this.model.findOne({ where: { codigo } });
-    }
+    async findByName(nombre) {
+    return await this.model.findAll({
+        where: {
+            nombre: {
+                [Op.like]: `%${nombre}%`  // Usa Op.iLike si tu DB es PostgreSQL
+            }
+        }
+    });
+}
 
     async findByEmail(email) {
         return await this.model.findOne({ where: { email } });

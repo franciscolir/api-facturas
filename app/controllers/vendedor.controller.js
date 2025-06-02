@@ -2,11 +2,11 @@
  * Controlador de Vendedores
  * Gestiona las operaciones relacionadas con los vendedores
  * Extiende el controlador base para operaciones CRUD
- * Implementa métodos específicos para búsqueda por código 
+ * Implementa métodos específicos para búsqueda por nombre 
  * 
  * Características principales:
  * - Operaciones CRUD heredadas del controlador base
- * - Búsqueda de vendedores por código
+ * - Búsqueda de vendedores por nombre
  * - Manejo de errores consistente
  * - Respuestas HTTP estandarizadas
  */
@@ -115,18 +115,18 @@ class VendedorController extends BaseController {
     }
 
     /**
-     * Obtiene un vendedor por su código
-     * GET /api/vendedores/codigo/:codigo
+     * Obtiene un vendedor por su nombre
+     * GET /api/vendedores/nombre/:nombre
      * @param {Object} req - Objeto de solicitud HTTP
      * @param {Object} res - Objeto de respuesta HTTP
      * @returns {Object} Vendedor encontrado
      * 
      * @example
-     * GET /api/vendedores/codigo/V001
+     * GET /api/vendedores/nombre/{nombre}
      */
-    getByCode = async (req, res) => {
+    getByName = async (req, res) => {
         try {
-            const vendedor = await this.service.findByCode(req.params.codigo);
+            const vendedor = await this.service.findByName(req.params.nombre);
             if (vendedor) {
                 res.json(vendedor);
             } else {

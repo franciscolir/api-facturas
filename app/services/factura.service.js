@@ -7,6 +7,37 @@ const BaseService = require('./base.service');
 const { Factura, Cliente, Vendedor, CondicionPago, DetalleFactura, Producto } = require('../models');
 
 const TASA_IVA = 0.19; // Puedes ajustar la tasa de IVA aquí
+const facturaFields = ['fecha', 'total', 'subtotal', 'iva', 'folio_id', 'estado'];
+
+const facturaIncludes = [
+    {
+        model: Cliente,
+        attributes: ['rut', 'razon_social', 'direccion', 'giro']
+    },
+    {
+        model: Vendedor,
+        attributes: ['nombre']
+    },
+    {
+        model: CondicionPago,
+        attributes: ['descripcion']
+    },
+    {
+        model: DetalleFactura,
+        attributes: ['cantidad', 'precio_unitario', 'subtotal'],
+        include: [
+            {
+                model: Producto,
+                attributes: ['nombre', 'codigo']
+            }
+        ]
+    }
+];
+
+const facturaAttributes = {
+    attributes: facturaFields,
+    include: facturaIncludes
+};
 
 class FacturaService extends BaseService {
     /**
@@ -37,7 +68,6 @@ class FacturaService extends BaseService {
         const facturaActualizada = await Factura.findByPk(facturaId);
         console.log('Totales actualizados:', facturaActualizada.subtotal, facturaActualizada.iva, facturaActualizada.total);
     }
-
 
         /**
      * Crea una factura junto con sus detalles asociados.
@@ -171,13 +201,9 @@ async asignarFoliosABorradores() {
  */
 async findBorrador() {
     const borradores = await this.model.findAll({
-        where: { estado: 'borrador', activo: true },
-        include: [
-            { model: Cliente, required: false },
-            { model: Vendedor, required: false },
-            { model: CondicionPago, required: false },
-            { model: DetalleFactura, required: false }
-        ]
+        //...facturaAttributes,
+        ...facturaFields,
+        where: { estado: 'borrador', activo: true }
     });
     console.log('Borradores encontrados:', borradores.length);
     return borradores;
@@ -192,33 +218,8 @@ async findBorrador() {
      */
     async findAllWithDetails() {
     return await this.model.findAll({
-        where: { activo: true },
-        attributes: ['fecha', 'total', 'subtotal', 'iva', 'folio_id', 'estado'],
-        include: [
-            {
-                model: Cliente,
-                attributes: ['rut', 'razon_social', 'direccion', 'giro'],
-                required: true
-            },
-            {
-                model: Vendedor,
-                attributes: ['nombre']
-            },
-            {
-                model: CondicionPago,
-                attributes: ['descripcion']
-            },
-            {
-                model: DetalleFactura,
-                attributes: ['cantidad', 'precio_unitario', 'subtotal'],
-                include: [
-                    {
-                        model: Producto,
-                        attributes: ['nombre', 'codigo']
-                    }
-                ]
-            }
-        ]
+        ...facturaAttributes,
+        where: { activo: true }
     });
 }
 
@@ -231,10 +232,8 @@ async findBorrador() {
      */
     async findByClienteId(clienteId) {
         return await this.model.findAll({
-            where: { cliente_id: clienteId, activo: true },
-            include: [
-                { model: DetalleFactura, include: [{ model: Producto }] }
-            ]
+            ...facturaAttributes,
+            where: { cliente_id: clienteId, activo: true }
         });
     }
 
@@ -246,11 +245,8 @@ async findBorrador() {
      */
     async findByVendedorId(vendedorId) {
         return await this.model.findAll({
-            where: { vendedor_id: vendedorId, activo: true },
-            include: [
-                { model: Cliente },
-                { model: DetalleFactura, include: [{ model: Producto }] }
-            ]
+            ...facturaAttributes,
+            where: { vendedor_id: vendedorId, activo: true }
         });
     }
 
@@ -262,12 +258,9 @@ async findBorrador() {
      */
     async findByFecha(fecha) {
         return await this.model.findAll({
-            where: { fecha, activo: true },
-            include: [
-                { model: Cliente },
-                { model: Vendedor },
-                { model: DetalleFactura, include: [{ model: Producto }] }
-            ]
+            ...facturaAttributes,
+            where: { fecha, activo: true }
+            
         });
     }
 
@@ -278,33 +271,8 @@ async findBorrador() {
      */
  async findByPkWithDetails(id) {
     return await this.model.findOne({
-        where: { id, activo: true },
-        attributes: ['fecha', 'total','subtotal', 'iva', 'folio_id', 'estado'], // Atributos del modelo principal (ej. Factura)
-        include: [
-            {
-                model: Cliente,
-                attributes: ['rut','razon_social', 'direccion', 'giro'], // Atributos del cliente
-                required: true // Asegura que siempre se incluya el cliente
-            },
-            {
-                model: Vendedor,
-                attributes: ['nombre']
-            },
-            {
-                model: CondicionPago,
-                attributes: ['descripcion']
-            },
-            {
-                model: DetalleFactura,
-                attributes: ['cantidad', 'precio_unitario', 'subtotal'], // Atributos del detalle
-                include: [
-                    {
-                        model: Producto,
-                        attributes: ['nombre', 'codigo']
-                    }
-                ]
-            }
-        ]
+        ...facturaAttributes,
+        where: { id, activo: true }
     });
 }
 

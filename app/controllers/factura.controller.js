@@ -88,16 +88,24 @@ class FacturaController extends BaseController {
      * @example
      * GET /api/facturas/with-details
      */
-    async getAllWithDetails(req, res) {
-        try {
-            const facturas = await this.service.findAllWithDetails();
-            //res.json(facturas);
-            
-            res.json(facturas.map(u => u.toPublicJSON()));
-        } catch (error) {
-            res.status(500).json({ message: error.message });
+   async getAllWithDetails(req, res) {
+    try {
+        const facturas = await this.service.findAllWithDetails();
+
+        if (!facturas || facturas.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron facturas con detalles.' });
         }
+
+        res.json(facturas.map(f => f.toPublicJSON()));
+    } catch (error) {
+        console.error('Error al obtener facturas con detalles:', error); // útil para logs del backend
+        res.status(500).json({ 
+            message: 'Ocurrió un error al obtener las facturas.', 
+            error: error.message 
+        });
     }
+}
+
 
     /**
      * Obtiene las facturas de un cliente específico

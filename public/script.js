@@ -1,8 +1,17 @@
  // Configuración de endpoints por modelo
- let facturaIndex = 0;
-let facturasArray = [];
+let facturaIndex = 0;// Índice actual de la factura mostrada.
+let facturasArray = [];//Almacena un conjunto de facturas para navegación tipo paginación.
+let currentModel = 'usuario';      // Modelo actualmente seleccionado
+let lastResult = null;             // Último resultado devuelto por una API
+let currentPage = 1;               // Página actual para paginación
+let pageSize = 10;                 // Tamaño de página (no se usa directamente aquí)
+let formMode = null;              // 'form' o 'json'
+let currentVerb = null;           // Método HTTP actual
+let currentEndpointIdx = null;    // Índice del endpoint actualmente seleccionado
 
-        const apiBase = '/api';
+        const apiBase = '/api';//Ruta base para todas las solicitudes fetch.
+        /*-Estructura que define todas las rutas disponibles por tipo de entidad (usuario, producto, etc.), organizadas por método HTTP (GET, POST, etc.).
+          -Cada endpoint contiene un name, path y params (JSON de ejemplo).*/
         const endpoints = {
             usuario: {
                 GET: [
@@ -15,7 +24,7 @@ let facturasArray = [];
                     { name: 'Login', path: '/usuarios/login', params: '{ "email": "ejemplo@mail.com", "password": "123456" }' }
                 ],
                 PUT: [
-                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "nombre": "Nuevo Nombre" }' }
+                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "id": 1 }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar usuario', path: '/usuarios/{id}', params: '{ "id": 1 }' }
@@ -25,10 +34,10 @@ let facturasArray = [];
                 GET: [
                     { name: 'Obtener todos', path: '/productos', params: '' },
                     { name: 'Obtener por ID', path: '/productos/{id}', params: '{ "id": 1 }' },
-                    { name: 'Obtener por código', path: '/productos/codigo/{codigo}', params: '{ "codigo": "P001" }' }
+                    { name: 'Obtener por código', path: '/productos/codigo/{codigo}', params: '{ "codigo": "PROD001" }' }
                 ],
                 POST: [
-                    { name: 'Crear producto', path: '/productos', params: '{ "codigo": "P001", "nombre": "Producto", "precio_unitario": 100, "stock": 10 }' },
+                    { name: 'Crear producto', path: '/productos', params: '{ "codigo": "PROD001", "nombre": "Producto", "precio_unitario": 100, "stock": 10 }' },
                     { name: 'Crear múltiples productos', path: '/productos/bulk', params: '[{ "codigo": "P002", "nombre": "Producto 2", "precio_unitario": 200, "stock": 20 }]' }
                 ],
                 PUT: [
@@ -42,7 +51,7 @@ let facturasArray = [];
                 GET: [
                     { name: 'Obtener todos', path: '/vendedores', params: '' },
                     { name: 'Obtener por ID', path: '/vendedores/{id}', params: '{ "id": 1 }' },
-                    { name: 'Obtener por código', path: '/vendedores/codigo/{codigo}', params: '{ "codigo": "VEN001" }' }
+                    { name: 'Obtener por nombre', path: '/vendedores/nombre/{nombre}', params: '{ "nombre": "nombre o apellido" }' }
                 ],
                 POST: [
                     { name: 'Crear vendedor', path: '/vendedores', params: '{ "nombre": "Vendedor", "email": "vendedor@mail.com", "telefono": "912345678" }' },
@@ -59,9 +68,7 @@ let facturasArray = [];
                 GET: [
                     { name: 'Obtener todos', path: '/folios', params: '' },
                     { name: 'Obtener por ID', path: '/folios/{id}', params: '{ "id": 1 }' },
-                    { name: 'Obtener por tipo', path: '/folios/tipo/{tipo}', params: '{ "tipo": "FACTURA" }' },
-                    { name: 'Obtener por tipo y serie', path: '/folios/tipo/{tipo}/serie/{serie}', params: '{ "tipo": "FACTURA", "serie": "A" }' },
-                    { name: 'Obtener siguiente disponible', path: '/folios/siguiente/{tipo}/{serie}', params: '{ "tipo": "FACTURA", "serie": "A" }' }
+                    { name: 'Obtener siguiente disponible', path: '/folios/siguiente', params: '' }
                 ],
                 POST: [
                     { name: 'Crear folio', path: '/folios', params: '{ "numero": 123456, "serie": "A", "tipo": "FACTURA" }' },
@@ -80,10 +87,9 @@ let facturasArray = [];
                 GET: [
                     { name: 'Obtener todos', path: '/condiciones-pago', params: '' },
                     { name: 'Obtener por ID', path: '/condiciones-pago/{id}', params: '{ "id": 1 }' },
-                    { name: 'Obtener por código', path: '/condiciones-pago/codigo/{codigo}', params: '{ "codigo": "CONTADO" }' },
-                    { name: 'Obtener por plazo', path: '/condiciones-pago/plazo/{plazo}', params: '{ "plazo": 30 }' },
-                    { name: 'Obtener por descripción', path: '/condiciones-pago/descripcion/{descripcion}', params: '{ "descripcion": "contado" }' }
-                ],
+                    { name: 'Obtener por código', path: '/condiciones-pago/codigo/{codigo}', params: '{ "codigo": "CONTADO, 15D, 30D, 60D" }' },
+                    { name: 'Obtener por plazo', path: '/condiciones-pago/plazo/{plazo}', params: '{ "plazo": 0, 15, 30, 60 }' },
+                     ],
                 POST: [
                     { name: 'Crear condición', path: '/condiciones-pago', params: '{ "codigo": "CONTADO", "descripcion": "Pago al contado", "plazo": 0 }' },
                     { name: 'Crear múltiples condiciones', path: '/condiciones-pago/bulk', params: '[{ "codigo": "CREDITO", "descripcion": "Pago a crédito", "plazo": 30 }]' }
@@ -139,14 +145,8 @@ let facturasArray = [];
             }
         };
 
-        let currentModel = 'usuario';
-        let lastResult = null;
-        let currentPage = 1;
-        let pageSize = 10;
-        let formMode = null; // 'form' o 'json'
-        let currentVerb = null;
-        let currentEndpointIdx = null;
 
+//Renderiza la lista de modelos (usuario, producto, etc.) como botones.
        function renderModelList() {
     const models = Object.keys(endpoints);
     const listHtml = models.map(model =>
@@ -157,11 +157,13 @@ let facturasArray = [];
     document.getElementById('modelListMobile').innerHTML = listHtml;
 }
 
-
+        //Convierte la primera letra de un string en mayúscula.
         function capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
+        // Selecciona un modelo y actualiza la UI
+        //Actualiza el modelo actual y redibuja endpoints y resultados.
         function selectModel(model) {
             currentModel = model;
             renderModelList();
@@ -169,6 +171,9 @@ let facturasArray = [];
             clearResults();
         }
 
+        //Recorre todos los métodos HTTP.
+        //Para cada endpoint, crea un botón con su nombre y permite ingresar parámetros si es necesario (por ejemplo {id}).
+        //Asigna la función a ejecutar al hacer clic (por ejemplo, callEndpoint).
         function renderEndpoints() {
             ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].forEach(verb => {
                 const container = document.getElementById(verb.toLowerCase() + 'Endpoints');
@@ -180,14 +185,22 @@ let facturasArray = [];
                     let paramId = `${verb}_${currentModel}_${idx}_param`;
                     let btnDisabled = false;
 
-                    //console.log("param id: "+paramId);
                     if ((verb === 'GET' || verb === 'DELETE') && needsParams) {
-                        paramPlaceholder = `<input type="number" class="form-control param-inline" id="${paramId}" placeholder='${ep.params ? ep.params : "Número"}' oninput="validateParamsNumber('${paramId}', '${verb}', '${ep.path}', ${idx})">`;
+                        // Extrae el primer parámetro entre llaves, ej: "{codigo}" → "codigo"
+                        const match = ep.path.match(/{(\w+)}/);
+                        const paramName = match ? match[1] : 'valor';
+                        const example = `Ej: ${paramName.toUpperCase()}123`; // ejemplo genérico
+                        const exampleValue = ep.params ? `Ejemplo: ${JSON.parse(ep.params)[paramName]}` || example : example;
+                    
+                        paramPlaceholder = `
+                            <input type="text" class="form-control param-inline" id="${paramId}" 
+                                placeholder="${exampleValue}" 
+                                oninput="toggleButton('${paramId}')">
+                            <small id="msg_${paramId}" class="text-danger d-none">Este campo es obligatorio.</small>
+                        `;
                         btnDisabled = true;
                     }
 
-                    // Elimina el botón Formulario/JSON del acordeón, deja solo el principal
-                    let extraBtns = '';
 
                     container.innerHTML += `
                         <div class="endpoint-row">
@@ -195,17 +208,17 @@ let facturasArray = [];
                                 id="btn_${paramId}"
                                 data-paramid="${paramId}"
                                  onclick="${
-      verb === 'GET' && currentModel === 'factura'
-        ? `mostrarFactura(); callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}')`
-        : (verb === 'POST' || verb === 'PUT')
-          ? `showFormOrJson('${verb}', ${idx}, 'form');ocultarFactura();`
-          : `callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}');ocultarFactura();`
-    }"
-    ${btnDisabled ? 'disabled' : ''}>
-    ${ep.name}
-  </button>
+                                    verb === 'GET' && currentModel === 'factura'
+                                        ? `mostrarFactura(); callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}')`
+                                        : (verb === 'POST' || verb === 'PUT')
+                                        ? `showFormOrJson('${verb}', ${idx}, 'form');ocultarFactura();`
+                                        : `callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}');ocultarFactura();`
+                                    }"
+                                    ${btnDisabled ? 'disabled' : ''}>
+                                    ${ep.name}
+                                </button>
                             ${paramPlaceholder}
-                            ${extraBtns}
+                            
                             <small class="text-muted ms-2">${ep.path}</small>
                         </div>
                     `;
@@ -215,7 +228,7 @@ let facturasArray = [];
       
       
         // Habilita el botón solo si el input tiene un número válido (GET/DELETE)
-        function validateParamsNumber(paramId, verb, path, idx) {
+        /*function validateParamsNumber(paramId, verb, path, idx) {
             const input = document.getElementById(paramId);
             const btn = document.getElementById('btn_' + paramId);
             let valid = false;
@@ -223,34 +236,61 @@ let facturasArray = [];
                 valid = true;
             }
             btn.disabled = !valid;
-        }
+        }*/
+       function toggleButton(paramId) {
+    const input = document.getElementById(paramId);
+    const btn = document.getElementById('btn_' + paramId);
+    const msg = document.getElementById('msg_' + paramId);
 
+    const isValid = input.value.trim() !== '';
+    btn.disabled = !isValid;
+
+    // Mostrar u ocultar mensaje
+    msg.classList.toggle('d-none', isValid);
+}
+
+
+
+        // Muestra el formulario o JSON para crear/editar un registro
         function showFormOrJson(verb, idx, mode) {
+            // Si el modo es 'form', muestra el formulario; si es 'json', muestra el JSON
             formMode = mode;
+            // Método HTTP actual
             currentVerb = verb;
+            // Si el índice es -1, significa que es un nuevo registro
             currentEndpointIdx = idx;
+            // Renderiza el formulario o JSON según el modo actual
             renderFormOrJson();
         }
-
+        // Renderiza el formulario o JSON según el modo actual
       function renderFormOrJson() {
     const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
     let formHtml = '';
     let jsonHtml = '';
+    // Si no hay endpoint seleccionado, no hacemos nada
     let example = {};
     try {
+        // Intenta parsear los parámetros del endpoint
         example = ep.params ? JSON.parse(ep.params) : {};
     } catch { example = {}; }
 
     // Usa lastResult si está disponible
+    // Si hay un resultado previo, lo usamos como ejemplo
+    // Si no, usamos el ejemplo del endpoint
     const jsonToShow = lastResult ? lastResult : example;
     //console.log("jsonToShow: ", jsonToShow);
     //console.log("lastResult: ", lastResult);
 
+    // Botones para cambiar entre formulario y JSON    
     let formBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('form')">Formulario</button>`;
     let jsonBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('json')">JSON</button>`;
 
+    // Si el modo es 'form', renderiza el formulario; si es 'json', renderiza el JSON
     if (formMode === 'form') {
+        // Renderiza el formulario con los campos del ejemplo
+        // Si el ejemplo tiene campos, los muestra como inputs
         formHtml = formBtn + `<form id="mainForm" oninput="syncFormToJson()">
+
             ${Object.keys(example).map(field => `
                 <div class="mb-2">
                     <label class="form-label">${field}</label>
@@ -259,22 +299,27 @@ let facturasArray = [];
             `).join('')}
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('form')">Enviar</button>
         </form>`;
+        
         jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>`;
     } else {
-        formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
+                formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
+        
         jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('json')">Enviar</button>`;
     }
-
+    // Actualiza el HTML de los contenedores
     document.getElementById('attrList').innerHTML = formHtml;
     document.getElementById('jsonView').innerHTML = jsonHtml;
 }
 
-
+        // Cambia el modo del formulario (formulario o JSON)
         function setFormMode(mode) {
+            
             formMode = mode;
+
             renderFormOrJson();
         }
+        
 
         function syncFormToJson() {
             const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
@@ -289,6 +334,8 @@ let facturasArray = [];
             document.getElementById('jsonInput').value = JSON.stringify(obj, null, 2);
         }
 
+        //Envia los datos del formulario o JSON mediante fetch.
+        
         function submitFormOrJson(mode) {
             const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
             let url = apiBase + ep.path;
@@ -310,6 +357,8 @@ let facturasArray = [];
             let options = { method: currentVerb, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
             fetch(url, options)
                 .then(r => r.json().then(data => ({ status: r.status, data })))
+                //Si tiene éxito, guarda el resultado en lastResult y renderiza.
+
                 .then(({ status, data }) => {
                     lastResult = data;
                     currentPage = 1;
@@ -329,6 +378,9 @@ let facturasArray = [];
             document.getElementById('jsonView').innerHTML = '';
         }
 
+       
+
+        // Llama al endpoint con el verbo y la ruta especificada, usando el ID del input de parámetros
         function callEndpoint(verb, path, idx, paramId) {
             // Busca el input de params asociado usando el id recibido
             const input = document.getElementById(paramId);
@@ -336,9 +388,19 @@ let facturasArray = [];
             let url = apiBase + path;
 
             // Si hay input, procesa params
-            if (input && input.value.trim()) {
-                params = { id: Number(input.value) };
-            }
+           // Si hay input, procesa params
+            //if (input && input.value.trim()) {
+              //  params = { id: input.value.trim() }; // Mantiene el valor como string
+            //}
+                if (input && input.value.trim()) {
+                    // Extrae el nombre del parámetro desde la ruta, ej: {codigo} => "codigo"
+                    const match = path.match(/{(\w+)}/);
+                    if (match) {
+                        const paramName = match[1];
+                        params[paramName] = input.value.trim();
+                    }
+                }
+
 
             // Reemplaza {id} y otros params en la ruta
             url = url.replace(/{(\w+)}/g, (_, k) => {
@@ -350,6 +412,7 @@ let facturasArray = [];
                 return `{${k}}`;
             });
 
+            //Hace fetch y si el resultado incluye factura, renderiza visualización especial.
             let options = { method: verb, headers: { 'Content-Type': 'application/json' } };
             fetch(url, options)
                 .then(r => r.json().then(data => ({ status: r.status, data })))
@@ -368,6 +431,7 @@ let facturasArray = [];
                 });
         }
 
+        //Decide si el resultado es una lista o un objeto y renderiza acorde.
      function renderResult(data, status) {
     if (Array.isArray(data)) {
         renderAttrList(data);  // Mostrar todo, sin paginar
@@ -376,53 +440,47 @@ let facturasArray = [];
         renderAttrList(data);
         renderJsonView(data);
     }
+  
     scrollToResultsIfMobile();
 }
 
+    //crea tabla de modelos y muestra atributos de cada uno.
+     function renderAttrList(obj) {
+    const attrList = document.getElementById('attrList');
 
-        function renderAttrList(obj) {
-            const attrList = document.getElementById('attrList');
-            // Si recibe un array, muestra tabla paginada
-            if (Array.isArray(obj)) {
-                if (!obj.length) {
-                    attrList.innerHTML = '<div class="text-muted">Sin datos</div>';
-                    return;
-                }
-                // Encabezados de tabla
-                const headers = Object.keys(obj[0]);
-                let html = '<div class="table-responsive"><table class="table table-bordered table-sm mb-0">';
-                html += '<thead class="table-light"><tr>';
-                headers.forEach(h => html += `<th>${h}</th>`);
-                html += '</tr></thead><tbody>';
-                obj.forEach(item => {
-                    html += '<tr>';
-                    headers.forEach(h => {
-                        let val = item[h];
-                        if (typeof val === 'object' && val !== null) val = JSON.stringify(val);
-                        html += `<td>${val !== undefined ? val : ''}</td>`;
-                    });
-                    html += '</tr>';
-                });
-                html += '</tbody></table></div>';
-                attrList.innerHTML = html;
-            } else if (!obj) {
-                attrList.innerHTML = '<div class="text-muted">Sin datos</div>';
-            } else {
-                // Muestra como formulario simple (solo lectura)
-                let html = '<form>';
-                Object.entries(obj).forEach(([k, v]) => {
-                    html += `
-                        <div class="mb-2">
-                            <label class="form-label">${k}</label>
-                            <input type="text" class="form-control" value="${typeof v === 'object' ? JSON.stringify(v) : v}" readonly>
-                        </div>
-                    `;
-                });
-                html += '</form>';
-                attrList.innerHTML = html;
-            }
-        }
+    // Verifica si hay datos
+    if (!obj || (Array.isArray(obj) && obj.length === 0)) {
+        attrList.innerHTML = '<div class="text-muted">Sin datos</div>';
+        return;
+    }
 
+    // Normaliza el dato para siempre trabajar con un array
+    const dataArray = Array.isArray(obj) ? obj : [obj];
+
+    // Obtiene todas las claves únicas de todos los objetos
+    const headers = Array.from(new Set(dataArray.flatMap(item => Object.keys(item))));
+
+    // Construye la tabla HTML
+    let html = '<div class="table-responsive"><table class="table table-bordered table-sm mb-0">';
+    html += '<thead class="table-light"><tr>';
+    headers.forEach(header => html += `<th>${header}</th>`);
+    html += '</tr></thead><tbody>';
+
+    dataArray.forEach(item => {
+        html += '<tr>';
+        headers.forEach(header => {
+            let val = item[header];
+            if (typeof val === 'object' && val !== null) val = JSON.stringify(val);
+            html += `<td>${val !== undefined ? val : ''}</td>`;
+        });
+        html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    attrList.innerHTML = html;
+}
+
+        //Muestra el JSON en formato <pre>.
         function renderJsonView(obj) {
             document.getElementById('jsonView').innerHTML = `<pre>${JSON.stringify(obj, null, 2)}</pre>`;
         }
@@ -430,7 +488,7 @@ let facturasArray = [];
     
 
     
-
+//Si está en pantalla pequeña, hace scroll automático a los resultados.
         function scrollToResultsIfMobile() {
     if (window.innerWidth < 992) {  // Bootstrap lg breakpoint
         const section = document.getElementById('resultsSection');
@@ -450,18 +508,19 @@ let facturasArray = [];
 
 
    
-
+//Oculta la sección HTML para la factura.
 function ocultarFactura() {
       const container = document.getElementById('facturaSection');
       container.style.display = 'none';
     }
     
-
+//Muestra la sección HTML para la factura.
 function mostrarFactura() {
       const container = document.getElementById('facturaSection');
       container.style.display = 'block';}
 
-
+//Recibe una o varias facturas.
+//Las guarda en facturasArray y comienza a renderizar desde la primera.
 function crearFacturas(facturas) {
   if (!facturas) {
     alert('No hay factura para mostrar');
@@ -481,15 +540,15 @@ function crearFacturas(facturas) {
   } else {
     // Es solo una factura individual
     renderFactura(facturas);
-    facturasArray = [facturas]; // También la almacenamos como array por si se necesita paginar luego
-    facturaIndex = 0;
-    renderFacturaPagination(); // Si quieres evitar paginación en este caso, comenta esta línea
+    //facturasArray = [facturas]; // También la almacenamos como array por si se necesita paginar luego
+    //facturaIndex = 0;
+    //renderFacturaPagination(); // Si quieres evitar paginación en este caso, comenta esta línea
   }
 }
 
 
 
-
+//Rellena los campos de la factura: fecha, cliente, vendedor, condición de pago, productos.
       function renderFactura(factura) {
       const container = document.getElementById('facturaSection');
 console.log("renderFactura: ", factura);
@@ -507,6 +566,7 @@ console.log("renderFactura: ", factura);
       const detalleContainer = document.getElementById('detalleProductos');
       detalleContainer.innerHTML = ''; // limpia si ya está renderizado
 
+      //Convierte cada detalle en una fila de tabla.
       factura.detalles_facturas.forEach(det => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -516,6 +576,7 @@ console.log("renderFactura: ", factura);
           <td>$${det.precio_unitario.toFixed(2)}</td>
           <td>$${det.subtotal.toFixed(2)}</td>
         `;
+
         detalleContainer.appendChild(row);
       });
 
@@ -524,7 +585,7 @@ console.log("renderFactura: ", factura);
       document.getElementById('total').textContent = factura.total.toFixed(2);
     }
 
-       
+      //Muestra los botones “Anterior” y “Siguiente” para cambiar de factura. 
 function renderFacturaPagination() {
   const container = document.getElementById('paginacionFacturas');
   container.innerHTML = `
@@ -536,6 +597,7 @@ function renderFacturaPagination() {
   `;
 }
 
+//Cambia el índice actual de factura y redibuja.
 function navegarFactura(direccion) {
   facturaIndex += direccion;
   renderFactura(facturasArray[facturaIndex]);

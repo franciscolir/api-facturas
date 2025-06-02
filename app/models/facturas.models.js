@@ -139,6 +139,8 @@ module.exports = (sequelize, DataTypes) => {
             total: this.total,
             vendedor_id: this.vendedor_id,
             folio_id: this.folio_id,
+            cliente_id: this.cliente_id,
+            condicion_pago_id: this.condicion_pago_id,
             estado: this.estado        
         };
     }

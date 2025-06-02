@@ -7,6 +7,7 @@ const BaseService = require('./base.service');
 const { Folio } = require('../models');
 const { Op } = require('sequelize');
 
+ //const { sequelize } = require('../config/db');
 class FolioService extends BaseService {
     /**
      * Inicializa el servicio con el modelo de Folio
@@ -63,33 +64,33 @@ class FolioService extends BaseService {
     }
 
     // Métodos específicos para Folio
-    async findByTipo(tipo) {
-        return await this.model.findAll({ 
-            where: { tipo },
-            order: [['numero', 'ASC']]
-        });
-    }
 
-    async findByTipoAndSerie(tipo, serie) {
-        return await this.model.findAll({ 
-            where: { 
-                tipo,
-                serie
-            },
-            order: [['numero', 'ASC']]
-        });
-    }
 
-    async findNextAvailable(tipo, serie) {
-        return await this.model.findOne({
+
+async findNextAvailable() {
+    try {
+        const disponibles = await this.model.findAll({
             where: {
-                tipo,
-                serie,
-                estado: 'disponible'
+                estado: {
+                    [Op.eq]: sequelize.where(
+                        sequelize.fn('LOWER', sequelize.col('estado')),
+                        'disponible'
+                    )
+                }
             },
             order: [['numero', 'ASC']]
         });
+
+        console.log('Folios encontrados:', disponibles);
+
+        return disponibles.length > 0 ? disponibles[0] : null;
+
+    } catch (error) {
+        console.error('Error buscando folios:', error.message);
+        throw error;
     }
+}
+
 
     async create(data) {
         // Si no se especifica el tipo, usar el valor por defecto

@@ -186,61 +186,10 @@ router.post('/bulk', folioController.createBulk.bind(folioController));
 // Rutas Específicas
 // =======================
 
-/**
- * @openapi
- * /api/folios/tipo/{tipo}:
- *   get:
- *     summary: Obtiene folios por tipo
- *     tags: [Folios]
- *     parameters:
- *       - in: path
- *         name: tipo
- *         required: true
- *         schema:
- *           type: string
- *         description: Tipo de folio (ej. FACTURA, BOLETA)
- *     responses:
- *       200:
- *         description: Lista de folios encontrados
- *       404:
- *         description: No se encontraron folios de este tipo
- *       500:
- *         description: Error del servidor
- */
-router.get('/tipo/:tipo', folioController.getByTipo.bind(folioController));
 
 /**
  * @openapi
- * /api/folios/tipo/{tipo}/serie/{serie}:
- *   get:
- *     summary: Obtiene folios por tipo y serie
- *     tags: [Folios]
- *     parameters:
- *       - in: path
- *         name: tipo
- *         required: true
- *         schema:
- *           type: string
- *         description: Tipo de folio (ej. FACTURA, BOLETA)
- *       - in: path
- *         name: serie
- *         required: true
- *         schema:
- *           type: string
- *         description: Serie del folio
- *     responses:
- *       200:
- *         description: Lista de folios encontrados
- *       404:
- *         description: No se encontraron folios con este tipo y serie
- *       500:
- *         description: Error del servidor
- */
-router.get('/tipo/:tipo/serie/:serie', folioController.getByTipoAndSerie.bind(folioController));
-
-/**
- * @openapi
- * /api/folios/siguiente/{tipo}/{serie}:
+ * /api/folios/siguiente:
  *   get:
  *     summary: Obtiene el siguiente folio disponible
  *     tags: [Folios]
@@ -265,7 +214,7 @@ router.get('/tipo/:tipo/serie/:serie', folioController.getByTipoAndSerie.bind(fo
  *       500:
  *         description: Error del servidor
  */
-router.get('/siguiente/:tipo/:serie', folioController.getNextAvailable.bind(folioController));
+router.get('/siguiente', folioController.getNextAvailable.bind(folioController));
 
 /**
  * @openapi

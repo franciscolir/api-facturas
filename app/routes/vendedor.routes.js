@@ -185,21 +185,21 @@ router.delete('/:id', vendedorController.delete.bind(vendedorController));
 
 /**
  * @openapi
- * /api/vendedores/codigo/{codigo}:
+ * /api/vendedores/nombre/{nombre}:
  *   get:
- *     summary: Obtener vendedor por código
- *     description: Retorna el vendedor con un código específico
+ *     summary: Obtener vendedor por nombre
+ *     description: Retorna el vendedor con un nombre específico
  *     tags:
  *       - Vendedores
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: codigo
+ *         name: nombre
  *         required: true
  *         schema:
  *           type: string
- *         description: Código único del vendedor
+ *         description: Nombre del vendedor
  *     responses:
  *       200:
  *         description: Vendedor encontrado exitosamente
@@ -214,7 +214,7 @@ router.delete('/:id', vendedorController.delete.bind(vendedorController));
  *       500:
  *         description: Error del servidor
  */
-router.get('/codigo/:codigo', vendedorController.getByCode.bind(vendedorController));
+router.get('/nombre/:nombre', vendedorController.getByName.bind(vendedorController));
 
 /**
  * @openapi
@@ -235,12 +235,10 @@ router.get('/codigo/:codigo', vendedorController.getByCode.bind(vendedorControll
  *             items:
  *               $ref: '#/components/schemas/Vendedor'
  *           example:
- *             - codigo: "VEN001"
- *               nombre: "Juan Pérez"
+ *             - nombre: "Juan Pérez"
  *               email: "juan@empresa.com"
  *               telefono: "123456789"
- *             - codigo: "VEN002"
- *               nombre: "Ana López"
+ *             - nombre: "Ana López"
  *               email: "ana@empresa.com"
  *               telefono: "987654321"
  *     responses:

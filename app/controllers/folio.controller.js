@@ -92,12 +92,12 @@ class FolioController extends BaseController {
      */
     async getNextAvailable(req, res) {
         try {
-            const { tipo, serie } = req.params;
-            const folio = await folioService.findNextAvailable(tipo, serie);
+            //const { tipo, serie } = req.params;
+            const folio = await folioService.findNextAvailable();
             
             if (!folio) {
                 return res.status(404).json({
-                    message: 'No hay folios disponibles de este tipo y serie'
+                    message: 'No hay folios disponibles'
                 });
             }
 
