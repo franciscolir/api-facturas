@@ -120,10 +120,10 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             },
             factura: {
                 GET: [
-                    { name: 'Obtener todas', path: '/facturas', params: '' },
-                    { name: 'Obtener por ID', path: '/facturas/{id}', params: '{ "id": 1 }' },
-                    { name: 'Obtener todas con detalles', path: '/facturas/with-details', params: '' },
-                    { name: 'Obtener por ID con detalles', path: '/facturas/{id}/with-details', params: '{ "id": 1 }' },
+                    //{ name: 'Obtener todas', path: '/facturas', params: '' },
+                    //{ name: 'Obtener por ID', path: '/facturas/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener todas', path: '/facturas/with-details', params: '' },
+                    { name: 'Obtener por ID', path: '/facturas/{id}/with-details', params: '{ "id": 1 }' },
                     { name: 'Obtener por cliente', path: '/facturas/cliente/{clienteId}', params: '{ "clienteId": 1 }' },
                     { name: 'Obtener por vendedor', path: '/facturas/vendedor/{vendedorId}', params: '{ "vendedorId": 1 }' },
                     { name: 'Obtener por fecha', path: '/facturas/fecha/{fecha}', params: '{ "fecha": "2025-05-26" }' },

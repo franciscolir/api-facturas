@@ -217,16 +217,12 @@ async findBorrador() {
      * @returns {Promise<Array>} Lista de facturas con todas sus relaciones
      */
     async findAllWithDetails() {
-        try {
-            return await this.model.findAll({
-                ...facturaAttributes,
-                where: { activo: true }
-            });
-        } catch (error) {
-            console.error('Error en findAllWithDetails:', error);
-            throw error;
-        }
-    }
+    return await this.model.findAll({
+        ...facturaAttributes,
+        where: { activo: true }
+    });
+}
+
 
     /**
      * Busca facturas por ID de cliente

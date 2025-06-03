@@ -258,7 +258,7 @@ router.patch('/asignar-folios-borrador', facturaController.asignarFoliosABorrado
  *       500:
  *         description: Error del servidor
  */
-router.get('/', facturaController.getAll.bind(facturaController));
+//router.get('/', facturaController.getAll.bind(facturaController));
 
 /**
  * @openapi
@@ -291,7 +291,7 @@ router.get('/', facturaController.getAll.bind(facturaController));
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', facturaController.getByPk.bind(facturaController));
+//router.get('/:id', facturaController.getByPk.bind(facturaController));
 
 /**
  * @swagger
