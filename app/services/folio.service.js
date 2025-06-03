@@ -6,6 +6,7 @@
 const BaseService = require('./base.service');
 const { Folio } = require('../models');
 const { Op } = require('sequelize');
+const disponible = "disponible"; // Valor de estado para folios disponibles
 
  //const { sequelize } = require('../config/db');
 class FolioService extends BaseService {
@@ -71,12 +72,7 @@ async findNextAvailable() {
     try {
         const disponibles = await this.model.findAll({
             where: {
-                estado: {
-                    [Op.eq]: sequelize.where(
-                        sequelize.fn('LOWER', sequelize.col('estado')),
-                        'disponible'
-                    )
-                }
+                estado: disponible
             },
             order: [['numero', 'ASC']]
         });

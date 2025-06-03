@@ -51,12 +51,14 @@ module.exports = (sequelize, DataTypes) => {
         vencimiento: {
             type: DataTypes.DATE,
             allowNull: false
-        },
-        // Estado del pago: pendiente, pagada o vencida
+        },        // Estado del pago: pendiente, pagada o vencida
         estado: {
-            type: DataTypes.ENUM('pendiente', 'pagada', 'vencida'),
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'pendiente'
+            defaultValue: 'pendiente',
+            validate: {
+                isIn: [['pendiente', 'pagada', 'vencida']]
+            }
         },
         // Indica si el registro está activo (borrado lógico)
         activo: {

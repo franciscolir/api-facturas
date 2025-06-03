@@ -29,16 +29,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 'A'
-        },
-        tipo: {
+        },        tipo: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 'FACTURA'
         },
         estado: {
-            type: DataTypes.ENUM('disponible', 'usado', 'anulado'),
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'disponible'
+            defaultValue: 'disponible',
+            validate: {
+                isIn: [['disponible', 'usado', 'anulado']]
+            }
         },
         activo: {
             type: DataTypes.BOOLEAN,

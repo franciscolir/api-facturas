@@ -87,9 +87,9 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                 GET: [
                     { name: 'Obtener todos', path: '/condiciones-pago', params: '' },
                     { name: 'Obtener por ID', path: '/condiciones-pago/{id}', params: '{ "id": 1 }' },
-                    { name: 'Obtener por código', path: '/condiciones-pago/codigo/{codigo}', params: '{ "codigo": "CONTADO, 15D, 30D, 60D" }' },
-                    { name: 'Obtener por plazo', path: '/condiciones-pago/plazo/{plazo}', params: '{ "plazo": 0, 15, 30, 60 }' },
-                     ],
+                    { name: 'Obtener por código', path: '/condiciones-pago/codigo/{codigo}', params: '{ "codigo": "30D" }' },
+                    { name: 'Obtener por plazo', path: '/condiciones-pago/plazo/{plazo}', params: '{ "plazo": 30 }' }
+                ],
                 POST: [
                     { name: 'Crear condición', path: '/condiciones-pago', params: '{ "codigo": "CONTADO", "descripcion": "Pago al contado", "plazo": 0 }' },
                     { name: 'Crear múltiples condiciones', path: '/condiciones-pago/bulk', params: '[{ "codigo": "CREDITO", "descripcion": "Pago a crédito", "plazo": 30 }]' }
@@ -148,9 +148,8 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
 
 //Renderiza la lista de modelos (usuario, producto, etc.) como botones.
        function renderModelList() {
-    const models = Object.keys(endpoints);
-    const listHtml = models.map(model =>
-        `<button class="list-group-item list-group-item-action${model === currentModel ? ' active' : ''}" onclick="selectModel('${model}')">${capitalize(model.replace('_', ' '))}</button>`
+    const models = Object.keys(endpoints);    const listHtml = models.map(model =>
+        `<button class="list-group-item list-group-item-action${model === currentModel ? ' active' : ''}" onclick="selectModel('${model}')">${capitalize(model.replaceAll('_', ' '))}</button>`
     ).join('');
 
     document.getElementById('modelList').innerHTML = `<div class="list-group">${listHtml}</div>`;

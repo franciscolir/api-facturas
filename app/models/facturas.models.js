@@ -13,7 +13,7 @@
  * - Control de condiciones de pago
  * - Auditoría de creación y modificación
  */
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     const Factura = sequelize.define('Factura', {
         // Identificador único autoincremental
         id: {
@@ -47,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         // Monto total de la factura
         // Resultado de subtotal + iva
-        // No puede ser negativo
-        total: {
+        // No puede ser negativo       
+         total: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
             defaultValue: 0
@@ -58,9 +58,12 @@ module.exports = (sequelize, DataTypes) => {
         // emitida: factura finalizada y numerada
         // anulada: factura cancelada
         estado: {
-            type: DataTypes.ENUM('borrador', 'emitida', 'anulada'),
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'borrador'
+            defaultValue: 'borrador',
+            validate: {
+                isIn: [['borrador', 'emitida', 'anulada']]
+            }
         },
         // Estado de activación de la factura
         // Permite desactivar facturas sin eliminarlas

@@ -1,3 +1,5 @@
+
+
 /**
  * Servicio para la gestión de Condiciones de Pago
  * Extiende BaseService e implementa lógica específica para condiciones de pago.
@@ -81,14 +83,14 @@ class CondicionPagoService extends BaseService {
     }
 
     /**
-     * Obtiene todas las condiciones de pago activas ordenadas por días de vencimiento.
+     * Obtiene todas las condiciones de pago activas ordenadas por plazo.
      * @param {string} [orden='ASC'] - Orden de los resultados ('ASC' o 'DESC').
      * @returns {Promise<Array>} Lista ordenada de condiciones de pago activas.
      */
     async findAllOrdenadas(orden = 'ASC') {
         return await this.model.findAll({
             where: { activo: true },
-            order: [['dias_venc', orden]],
+            order: [['plazo', orden]],
         });
     }
 
@@ -97,31 +99,11 @@ class CondicionPagoService extends BaseService {
      * @param {number} dias - Días de vencimiento de la condición de pago.
      * @returns {Promise<Array>} Lista de condiciones de pago que coinciden.
      */
-    async findByDiasVencimiento(dias) {
-        return await this.model.findAll({ where: { dias_venc: dias, activo: true } });
+    async findByPlazo(dias) {
+        return await this.model.findAll({ where: { plazo: dias, activo: true } });
     }
 
-    /**
-     * Busca una condición de pago por su rut.
-     * @param {string} rut - Rut de la condición de pago.
-     * @returns {Promise<Object|null>} Condición encontrada o null.
-     */
-    async findByRut(rut) {
-        return await this.model.findOne({ where: { rut, activo: true } });
-    }
-
-    /**
-     * Busca una condición de pago por su email.
-     * @param {string} email - Email de la condición de pago.
-     * @returns {Promise<Object|null>} Condición encontrada o null.
-     */
-    async findByEmail(email) {
-        return await this.model.findOne({ where: { email, activo: true } });
-    }
-
-    async findByRol(rol) {
-        return await this.model.findAll({ where: { rol, activo: true } });
-    }
+ 
 
     /**
      * Crea múltiples condiciones de pago a partir de un array

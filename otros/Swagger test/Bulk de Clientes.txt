@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "rut": "12345678-9",
     "razon_social": "Comercial Pérez Ltda.",
     "direccion": "Calle Falsa 123",
@@ -11,7 +10,6 @@
     "telefono": "123456789"
   },
   {
-    "id": 2,
     "rut": "98765432-1",
     "razon_social": "Servicios López SpA",
     "direccion": "Avenida Siempre Viva 742",
@@ -22,7 +20,6 @@
     "telefono": "987654321"
   },
   {
-    "id": 3,
     "rut": "11222333-4",
     "razon_social": "Ramírez y Cía Ltda.",
     "direccion": "Pasaje Los Olmos 45",
@@ -33,7 +30,6 @@
     "telefono": "998877665"
   },
   {
-    "id": 4,
     "rut": "22334455-6",
     "razon_social": "Rombo Spa",
     "direccion": "Camino del Sol 100",
@@ -44,7 +40,6 @@
     "telefono": "912345678"
   },
   {
-    "id": 5,
     "rut": "33445566-7",
     "razon_social": "González Hermanos",
     "direccion": "Ruta 5 Sur Km 30",
@@ -55,7 +50,6 @@
     "telefono": "934567891"
   },
   {
-    "id": 6,
     "rut": "44556677-8",
     "razon_social": "Herrera Servicios Generales",
     "direccion": "Villa Los Aromos 56",
@@ -66,7 +60,6 @@
     "telefono": "956789123"
   },
   {
-    "id": 7,
     "rut": "55667788-9",
     "razon_social": "Conce Ltda",
     "direccion": "Las Rosas 789",
@@ -77,7 +70,6 @@
     "telefono": "978901234"
   },
   {
-    "id": 8,
     "rut": "66778899-0",
     "razon_social": "Casac Spa",
     "direccion": "Calle Luna 33",
@@ -88,7 +80,6 @@
     "telefono": "901234567"
   },
   {
-    "id": 9,
     "rut": "77889900-1",
     "razon_social": "Rojas Importaciones",
     "direccion": "Camino Viejo 88",
@@ -99,7 +90,6 @@
     "telefono": "923456789"
   },
   {
-    "id": 10,
     "rut": "88990011-2",
     "razon_social": "Vargas Spa",
     "direccion": "Pje. Las Hortensias 15",
@@ -110,7 +100,6 @@
     "telefono": "945678901"
   },
   {
-    "id": 11,
     "rut": "99001122-3",
     "razon_social": "Navarro Producciones",
     "direccion": "Altos del Parque 10",
@@ -121,7 +110,6 @@
     "telefono": "967890123"
   },
   {
-    "id": 12,
     "rut": "10111213-4",
     "razon_social": "Ruta Ltda",
     "direccion": "Las Palmeras 300",
@@ -132,7 +120,6 @@
     "telefono": "989012345"
   },
   {
-    "id": 13,
     "rut": "11121314-5",
     "razon_social": "Silva & Asociados",
     "direccion": "Los Copihues 9",
@@ -143,7 +130,6 @@
     "telefono": "912398456"
   },
   {
-    "id": 14,
     "rut": "12131415-6",
     "razon_social": "Martínez Inversiones",
     "direccion": "Av. Principal 456",
@@ -154,7 +140,6 @@
     "telefono": "934567890"
   },
   {
-    "id": 15,
     "rut": "13141516-7",
     "razon_social": "Fuentes Diseño",
     "direccion": "Av. Independencia 789",
@@ -165,7 +150,6 @@
     "telefono": "956789012"
   },
   {
-    "id": 16,
     "rut": "14151617-8",
     "razon_social": "Andes SPA",
     "direccion": "Calle Sur 202",
@@ -176,7 +160,6 @@
     "telefono": "978901234"
   },
   {
-    "id": 17,
     "rut": "15161718-9",
     "razon_social": "Paredes Muebles",
     "direccion": "Monte Alegre 67",
@@ -187,7 +170,6 @@
     "telefono": "901234567"
   },
   {
-    "id": 18,
     "rut": "16171819-0",
     "razon_social": "Cáceres y Compañía",
     "direccion": "Plaza Central 11",
@@ -198,7 +180,6 @@
     "telefono": "923456789"
   },
   {
-    "id": 19,
     "rut": "17181920-1",
     "razon_social": "Araya Textiles",
     "direccion": "Los Castaños 120",
@@ -209,7 +190,6 @@
     "telefono": "945678901"
   },
   {
-    "id": 20,
     "rut": "18192021-2",
     "razon_social": "Saavedra Software",
     "direccion": "Camino Real 101",

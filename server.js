@@ -2,7 +2,7 @@ require('dotenv').config();
 const app = require('./app/app');
 require('./jobs/pagos-vencidos.job');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 
 //agrega opciones para que se pueda acceder desde cualquier ip

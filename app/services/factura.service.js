@@ -201,8 +201,8 @@ async asignarFoliosABorradores() {
  */
 async findBorrador() {
     const borradores = await this.model.findAll({
-        //...facturaAttributes,
-        ...facturaFields,
+        ...facturaAttributes,
+        //...facturaFields,
         where: { estado: 'borrador', activo: true }
     });
     console.log('Borradores encontrados:', borradores.length);

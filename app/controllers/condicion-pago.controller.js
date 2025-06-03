@@ -144,10 +144,10 @@ class CondicionPagoController extends BaseController {
             // Validación básica de cada elemento
             const errores = [];
             condiciones.forEach((c, i) => {
-                if (!c.codigo || !c.descripcion || typeof c.dias_venc !== 'number') {
+                if (!c.codigo || !c.descripcion || typeof c.plazo !== 'number') {
                     errores.push({
                         index: i,
-                        message: 'Faltan campos requeridos: codigo, descripcion o dias_venc'
+                        message: 'Faltan campos requeridos: codigo, descripcion o plazo'
                     });
                 }
             });

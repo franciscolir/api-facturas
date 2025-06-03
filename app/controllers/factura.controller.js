@@ -92,8 +92,9 @@ class FacturaController extends BaseController {
     try {
         const facturas = await this.service.findAllWithDetails();
 
+        // Mejorar: devolver 200 y [] si no hay resultados
         if (!facturas || facturas.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron facturas con detalles.' });
+            return res.status(200).json([]);
         }
 
         res.json(facturas.map(f => f.toPublicJSON()));
@@ -202,10 +203,14 @@ class FacturaController extends BaseController {
             console.log('Llamando al servicio para obtener borradores');
             const borradores = await this.service.findBorrador();
             console.log('Borradores encontrados:', borradores.length);
-            res.status(200).json(borradores);   
+            // Si no hay borradores, devolver 200 y array vacío
+            if (!borradores || borradores.length === 0) {
+                res.status(200).json([]);
+            } else {
+                res.status(200).json(borradores);
+            }
             console.log('Respuesta enviada con éxito');
         } catch (error) {
-
             console.error('Error al obtener borradores:', error);
             console.error('Detalles del error:', {
                 message: error.message,
