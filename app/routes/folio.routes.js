@@ -23,6 +23,86 @@ const folioController = require('../controllers/folio.controller');
  */
 
 // =======================
+// Rutas Específicas
+// =======================
+
+
+/**
+ * @openapi
+ * /api/folios/siguiente:
+ *   get:
+ *     summary: Obtiene el siguiente folio disponible
+ *     tags: [Folios]
+ *     parameters:
+ *       - in: path
+ *         name: tipo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tipo de folio (ej. FACTURA, BOLETA)
+ *       - in: path
+ *         name: serie
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Serie del folio
+ *     responses:
+ *       200:
+ *         description: Siguiente folio disponible
+ *       404:
+ *         description: No hay folios disponibles
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/siguiente', folioController.getNextAvailable.bind(folioController));
+/**
+ * @openapi
+ * /api/folios/{id}/usar:
+ *   put:
+ *     summary: Marca un folio como usado
+ *     tags: [Folios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del folio
+ *     responses:
+ *       200:
+ *         description: Folio marcado como usado
+ *       404:
+ *         description: Folio no encontrado
+ *       500:
+ *         description: Error del servidor
+ */
+router.put('/:id/usar', folioController.markAsUsed.bind(folioController));
+
+/**
+ * @openapi
+ * /api/folios/{id}/anular:
+ *   put:
+ *     summary: Marca un folio como anulado
+ *     tags: [Folios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del folio
+ *     responses:
+ *       200:
+ *         description: Folio marcado como anulado
+ *       404:
+ *         description: Folio no encontrado
+ *       500:
+ *         description: Error del servidor
+ */
+router.put('/:id/anular', folioController.markAsAnulado.bind(folioController));
+
+
+// =======================
 // Rutas CRUD Básicas
 // =======================
 
@@ -182,84 +262,6 @@ router.delete('/:id', folioController.delete.bind(folioController));
  */
 router.post('/bulk', folioController.createBulk.bind(folioController));
 
-// =======================
-// Rutas Específicas
-// =======================
 
-
-/**
- * @openapi
- * /api/folios/siguiente:
- *   get:
- *     summary: Obtiene el siguiente folio disponible
- *     tags: [Folios]
- *     parameters:
- *       - in: path
- *         name: tipo
- *         required: true
- *         schema:
- *           type: string
- *         description: Tipo de folio (ej. FACTURA, BOLETA)
- *       - in: path
- *         name: serie
- *         required: true
- *         schema:
- *           type: string
- *         description: Serie del folio
- *     responses:
- *       200:
- *         description: Siguiente folio disponible
- *       404:
- *         description: No hay folios disponibles
- *       500:
- *         description: Error del servidor
- */
-router.get('/siguiente', folioController.getNextAvailable.bind(folioController));
-
-/**
- * @openapi
- * /api/folios/{id}/usar:
- *   put:
- *     summary: Marca un folio como usado
- *     tags: [Folios]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del folio
- *     responses:
- *       200:
- *         description: Folio marcado como usado
- *       404:
- *         description: Folio no encontrado
- *       500:
- *         description: Error del servidor
- */
-router.put('/:id/usar', folioController.markAsUsed.bind(folioController));
-
-/**
- * @openapi
- * /api/folios/{id}/anular:
- *   put:
- *     summary: Marca un folio como anulado
- *     tags: [Folios]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del folio
- *     responses:
- *       200:
- *         description: Folio marcado como anulado
- *       404:
- *         description: Folio no encontrado
- *       500:
- *         description: Error del servidor
- */
-router.put('/:id/anular', folioController.markAsAnulado.bind(folioController));
 
 module.exports = router;

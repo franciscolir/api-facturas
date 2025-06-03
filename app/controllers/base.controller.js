@@ -26,6 +26,8 @@ class BaseController {
      * @returns {Array} Lista de registros
      */
     async getAll(req, res) {
+        console.log('getAll', req.url);
+        console.log('getAll', req.method);
         try {
             const items = await this.service.findAll();
             //res.json(items);

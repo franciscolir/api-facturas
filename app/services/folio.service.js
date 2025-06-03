@@ -6,6 +6,7 @@
 const BaseService = require('./base.service');
 const { Folio } = require('../models');
 const { Op } = require('sequelize');
+const { default: facturasModels } = require('../models/facturas.models');
 const disponible = "disponible"; // Valor de estado para folios disponibles
 
  //const { sequelize } = require('../config/db');
@@ -69,6 +70,7 @@ class FolioService extends BaseService {
 
 
 async findNextAvailable() {
+    console.log('Buscando el siguiente folio disponible...');
     try {
         const disponibles = await this.model.findAll({
             where: {
@@ -168,4 +170,4 @@ async findNextAvailable() {
     }
 }
 
-module.exports = new FolioService(); 
+module.exports = new FolioService();

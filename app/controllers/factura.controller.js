@@ -90,7 +90,7 @@ class FacturaController extends BaseController {
      */
    async getAllWithDetails(req, res) {
     try {
-        const facturas = await this.service.findAllWithDetails();
+        const facturas = await facturaService.findAllWithDetails();
 
         // Mejorar: devolver 200 y [] si no hay resultados
         if (!facturas || facturas.length === 0) {

@@ -91,6 +91,8 @@ class FolioController extends BaseController {
      * GET /api/folios/siguiente/FACTURA/A
      */
     async getNextAvailable(req, res) {
+        console.log('Obteniendo siguiente folio disponible');
+        console.log('Parámetros de solicitud:', req.params);
         try {
             //const { tipo, serie } = req.params;
             const folio = await folioService.findNextAvailable();

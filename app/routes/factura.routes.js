@@ -16,6 +16,221 @@ const router = express.Router();
 const facturaController = require('../controllers/factura.controller');
 
 // ==========================================
+// Rutas Específicas
+// ==========================================
+
+/**
+ * @openapi
+ * /api/facturas/with-details:
+ *   get:
+ *     summary: Obtener todas las facturas con sus detalles
+ *     description: Retorna una lista de todas las facturas incluyendo sus detalles
+ *     tags:
+ *       - Facturas
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de facturas con detalles obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/FacturaWithDetails'
+ *       401:
+ *         description: No autorizado
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/with-details', facturaController.getAllWithDetails.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/{id}/with-details:
+ *   get:
+ *     summary: Obtener una factura específica con sus detalles
+ *     description: Retorna los detalles de una factura específica basada en su ID
+ *     tags:
+ *       - Facturas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID único de la factura
+ *     responses:
+ *       200:
+ *         description: Factura encontrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FacturaWithDetails'
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: Factura no encontrada
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/:id/with-details', facturaController.getByPkWithDetails.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/cliente/{clienteId}:
+ *   get:
+ *     summary: Obtener facturas por cliente
+ *     description: Retorna todas las facturas asociadas a un cliente específico
+ *     tags:
+ *       - Facturas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: clienteId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del cliente
+ *     responses:
+ *       200:
+ *         description: Lista de facturas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: No se encontraron facturas para el cliente especificado
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/cliente/:clienteId', facturaController.getByClienteId.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/vendedor/{vendedorId}:
+ *   get:
+ *     summary: Obtener facturas por vendedor
+ *     description: Retorna todas las facturas asociadas a un vendedor específico
+ *     tags:
+ *       - Facturas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: vendedorId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del vendedor
+ *     responses:
+ *       200:
+ *         description: Lista de facturas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: No se encontraron facturas para el vendedor especificado
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/vendedor/:vendedorId', facturaController.getByVendedorId.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/fecha/{fecha}:
+ *   get:
+ *     summary: Obtener facturas por fecha
+ *     description: Retorna todas las facturas emitidas en una fecha específica
+ *     tags:
+ *       - Facturas
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: fecha
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de emisión de las facturas (formato YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: Lista de facturas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ *       400:
+ *         description: Formato de fecha inválido
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: No se encontraron facturas para la fecha especificada
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/fecha/:fecha', facturaController.getByFecha.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/borrador:
+ *   get:
+ *     summary: Obtener todas las facturas en estado borrador
+ *     description: Retorna una lista de todas las facturas que están en estado borrador.
+ *     tags:
+ *       - Facturas
+ *     responses:
+ *       200:
+ *         description: Lista de facturas en estado borrador obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ */
+router.get('/borrador', facturaController.getBorrador.bind(facturaController));
+
+/**
+ * @openapi
+ * /api/facturas/asignar-folios-borrador:
+ *   patch:
+ *     summary: Asignar folios a todas las facturas en estado borrador
+ *     description: Asigna folios disponibles a todas las facturas en estado borrador y las cambia a estado emitida.
+ *     tags:
+ *       - Facturas
+ *     responses:
+ *       200:
+ *         description: Facturas actualizadas con folios asignados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Factura'
+ *       400:
+ *         description: Error al asignar folios
+ */
+router.patch('/asignar-folios-borrador', facturaController.asignarFoliosABorradores.bind(facturaController));
+
+
+
+// ==========================================
 // Rutas CRUD Base
 // ==========================================
 
@@ -278,216 +493,5 @@ router.put('/:id', facturaController.update.bind(facturaController));
  */
 router.delete('/:id', facturaController.delete.bind(facturaController));
 
-// ==========================================
-// Rutas Específicas
-// ==========================================
 
-/**
- * @openapi
- * /api/facturas/with-details:
- *   get:
- *     summary: Obtener todas las facturas con sus detalles
- *     description: Retorna una lista de todas las facturas incluyendo sus detalles
- *     tags:
- *       - Facturas
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de facturas con detalles obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/FacturaWithDetails'
- *       401:
- *         description: No autorizado
- *       500:
- *         description: Error del servidor
- */
-router.get('/with-details', facturaController.getAllWithDetails.bind(facturaController));
-
-/**
- * @openapi
- * /api/facturas/{id}/with-details:
- *   get:
- *     summary: Obtener una factura específica con sus detalles
- *     description: Retorna los detalles de una factura específica basada en su ID
- *     tags:
- *       - Facturas
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID único de la factura
- *     responses:
- *       200:
- *         description: Factura encontrada exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/FacturaWithDetails'
- *       401:
- *         description: No autorizado
- *       404:
- *         description: Factura no encontrada
- *       500:
- *         description: Error del servidor
- */
-router.get('/:id/with-details', facturaController.getByPkWithDetails.bind(facturaController));
-
-/**
- * @openapi
- * /api/facturas/cliente/{clienteId}:
- *   get:
- *     summary: Obtener facturas por cliente
- *     description: Retorna todas las facturas asociadas a un cliente específico
- *     tags:
- *       - Facturas
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: clienteId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del cliente
- *     responses:
- *       200:
- *         description: Lista de facturas obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Factura'
- *       401:
- *         description: No autorizado
- *       404:
- *         description: No se encontraron facturas para el cliente especificado
- *       500:
- *         description: Error del servidor
- */
-router.get('/cliente/:clienteId', facturaController.getByClienteId.bind(facturaController));
-
-/**
- * @openapi
- * /api/facturas/vendedor/{vendedorId}:
- *   get:
- *     summary: Obtener facturas por vendedor
- *     description: Retorna todas las facturas asociadas a un vendedor específico
- *     tags:
- *       - Facturas
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: vendedorId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del vendedor
- *     responses:
- *       200:
- *         description: Lista de facturas obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Factura'
- *       401:
- *         description: No autorizado
- *       404:
- *         description: No se encontraron facturas para el vendedor especificado
- *       500:
- *         description: Error del servidor
- */
-router.get('/vendedor/:vendedorId', facturaController.getByVendedorId.bind(facturaController));
-
-/**
- * @openapi
- * /api/facturas/fecha/{fecha}:
- *   get:
- *     summary: Obtener facturas por fecha
- *     description: Retorna todas las facturas emitidas en una fecha específica
- *     tags:
- *       - Facturas
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: fecha
- *         required: true
- *         schema:
- *           type: string
- *           format: date
- *         description: Fecha de emisión de las facturas (formato YYYY-MM-DD)
- *     responses:
- *       200:
- *         description: Lista de facturas obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Factura'
- *       400:
- *         description: Formato de fecha inválido
- *       401:
- *         description: No autorizado
- *       404:
- *         description: No se encontraron facturas para la fecha especificada
- *       500:
- *         description: Error del servidor
- */
-router.get('/fecha/:fecha', facturaController.getByFecha.bind(facturaController));
-
-/**
- * @openapi
- * /api/facturas/borrador:
- *   get:
- *     summary: Obtener todas las facturas en estado borrador
- *     description: Retorna una lista de todas las facturas que están en estado borrador.
- *     tags:
- *       - Facturas
- *     responses:
- *       200:
- *         description: Lista de facturas en estado borrador obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Factura'
- */
-router.get('/borrador', facturaController.getBorrador.bind(facturaController));
-
-/**
- * @openapi
- * /api/facturas/asignar-folios-borrador:
- *   patch:
- *     summary: Asignar folios a todas las facturas en estado borrador
- *     description: Asigna folios disponibles a todas las facturas en estado borrador y las cambia a estado emitida.
- *     tags:
- *       - Facturas
- *     responses:
- *       200:
- *         description: Facturas actualizadas con folios asignados
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Factura'
- *       400:
- *         description: Error al asignar folios
- */
-router.patch('/asignar-folios-borrador', facturaController.asignarFoliosABorradores.bind(facturaController));
 module.exports = router; 
