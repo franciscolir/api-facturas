@@ -16,7 +16,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             usuario: {
                 GET: [
                     { name: 'Obtener todos', path: '/usuarios', params: '' },
-                    { name: 'Obtener por ID', path: '/usuarios/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por ID', path: '/usuarios/{id}', params: '{ "id": 2 }' },
                     { name: 'Mi usuario', path: '/usuarios/me', params: '' }
                 ],
                 POST: [
@@ -24,7 +24,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Login', path: '/usuarios/login', params: '{ "email": "ejemplo@mail.com", "password": "123456" }' }
                 ],
                 PUT: [
-                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "id": 1 }' }
+                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "id": 3 }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar usuario', path: '/usuarios/{id}', params: '{ "id": 1 }' }
@@ -33,7 +33,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             producto: {
                 GET: [
                     { name: 'Obtener todos', path: '/productos', params: '' },
-                    { name: 'Obtener por ID', path: '/productos/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por ID', path: '/productos/{id}', params: '{ "id": 20 }' },
                     { name: 'Obtener por código', path: '/productos/codigo/{codigo}', params: '{ "codigo": "PROD001" }' }
                 ],
                 POST: [
@@ -50,7 +50,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             vendedor: {
                 GET: [
                     { name: 'Obtener todos', path: '/vendedores', params: '' },
-                    { name: 'Obtener por ID', path: '/vendedores/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por ID', path: '/vendedores/{id}', params: '{ "id": 2 }' },
                     { name: 'Obtener por nombre', path: '/vendedores/nombre/{nombre}', params: '{ "nombre": "nombre o apellido" }' }
                 ],
                 POST: [
@@ -61,7 +61,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Actualizar vendedor', path: '/vendedores/{id}', params: '{ "nombre": "Nuevo Vendedor" }' }
                 ],
                 DELETE: [
-                    { name: 'Eliminar vendedor', path: '/vendedores/{id}', params: '{ "id": 1 }' }
+                    { name: 'Eliminar vendedor', path: '/vendedores/{id}', params: '{ "id": 4 }' }
                 ]
             },
             folios: {
@@ -86,7 +86,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             condicion_pago: {
                 GET: [
                     { name: 'Obtener todos', path: '/condiciones-pago', params: '' },
-                    { name: 'Obtener por ID', path: '/condiciones-pago/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por ID', path: '/condiciones-pago/{id}', params: '{ "id": 3 }' },
                     { name: 'Obtener por código', path: '/condiciones-pago/codigo/{codigo}', params: '{ "codigo": "30D" }' },
                     { name: 'Obtener por plazo', path: '/condiciones-pago/plazo/{plazo}', params: '{ "plazo": 30 }' }
                 ],
@@ -104,7 +104,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             clientes: {
                 GET: [
                     { name: 'Obtener todos', path: '/clientes', params: '' },
-                    { name: 'Obtener por ID', path: '/clientes/{id}', params: '{ "id": 1 }' },
+                    { name: 'Obtener por ID', path: '/clientes/{id}', params: '{ "id": 7 }' },
                     { name: 'Obtener por RUT', path: '/clientes/rut/{rut}', params: '{ "rut": "12345678-9" }' }
                 ],
                 POST: [
@@ -115,15 +115,13 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Actualizar cliente', path: '/clientes/{id}', params: '{ "razon_social": "Nuevo Nombre" }' }
                 ],
                 DELETE: [
-                    { name: 'Eliminar cliente', path: '/clientes/{id}', params: '{ "id": 1 }' }
+                    { name: 'Eliminar cliente', path: '/clientes/{id}', params: '{ "id": 2 }' }
                 ]
             },
             factura: {
                 GET: [
-                    //{ name: 'Obtener todas', path: '/facturas', params: '' },
-                    //{ name: 'Obtener por ID', path: '/facturas/{id}', params: '{ "id": 1 }' },
                     { name: 'Obtener todas', path: '/facturas/with-details', params: '' },
-                    { name: 'Obtener por ID', path: '/facturas/{id}/with-details', params: '{ "id": 1 }' },
+                    { name: 'Obtener por ID', path: '/facturas/{id}/with-details', params: '{ "id": 5 }' },
                     { name: 'Obtener por cliente', path: '/facturas/cliente/{clienteId}', params: '{ "clienteId": 1 }' },
                     { name: 'Obtener por vendedor', path: '/facturas/vendedor/{vendedorId}', params: '{ "vendedorId": 1 }' },
                     { name: 'Obtener por fecha', path: '/facturas/fecha/{fecha}', params: '{ "fecha": "2025-05-26" }' },
@@ -140,7 +138,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Asignar folios a borrador', path: '/facturas/asignar-folios-borrador', params: '' }
                 ],
                 DELETE: [
-                    { name: 'Eliminar factura', path: '/facturas/{id}', params: '{ "id": 1 }' }
+                    { name: 'Eliminar factura', path: '/facturas/{id}', params: '{ "id": 3 }' }
                 ]
             }
         };
@@ -221,24 +219,21 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                                 </button>
                             ${paramPlaceholder}
                             
-                            <small class="text-muted ms-2">${ep.path}</small>
                         </div>
                     `;
                 });
+                // Actualiza instrucciones al expandir acordeón
+                const btn = document.querySelector('.accordion-button.' + verb.toLowerCase());
+                if (btn) {
+                    btn.onclick = function() { 
+                        updatePaso3Info(verb); 
+                        clearResults(); // Limpiar resultados y textarea al cambiar método
+                    };
+                }
             });
         }
       
-      
-        // Habilita el botón solo si el input tiene un número válido (GET/DELETE)
-        /*function validateParamsNumber(paramId, verb, path, idx) {
-            const input = document.getElementById(paramId);
-            const btn = document.getElementById('btn_' + paramId);
-            let valid = false;
-            if (input.value.trim() && !isNaN(Number(input.value))) {
-                valid = true;
-            }
-            btn.disabled = !valid;
-        }*/
+        
        function toggleButton(paramId) {
     const input = document.getElementById(paramId);
     const btn = document.getElementById('btn_' + paramId);
@@ -282,8 +277,8 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
     const jsonToShow = lastResult ? lastResult : example;
 
     // Botones para cambiar entre formulario y JSON    
-    let formBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('form')">Formulario</button>`;
-    let jsonBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('json')">JSON</button>`;
+    let formBtn = `<button class="btn btn-outline-primary btn-sm mb-2" type="button" onclick="setFormMode('form')">Formulario</button>`;
+    let jsonBtn = `<button class="btn btn-outline-success btn-sm mb-2" type="button" onclick="setFormMode('json')">JSON</button>`;
 
     // Si el modo es 'form', renderiza el formulario; si es 'json', renderiza el JSON
     if (formMode === 'form') {
@@ -300,13 +295,13 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('form')">Enviar</button>
         </form>`;
         
-        jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>
-            <button type="button" class="btn btn-danger mt-2" onclick="clearJson()">Limpiar JSON</button>`;
+        // No mostrar botón limpiar JSON en modo formulario
+        jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px" readonly>${JSON.stringify(jsonToShow, null, 2)}</textarea>`;
     } else {
         formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
         
+        // Quitar botón limpiar JSON
         jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>
-            <button type="button" class="btn btn-danger mt-2" onclick="clearJson()">Limpiar JSON</button>
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('json')">Enviar</button>`;
     }
     // Actualiza el HTML de los contenedores
@@ -378,6 +373,10 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
         function clearResults() {
             document.getElementById('attrList').innerHTML = '';
             document.getElementById('jsonView').innerHTML = '';
+            // Limpiar el textarea de JSON si existe
+            const jsonInput = document.getElementById('jsonInput');
+            if (jsonInput) jsonInput.value = '';
+            lastResult = null;
         }
 
        
@@ -500,16 +499,23 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
     
 //Si está en pantalla pequeña, hace scroll automático a los resultados.
         function scrollToResultsIfMobile() {
-    if (window.innerWidth < 992) {  // Bootstrap lg breakpoint
+   // if (window.innerWidth < 992) {  // Bootstrap lg breakpoint
         const section = document.getElementById('resultsSection');
         if (section) {
             section.scrollIntoView({ behavior: 'smooth' });
         }
-    }
+    //}
 }
  // Inicialización
+// No selecciones modelo por defecto al cargar
+//renderModelList();
+//renderEndpoints();
+
+// Espera a que el usuario seleccione un modelo para mostrar los endpoints
+// Así el acordeón de verbos HTTP estará vacío al inicio
+// Inicialización
         renderModelList();
-        renderEndpoints();
+        //renderEndpoints();
 
 
 
@@ -623,9 +629,24 @@ function navegarFactura(direccion) {
   renderFacturaPagination();
 }
 
+// Actualiza el texto de instrucciones según el método HTTP seleccionado
+function updatePaso3Info(verb) {
+    const paso3 = document.getElementById('paso3info');
+    if (!paso3) return;
+    if (verb === 'GET' || verb === 'DELETE') {
+        paso3.innerHTML = `Verás el <b>resultado</b> en formato <b>Tabla</b> y <b>JSON</b>.`;
+    } else if (verb === 'POST' || verb === 'PUT') {
+        paso3.innerHTML = `Elige el <b>formulario</b> o el campo para ingresar <b>JSON</b> y envía la información.`;
+    } else if (verb === 'PATCH') {
+        paso3.innerHTML = `Completa los datos necesarios y haz clic en <b>Enviar</b>.`;
+    } else {
+        paso3.innerHTML = '';
+    }
+}
 
-  
 
 
 
-  
+
+
+

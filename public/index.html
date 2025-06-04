@@ -19,85 +19,89 @@
     </nav>
 
     <div class="container-fluid mt-3">
-        <!-- Main Body: 2 Rows -->
+        <!-- Paso 1: Elije el modelo a consultar -->
         <div class="row mb-3" style="min-height: 320px;">
-            <!-- Columna 1: Lista de modelos -->
-            
-                <div class="col-md-4 col-12"> 
-                <div class="model-list d-none d-md-block">
-    <div id="modelList"></div> <!-- Escritorio -->
-</div>
-
-<!-- Versión móvil: collapsible -->
-<div class="d-block d-md-none mb-3">
-    <details>
-        <summary class="btn btn-outline-primary w-100 mb-2">Seleccionar Entidad</summary>
-        <div class="list-group" id="modelListMobile"></div>
-    </details>
-</div>
-
+            <div class="col-md-4 col-12"> 
+                <div class="mb-3 p-3" style="border: 2px solid #222; border-radius: 18px; background: #1818180a;">
+                    <p class="fw-bold text-primary fs-5 mb-1 text-dark">➊ Paso 1: <span class="fw-normal text-dark">Elige <b>entidad</b> a consultar</span></p>
+                    <p class="text-muted mb-2 text-dark">Haz clic en una entidad .</p>
+                    <div class="model-list d-none d-md-block">
+                        <div id="modelList"></div> <!-- Escritorio -->
+                    </div>
+                    <!-- Versión móvil: collapsible -->
+                    <div class="d-block d-md-none mb-3">
+                        <details>
+                            <summary class="btn btn-outline-primary w-100 mb-2">Seleccionar Entidad</summary>
+                            <div class="list-group" id="modelListMobile"></div>
+                        </details>
+                    </div>
+                </div>
             </div>
-            <!-- Columna 2: Endpoints -->
-                <div class="col-md-8 col-12"> 
-                <div class="accordion" id="endpointsAccordion">
-                    <!-- Acordeón Móvil (solo visible en pantallas pequeñas) -->
+            <!-- Paso 2: Elije método y endpoint -->
+            <div class="col-md-8 col-12"> 
+                <div class="mb-3 p-3" style="border: 2px solid #222; border-radius: 18px; background: #1818180a;">
+                    <p class="fw-bold text-success fs-5 mb-1 text-dark">➋ Paso 2: <span class="fw-normal text-dark">Elige <b>método HTTP</b> y <b>endpoint</b> a consultar</span></p>
+                    <p class="text-muted mb-2 text-dark">Haz clic en el método (GET, POST...) y luego en el endpoint a probar.</p>
+                    <div class="accordion" id="endpointsAccordion">
+                        <!-- Acordeón Móvil (solo visible en pantallas pequeñas) -->
 <div class="d-lg-none mt-3" id="endpointsAccordionMobile">
     <!-- Se llena dinámicamente en JS -->
 </div>
 
-                    <!-- GET -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingGet">
-                            <button class="accordion-button get" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGet" aria-expanded="true" aria-controls="collapseGet">
-                                GET
+                        <!-- GET -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingGet">
+                                <button class="accordion-button get" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGet" aria-expanded="true" aria-controls="collapseGet">
+                                    GET
                             </button>
-                        </h2>
-                        <div id="collapseGet" class="accordion-collapse collapse show" aria-labelledby="headingGet" data-bs-parent="#endpointsAccordion">
-                            <div class="accordion-body" id="getEndpoints"></div>
+                            </h2>
+                            <div id="collapseGet" class="accordion-collapse collapse show" aria-labelledby="headingGet" data-bs-parent="#endpointsAccordion">
+                                <div class="accordion-body" id="getEndpoints"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- POST -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingPost">
-                            <button class="accordion-button post collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePost" aria-expanded="false" aria-controls="collapsePost">
-                                POST
+                        <!-- POST -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingPost">
+                                <button class="accordion-button post collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePost" aria-expanded="false" aria-controls="collapsePost">
+                                    POST
                             </button>
-                        </h2>
-                        <div id="collapsePost" class="accordion-collapse collapse" aria-labelledby="headingPost" data-bs-parent="#endpointsAccordion">
-                            <div class="accordion-body" id="postEndpoints"></div>
+                            </h2>
+                            <div id="collapsePost" class="accordion-collapse collapse" aria-labelledby="headingPost" data-bs-parent="#endpointsAccordion">
+                                <div class="accordion-body" id="postEndpoints"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- PUT -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingPut">
-                            <button class="accordion-button put collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePut" aria-expanded="false" aria-controls="collapsePut">
-                                PUT
+                        <!-- PUT -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingPut">
+                                <button class="accordion-button put collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePut" aria-expanded="false" aria-controls="collapsePut">
+                                    PUT
                             </button>
-                        </h2>
-                        <div id="collapsePut" class="accordion-collapse collapse" aria-labelledby="headingPut" data-bs-parent="#endpointsAccordion">
-                            <div class="accordion-body" id="putEndpoints"></div>
+                            </h2>
+                            <div id="collapsePut" class="accordion-collapse collapse" aria-labelledby="headingPut" data-bs-parent="#endpointsAccordion">
+                                <div class="accordion-body" id="putEndpoints"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- DELETE -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingDelete">
-                            <button class="accordion-button delete collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
-                                DELETE
+                        <!-- DELETE -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingDelete">
+                                <button class="accordion-button delete collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">
+                                    DELETE
                             </button>
-                        </h2>
-                        <div id="collapseDelete" class="accordion-collapse collapse" aria-labelledby="headingDelete" data-bs-parent="#endpointsAccordion">
-                            <div class="accordion-body" id="deleteEndpoints"></div>
+                            </h2>
+                            <div id="collapseDelete" class="accordion-collapse collapse" aria-labelledby="headingDelete" data-bs-parent="#endpointsAccordion">
+                                <div class="accordion-body" id="deleteEndpoints"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- PATCH opcional -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingPatch">
-                            <button class="accordion-button patch collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePatch" aria-expanded="false" aria-controls="collapsePatch">
-                                PATCH
+                        <!-- PATCH opcional -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingPatch">
+                                <button class="accordion-button patch collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePatch" aria-expanded="false" aria-controls="collapsePatch">
+                                    PATCH
                             </button>
-                        </h2>
-                        <div id="collapsePatch" class="accordion-collapse collapse" aria-labelledby="headingPatch" data-bs-parent="#endpointsAccordion">
-                            <div class="accordion-body" id="patchEndpoints"></div>
+                            </h2>
+                            <div id="collapsePatch" class="accordion-collapse collapse" aria-labelledby="headingPatch" data-bs-parent="#endpointsAccordion">
+                                <div class="accordion-body" id="patchEndpoints"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,13 +109,20 @@
         </div>
 
         <!-- Row 2: Resultados -->
-        <div class="row" id="resultsSection" style="min-height: 320px;">
-
-            
-                <div class="col-md-6 col-12"> 
-                <h2>Modelo</h2>
-                
-                <section id="facturaSection" class="border border-dark rounded p-3">
+        <div class="container-fluid">
+      <div class="row justify-content-center" id="resultsSection" style="min-height: 320px;">
+            <div class="mb-2 p-3 mx-2 mx-md-4 mx-lg-5" style="border: 2px solid #222; border-radius: 18px; background: #1818180a; max-width: 1400px;">
+                <span class="fw-bold text-info fs-5 text-dark">➌</span>
+                <span class="fw-bold text-info fs-5 text-dark">Paso 3:</span>
+                <span class="fw-normal text-dark"> 
+                    <span id="paso3info" class="text-dark"> 
+                        <!-- Se actualiza dinámicamente según el método -->
+                    </span>
+                </span>
+                <div class="row mt-3">
+                    <div class="col-md-6 col-12">
+                        <h2>Formulario</h2>
+                        <section id="facturaSection" class="border border-dark rounded p-3">
   <div class="d-flex justify-content-between mb-3">
     <div>
       <h5 id="fecha"></h5>
@@ -147,15 +158,16 @@
 
 <div id="paginacionFacturas"></div>
 
-                <div class="attr-list" id="attrList">
+<div class="attr-list" id="attrList">
                     <!-- Lista de atributos de un registro o paginación -->
                 </div>
-            </div>
-            <div class="col-md-1 col-12"> </div>
-                <div class="col-md-5 col-12"> 
-                <h2>Json</h2>
-                <div class="json-view" id="jsonView">
-                    <!-- JSON completo -->
+                    </div>
+                    <div class="col-md-5 col-12 pe-md-4 pe-lg-5">
+                        <h2>Json</h2>
+                        <div class="json-view" id="jsonView">
+                            <!-- JSON completo -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
