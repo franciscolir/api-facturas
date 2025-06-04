@@ -40,7 +40,10 @@ module.exports = (sequelize) => {
         rol: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'usuario'
+            defaultValue: 'usuario',
+            validate: {
+                isIn: [['usuario', 'admin']]
+            }
         },
         // Estado del usuario en el sistema
         // Permite activar/desactivar usuarios sin eliminarlos

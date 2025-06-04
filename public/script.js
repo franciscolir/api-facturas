@@ -4,7 +4,6 @@ let facturasArray = [];//Almacena un conjunto de facturas para navegación tipo 
 let currentModel = 'usuario';      // Modelo actualmente seleccionado
 let lastResult = null;             // Último resultado devuelto por una API
 let currentPage = 1;               // Página actual para paginación
-let pageSize = 10;                 // Tamaño de página (no se usa directamente aquí)
 let formMode = null;              // 'form' o 'json'
 let currentVerb = null;           // Método HTTP actual
 let currentEndpointIdx = null;    // Índice del endpoint actualmente seleccionado
@@ -163,6 +162,10 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
         //Actualiza el modelo actual y redibuja endpoints y resultados.
         function selectModel(model) {
             currentModel = model;
+            // Limpiar arrays de facturas bulk al cambiar de modelo
+            window.facturasBulkArray = [];
+            window.detallesFacturas = [[]];
+            window.facturaBulkIndex = 0;
             renderModelList();
             renderEndpoints();
             clearResults();
@@ -225,9 +228,13 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                 // Actualiza instrucciones al expandir acordeón
                 const btn = document.querySelector('.accordion-button.' + verb.toLowerCase());
                 if (btn) {
-                    btn.onclick = function() { 
-                        updatePaso3Info(verb); 
-                        clearResults(); // Limpiar resultados y textarea al cambiar método
+                    btn.onclick = function() {
+                        updatePaso3Info(verb);
+                        clearResults();
+                        // Limpiar arrays de facturas bulk al cambiar de método
+                        window.facturasBulkArray = [];
+                        window.detallesFacturas = [[]];
+                        window.facturaBulkIndex = 0;
                     };
                 }
             });
@@ -264,26 +271,62 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
     const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
     let formHtml = '';
     let jsonHtml = '';
-    // Si no hay endpoint seleccionado, no hacemos nada
     let example = {};
     try {
-        // Intenta parsear los parámetros del endpoint
         example = ep.params ? JSON.parse(ep.params) : {};
     } catch { example = {}; }
-
-    // Usa lastResult si está disponible
-    // Si hay un resultado previo, lo usamos como ejemplo
-    // Si no, usamos el ejemplo del endpoint
     const jsonToShow = lastResult ? lastResult : example;
-
-    // Botones para cambiar entre formulario y JSON    
     let formBtn = `<button class="btn btn-outline-primary btn-sm mb-2" type="button" onclick="setFormMode('form')">Formulario</button>`;
     let jsonBtn = `<button class="btn btn-outline-success btn-sm mb-2" type="button" onclick="setFormMode('json')">JSON</button>`;
 
-    // Si el modo es 'form', renderiza el formulario; si es 'json', renderiza el JSON
-    if (formMode === 'form') {
-        // Renderiza el formulario con los campos del ejemplo
-        // Si el ejemplo tiene campos, los muestra como inputs
+    // Detectar si es POST factura o bulk
+    const isFacturaPost = currentModel === 'factura' && currentVerb === 'POST' && ep.path === '/facturas';
+    const isFacturaBulkPost = currentModel === 'factura' && currentVerb === 'POST' && ep.path === '/facturas/bulk';
+
+    if (formMode === 'form' && (isFacturaPost || isFacturaBulkPost)) {
+        // --- Formulario especial para factura (y bulk) ---
+        formHtml = formBtn + `
+    <form id="mainForm" oninput="syncFormToJson()">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div></div>
+            <div class="d-flex align-items-center gap-2">
+                <div id="facturaBulkNav" class="me-2"></div>
+            </div>
+        </div>
+        <p class="text-muted">Completa los datos de la factura.</p>
+        <div class="mb-2">
+            <label class="form-label">cliente_id</label>
+            <input type="number" class="form-control" name="cliente_id" id="formField_cliente_id">
+        </div>
+        <div class="mb-2">
+            <label class="form-label">vendedor_id</label>
+            <input type="number" class="form-control" name="vendedor_id" id="formField_vendedor_id">
+        </div>
+        <div class="mb-2">
+            <label class="form-label">condicion_pago_id</label>
+            <input type="number" class="form-control" name="condicion_pago_id" id="formField_condicion_pago_id">
+        </div>
+        <div id="detallesContainer"></div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <button type="button" class="btn btn-outline-info btn-sm px-2 py-1" style="font-size:1.2rem;line-height:1;" title="Agregar producto" onclick="agregarDetalle()">+</button>
+            <div class="d-flex gap-2 ms-auto">
+                ${isFacturaBulkPost ? `<button type="button" class="btn btn-secondary btn-sm" onclick="agregarFacturaAlArray()">Añadir factura</button>` : ''}
+                <button type="button" class="btn btn-success btn-sm" onclick="submitFormOrJson('form')">Enviar${isFacturaBulkPost ? ' todas' : ''}</button>
+            </div>
+        </div>
+    </form>`;
+        setTimeout(() => {
+            if (!window.detallesFacturas) window.detallesFacturas = [[]];
+            if (!window.facturaBulkIndex) window.facturaBulkIndex = 0;
+            renderDetallesFactura();
+            if (isFacturaBulkPost) renderFacturaBulkNav();
+            // Mover la navegación de facturas arriba a la derecha
+            const nav = document.getElementById('facturaBulkNav');
+            if (nav) nav.classList.add('d-flex', 'justify-content-end', 'align-items-center', 'gap-2');
+        }, 0);
+        jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px" readonly>${JSON.stringify(jsonToShow, null, 2)}</textarea>`;
+    } else if (formMode === 'form') {
+        // Formulario normal para otros modelos
         formHtml = formBtn + `<form id="mainForm" oninput="syncFormToJson()">
             <p class="text-muted">Selecciona el formulario para ingresar los datos.</p>
             ${Object.keys(example).map(field => `
@@ -294,55 +337,203 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             `).join('')}
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('form')">Enviar</button>
         </form>`;
-        
-        // No mostrar botón limpiar JSON en modo formulario
         jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px" readonly>${JSON.stringify(jsonToShow, null, 2)}</textarea>`;
     } else {
         formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
-        
-        // Quitar botón limpiar JSON
         jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('json')">Enviar</button>`;
     }
-    // Actualiza el HTML de los contenedores
     document.getElementById('attrList').innerHTML = formHtml;
     document.getElementById('jsonView').innerHTML = jsonHtml;
 }
 
-        // Cambia el modo del formulario (formulario o JSON)
-        function setFormMode(mode) {
-            
-            formMode = mode;
+// --- Lógica para detalles dinámicos de factura y bulk ---
+window.detallesFacturas = [[]];
+window.facturaBulkIndex = 0;
+window.facturasBulkArray = [];
+function agregarDetalle() {
+    const idx = window.facturaBulkIndex || 0;
+    if (!window.detallesFacturas[idx]) window.detallesFacturas[idx] = [];
+    window.detallesFacturas[idx].push({ producto_id: '', cantidad: '', precio_unitario: '' });
+    renderDetallesFactura();
+}
+function eliminarDetalle(i) {
+    const idx = window.facturaBulkIndex || 0;
+    window.detallesFacturas[idx].splice(i, 1);
+    renderDetallesFactura();
+}
+function renderDetallesFactura() {
+    const idx = window.facturaBulkIndex || 0;
+    const detalles = window.detallesFacturas[idx] || [];
+    const container = document.getElementById('detallesContainer');
+    if (!container) return;
+    let html = `<label class='form-label'>Detalles de productos</label>`;
+    detalles.forEach((det, i) => {
+        html += `<div class='row g-2 align-items-end mb-2'>
+            <div class='col-4'><input type='number' class='form-control' placeholder='producto_id' value='${det.producto_id}' onchange='actualizarDetalle(${i},"producto_id",this.value)'></div>
+            <div class='col-3'><input type='number' class='form-control' placeholder='cantidad' value='${det.cantidad}' onchange='actualizarDetalle(${i},"cantidad",this.value)'></div>
+            <div class='col-4'><input type='number' class='form-control' placeholder='precio_unitario' value='${det.precio_unitario}' onchange='actualizarDetalle(${i},"precio_unitario",this.value)'></div>
+            <div class='col-1'><button type='button' class='btn btn-danger btn-sm' onclick='eliminarDetalle(${i})'>&times;</button></div>
+        </div>`;
+    });
+    container.innerHTML = html;
+    syncFormToJson();
+}
+function actualizarDetalle(i, campo, valor) {
+    const idx = window.facturaBulkIndex || 0;
+    window.detallesFacturas[idx][i][campo] = valor;
+    syncFormToJson();
+}
 
-            renderFormOrJson();
+// Sincroniza el formulario de factura (o bulk) con el textarea JSON
+function syncFormToJson() {
+    const form = document.getElementById('mainForm');
+    if (!form) return;
+    const formData = new FormData(form);
+    let data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+    // Detectar si es bulk
+    const isBulk = !!document.getElementById('facturaBulkNav');
+    if (isBulk) {
+        // Bulk: mostrar el array de facturas acumuladas + la actual si tiene datos
+        const facturas = window.facturasBulkArray ? [...window.facturasBulkArray] : [];
+        // Previsualiza la factura actual si tiene algún campo llenado
+        const idx = window.facturaBulkIndex || 0;
+        const detalles = (window.detallesFacturas[idx] || []).map(det => ({
+            producto_id: Number(det.producto_id),
+            cantidad: Number(det.cantidad),
+            precio_unitario: Number(det.precio_unitario)
+        }));
+        if (Object.values(data).some(v => v) || detalles.length > 0) {
+            data.detalles = detalles;
+            facturas[idx] = data;
         }
+        document.getElementById('jsonInput').value = JSON.stringify(facturas.filter(f => f), null, 2);
+    } else {
+        // Factura individual
+        const idx = window.facturaBulkIndex || 0;
+        data.detalles = (window.detallesFacturas[idx] || []).map(det => ({
+            producto_id: Number(det.producto_id),
+            cantidad: Number(det.cantidad),
+            precio_unitario: Number(det.precio_unitario)
+        }));
+        document.getElementById('jsonInput').value = JSON.stringify(data, null, 2);
+    }
+}
+function renderFacturaBulkNav() {
+    const nav = document.getElementById('facturaBulkNav');
+    if (!nav) return;
+    nav.innerHTML = `
+        <div class='d-flex align-items-center gap-2 my-2'>
+            <button type='button' class='btn btn-outline-secondary btn-sm' onclick='anteriorFacturaBulk()' ${window.facturaBulkIndex === 0 ? 'disabled' : ''}>Anterior</button>
+            <span>Factura ${window.facturaBulkIndex + 1}</span>
+            <button type='button' class='btn btn-outline-secondary btn-sm' onclick='siguienteFacturaBulk()'>Siguiente</button>
+        </div>
+    `;
+}
+function siguienteFacturaBulk() {
+    window.facturaBulkIndex = (window.facturaBulkIndex || 0) + 1;
+    if (!window.detallesFacturas[window.facturaBulkIndex]) window.detallesFacturas[window.facturaBulkIndex] = [];
+    document.getElementById('mainForm').reset();
+    renderDetallesFactura();
+    renderFacturaBulkNav();
+}
+function anteriorFacturaBulk() {
+    if (window.facturaBulkIndex > 0) window.facturaBulkIndex--;
+    renderDetallesFactura();
+    renderFacturaBulkNav();
+}
+// --- Implementación faltante: agregarFacturaAlArray ---
+function agregarFacturaAlArray() {
+    // Obtiene los datos del formulario actual y los detalles
+    const form = document.getElementById('mainForm');
+    const formData = new FormData(form);
+    let factura = {};
+    formData.forEach((value, key) => {
+        factura[key] = value;
+    });
+    // Añade los detalles de productos
+    const idx = window.facturaBulkIndex || 0;
+    factura.detalles = (window.detallesFacturas[idx] || []).map(det => ({
+        producto_id: Number(det.producto_id),
+        cantidad: Number(det.cantidad),
+        precio_unitario: Number(det.precio_unitario)
+    }));
+    // Validar que la factura no esté vacía (al menos un campo o un detalle)
+    const tieneCampos = Object.values(factura).some(v => v && v !== '' && v !== 0);
+    const tieneDetalles = factura.detalles && factura.detalles.length > 0 && factura.detalles.some(d => d.producto_id && d.cantidad && d.precio_unitario);
+    if (!tieneCampos && !tieneDetalles) {
+        alert('No puedes añadir una factura vacía al lote.');
+        return;
+    }
+    // Guarda la factura en el array bulk
+    window.facturasBulkArray[idx] = factura;
+    // Prepara el siguiente formulario vacío
+    window.facturaBulkIndex = idx + 1;
+    if (!window.detallesFacturas[window.facturaBulkIndex]) window.detallesFacturas[window.facturaBulkIndex] = [];
+    document.getElementById('mainForm').reset();
+    renderDetallesFactura();
+    renderFacturaBulkNav();
+    syncFormToJson();
+}
         
-
-        function syncFormToJson() {
-            const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
-            let example = {};
-            try {
-                example = ep.params ? JSON.parse(ep.params) : {};
-            } catch { example = {}; }
-            let obj = {};
-            Object.keys(example).forEach(field => {
-                obj[field] = document.getElementById(`formField_${field}`).value;
-            });
-            document.getElementById('jsonInput').value = JSON.stringify(obj, null, 2);
-        }
-
-        //Envia los datos del formulario o JSON mediante fetch.
+        // Envia los datos del formulario o JSON mediante fetch.
         
         function submitFormOrJson(mode) {
             const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
             let url = apiBase + ep.path;
             let body = {};
+            const isFacturaBulkPost = currentModel === 'factura' && currentVerb === 'POST' && ep.path === '/facturas/bulk';
             if (mode === 'form') {
-                const form = document.getElementById('mainForm');
-                const formData = new FormData(form);
-                formData.forEach((value, key) => {
-                    body[key] = value;
-                });
+                if (isFacturaBulkPost) {
+                    // Antes de enviar, agrega la última factura escrita si no está vacía y no fue añadida
+                    const form = document.getElementById('mainForm');
+                    const formData = new FormData(form);
+                    let ultimaFactura = {};
+                    formData.forEach((value, key) => {
+                        ultimaFactura[key] = value;
+                    });
+                    const idx = window.facturaBulkIndex || 0;
+                    ultimaFactura.detalles = (window.detallesFacturas[idx] || []).map(det => ({
+                        producto_id: Number(det.producto_id),
+                        cantidad: Number(det.cantidad),
+                        precio_unitario: Number(det.precio_unitario)
+                    }));
+                    const tieneCampos = Object.values(ultimaFactura).some(v => v && v !== '' && v !== 0);
+                    const tieneDetalles = ultimaFactura.detalles && ultimaFactura.detalles.length > 0 && ultimaFactura.detalles.some(d => d.producto_id && d.cantidad && d.precio_unitario);
+                    // Solo agrega si no está vacía y no fue añadida
+                    if ((tieneCampos || tieneDetalles) && !window.facturasBulkArray[idx]) {
+                        window.facturasBulkArray[idx] = ultimaFactura;
+                    }
+                    // Elimina facturas vacías del array
+                    body = window.facturasBulkArray.filter(f => {
+                        if (!f) return false;
+                        const campos = Object.values(f).some(v => v && v !== '' && v !== 0);
+                        const detalles = f.detalles && f.detalles.length > 0 && f.detalles.some(d => d.producto_id && d.cantidad && d.precio_unitario);
+                        return campos || detalles;
+                    });
+                    if (!body.length) {
+                        alert('Debes añadir al menos una factura válida al lote antes de enviar.');
+                        return;
+                    }
+                } else {
+                    const form = document.getElementById('mainForm');
+                    const formData = new FormData(form);
+                    formData.forEach((value, key) => {
+                        body[key] = value;
+                    });
+                    // Si es factura individual, añade detalles
+                    if (currentModel === 'factura' && currentVerb === 'POST' && ep.path === '/facturas') {
+                        const idx = window.facturaBulkIndex || 0;
+                        body.detalles = (window.detallesFacturas[idx] || []).map(det => ({
+                            producto_id: Number(det.producto_id),
+                            cantidad: Number(det.cantidad),
+                            precio_unitario: Number(det.precio_unitario)
+                        }));
+                    }
+                }
             } else {
                 try {
                     body = JSON.parse(document.getElementById('jsonInput').value);
@@ -354,14 +545,18 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             let options = { method: currentVerb, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
             fetch(url, options)
                 .then(r => r.json().then(data => ({ status: r.status, data })))
-                //Si tiene éxito, guarda el resultado en lastResult y renderiza.
-
                 .then(({ status, data }) => {
                     lastResult = data;
                     currentPage = 1;
                     renderResult(data, status);
                     if (status >= 200 && status < 300) {
                         alert('Registro exitoso');
+                        // Limpiar lote después de enviar
+                        if (isFacturaBulkPost) {
+                            window.facturasBulkArray = [];
+                            window.detallesFacturas = [[]];
+                            window.facturaBulkIndex = 0;
+                        }
                     }
                 })
                 .catch(err => {
@@ -389,10 +584,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             let url = apiBase + path;
 
             // Si hay input, procesa params
-           // Si hay input, procesa params
-            //if (input && input.value.trim()) {
-              //  params = { id: input.value.trim() }; // Mantiene el valor como string
-            //}
+         
                 if (input && input.value.trim()) {
                     // Extrae el nombre del parámetro desde la ruta, ej: {codigo} => "codigo"
                     const match = path.match(/{(\w+)}/);
@@ -483,23 +675,14 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
 
         //Muestra el JSON en formato <pre>.
         function renderJsonView(obj) {
-            const isPost = currentVerb === 'POST';
             document.getElementById('jsonView').innerHTML = `
                 <pre>${JSON.stringify(obj, null, 2)}</pre>
-                ${isPost ? `<button class="btn btn-danger mt-2" onclick="clearJson()">Limpiar JSON</button>` : ''}
             `;
         }
-
-        function clearJson() {
-            document.getElementById('jsonInput').value = '';
-        }
-
-    
 
     
 //Si está en pantalla pequeña, hace scroll automático a los resultados.
         function scrollToResultsIfMobile() {
-   // if (window.innerWidth < 992) {  // Bootstrap lg breakpoint
         const section = document.getElementById('resultsSection');
         if (section) {
             section.scrollIntoView({ behavior: 'smooth' });
@@ -507,20 +690,10 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
     //}
 }
  // Inicialización
-// No selecciones modelo por defecto al cargar
-//renderModelList();
-//renderEndpoints();
-
 // Espera a que el usuario seleccione un modelo para mostrar los endpoints
 // Así el acordeón de verbos HTTP estará vacío al inicio
 // Inicialización
         renderModelList();
-        //renderEndpoints();
-
-
-
-
-
 
 
    
@@ -565,9 +738,6 @@ function crearFacturas(facturas) {
   } else {
     // Es solo una factura individual
     renderFactura(facturas);
-    //facturasArray = [facturas]; // También la almacenamos como array por si se necesita paginar luego
-    //facturaIndex = 0;
-    //renderFacturaPagination(); // Si quieres evitar paginación en este caso, comenta esta línea
   }
 }
 
