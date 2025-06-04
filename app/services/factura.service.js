@@ -217,6 +217,7 @@ async findBorrador() {
      * @returns {Promise<Array>} Lista de facturas con todas sus relaciones
      */
     async findAllWithDetails() {
+        console.log('findAllWithDetails');
     return await this.model.findAll({
         ...facturaAttributes,
         where: { activo: true }

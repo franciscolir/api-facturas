@@ -1,4 +1,4 @@
- // Configuración de endpoints por modelo
+// Configuración de endpoints por modelo
 let facturaIndex = 0;// Índice actual de la factura mostrada.
 let facturasArray = [];//Almacena un conjunto de facturas para navegación tipo paginación.
 let currentModel = 'usuario';      // Modelo actualmente seleccionado
@@ -191,8 +191,11 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                         const example = `Ej: ${paramName.toUpperCase()}123`; // ejemplo genérico
                         const exampleValue = ep.params ? `Ejemplo: ${JSON.parse(ep.params)[paramName]}` || example : example;
                     
+                        // Determinar el tipo de input basado en el nombre del parámetro
+                        const inputType = paramName === 'fecha' ? 'date' : 'text';
+                    
                         paramPlaceholder = `
-                            <input type="text" class="form-control param-inline" id="${paramId}" 
+                            <input type="${inputType}" class="form-control param-inline" id="${paramId}" 
                                 placeholder="${exampleValue}" 
                                 oninput="toggleButton('${paramId}')">
                             <small id="msg_${paramId}" class="text-danger d-none">Este campo es obligatorio.</small>
@@ -277,8 +280,6 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
     // Si hay un resultado previo, lo usamos como ejemplo
     // Si no, usamos el ejemplo del endpoint
     const jsonToShow = lastResult ? lastResult : example;
-    //console.log("jsonToShow: ", jsonToShow);
-    //console.log("lastResult: ", lastResult);
 
     // Botones para cambiar entre formulario y JSON    
     let formBtn = `<button class="btn btn-outline-secondary btn-sm mb-2" type="button" onclick="setFormMode('form')">Formulario</button>`;
@@ -289,7 +290,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
         // Renderiza el formulario con los campos del ejemplo
         // Si el ejemplo tiene campos, los muestra como inputs
         formHtml = formBtn + `<form id="mainForm" oninput="syncFormToJson()">
-
+            <p class="text-muted">Selecciona el formulario para ingresar los datos.</p>
             ${Object.keys(example).map(field => `
                 <div class="mb-2">
                     <label class="form-label">${field}</label>
@@ -299,11 +300,13 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('form')">Enviar</button>
         </form>`;
         
-        jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>`;
+        jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>
+            <button type="button" class="btn btn-danger mt-2" onclick="clearJson()">Limpiar JSON</button>`;
     } else {
-                formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
+        formHtml = formBtn + `<div class="text-muted">Puedes usar el modo formulario para ingresar los datos.</div>`;
         
         jsonHtml = jsonBtn + `<textarea id="jsonInput" class="form-control" style="height:300px">${JSON.stringify(jsonToShow, null, 2)}</textarea>
+            <button type="button" class="btn btn-danger mt-2" onclick="clearJson()">Limpiar JSON</button>
             <button type="button" class="btn btn-success mt-2" onclick="submitFormOrJson('json')">Enviar</button>`;
     }
     // Actualiza el HTML de los contenedores
@@ -481,7 +484,15 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
 
         //Muestra el JSON en formato <pre>.
         function renderJsonView(obj) {
-            document.getElementById('jsonView').innerHTML = `<pre>${JSON.stringify(obj, null, 2)}</pre>`;
+            const isPost = currentVerb === 'POST';
+            document.getElementById('jsonView').innerHTML = `
+                <pre>${JSON.stringify(obj, null, 2)}</pre>
+                ${isPost ? `<button class="btn btn-danger mt-2" onclick="clearJson()">Limpiar JSON</button>` : ''}
+            `;
+        }
+
+        function clearJson() {
+            document.getElementById('jsonInput').value = '';
         }
 
     
@@ -510,13 +521,22 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
 //Oculta la sección HTML para la factura.
 function ocultarFactura() {
       const container = document.getElementById('facturaSection');
+      const tabla = document.getElementById('attrList');
+      const paginacion = document.getElementById('paginacionFacturas');
       container.style.display = 'none';
+      tabla.style.display = 'block';
+      paginacion.style.display = 'none';
     }
     
 //Muestra la sección HTML para la factura.
 function mostrarFactura() {
       const container = document.getElementById('facturaSection');
-      container.style.display = 'block';}
+      const tabla = document.getElementById('attrList');
+      const paginacion = document.getElementById('paginacionFacturas');
+      container.style.display = 'block';
+      tabla.style.display = 'none';
+      paginacion.style.display = 'block';
+    }        
 
 //Recibe una o varias facturas.
 //Las guarda en facturasArray y comienza a renderizar desde la primera.
@@ -584,7 +604,7 @@ console.log("renderFactura: ", factura);
       document.getElementById('total').textContent = factura.total.toFixed(2);
     }
 
-      //Muestra los botones “Anterior” y “Siguiente” para cambiar de factura. 
+      //Muestra los botones "Anterior" y "Siguiente" para cambiar de factura. 
 function renderFacturaPagination() {
   const container = document.getElementById('paginacionFacturas');
   container.innerHTML = `

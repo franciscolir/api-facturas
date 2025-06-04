@@ -90,14 +90,18 @@ class FacturaController extends BaseController {
      */
    async getAllWithDetails(req, res) {
     try {
+        console.log('getAllWithDetails', req.url);
         const facturas = await facturaService.findAllWithDetails();
-
+        console.log('facturas', facturas);
         // Mejorar: devolver 200 y [] si no hay resultados
         if (!facturas || facturas.length === 0) {
+            console.log('No hay facturas');
             return res.status(200).json([]);
         }
-
-        res.json(facturas.map(f => f.toPublicJSON()));
+        console.log('Hay facturas');
+       
+        //res.json(facturas.map(f => f.toPublicJSON()));
+        res.json(facturas);
     } catch (error) {
         console.error('Error al obtener facturas con detalles:', error); // útil para logs del backend
         res.status(500).json({ 
@@ -155,7 +159,8 @@ class FacturaController extends BaseController {
      */
     async getByFecha(req, res) {
         try {
-            const facturas = await this.service.findByFecha(req.params.fecha);
+            const fecha = new Date(req.params.fecha); // Convertir el parámetro a tipo fecha
+            const facturas = await this.service.findByFecha(fecha);
             res.json(facturas);
         } catch (error) {
             res.status(500).json({ message: error.message });
