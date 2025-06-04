@@ -23,7 +23,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Login', path: '/usuarios/login', params: '{ "email": "ejemplo@mail.com", "password": "123456" }' }
                 ],
                 PUT: [
-                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "id": 3 }' }
+                    { name: 'Actualizar usuario', path: '/usuarios/{id}', params: '{ "id": 1, "nombre": "Ejemplo", "email": "ejemplo@mail.com",  "rol": "usuario" }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar usuario', path: '/usuarios/{id}', params: '{ "id": 1 }' }
@@ -40,7 +40,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Crear múltiples productos', path: '/productos/bulk', params: '[{ "codigo": "P002", "nombre": "Producto 2", "precio_unitario": 200, "stock": 20 }]' }
                 ],
                 PUT: [
-                    { name: 'Actualizar producto', path: '/productos/{id}', params: '{ "nombre": "Nuevo Producto" }' }
+                    { name: 'Actualizar producto', path: '/productos/{id}', params: '{ "id": 1, "codigo": "P002", "nombre": "Producto 2", "precio_unitario": 200, "stock": 20 }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar producto', path: '/productos/{id}', params: '{ "id": 1 }' }
@@ -57,7 +57,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Crear múltiples vendedores', path: '/vendedores/bulk', params: '[{ "nombre": "Vendedor 2", "email": "v2@mail.com", "telefono": "912345679" }]' }
                 ],
                 PUT: [
-                    { name: 'Actualizar vendedor', path: '/vendedores/{id}', params: '{ "nombre": "Nuevo Vendedor" }' }
+                    { name: 'Actualizar vendedor', path: '/vendedores/{id}', params: '{ "id": 1, "nombre": "Vendedor 2", "email": "v2@mail.com", "telefono": "912345679" }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar vendedor', path: '/vendedores/{id}', params: '{ "id": 4 }' }
@@ -74,7 +74,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Crear múltiples folios', path: '/folios/bulk', params: '[{ "numero": 123457, "serie": "A", "tipo": "FACTURA" }]' }
                 ],
                 PUT: [
-                    { name: 'Actualizar folio', path: '/folios/{id}', params: '{ "estado": "usado" }' },
+                    { name: 'Actualizar folio', path: '/folios/{id}', params: '{ "id": 1, "estado": "usado" }' },
                     { name: 'Usar folio', path: '/folios/{id}/usar', params: '{ "id": 1 }' },
                     { name: 'Anular folio', path: '/folios/{id}/anular', params: '{ "id": 1 }' }
                 ],
@@ -94,7 +94,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Crear múltiples condiciones', path: '/condiciones-pago/bulk', params: '[{ "codigo": "CREDITO", "descripcion": "Pago a crédito", "plazo": 30 }]' }
                 ],
                 PUT: [
-                    { name: 'Actualizar condición', path: '/condiciones-pago/{id}', params: '{ "descripcion": "Pago inmediato" }' }
+                    { name: 'Actualizar condición', path: '/condiciones-pago/{id}', params: '{ "id": 1, "codigo": "CONTADO", "descripcion": "Pago al contado", "plazo": 0 }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar condición', path: '/condiciones-pago/{id}', params: '{ "id": 1 }' }
@@ -111,7 +111,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Crear múltiples clientes', path: '/clientes/bulk', params: '[{ "rut": "98765432-1", "razon_social": "Empresa 2", "direccion": "Calle 456", "comuna": "Comuna", "ciudad": "Ciudad", "giro": "Servicios", "email": "cliente2@mail.com", "telefono": "912345679" }]' }
                 ],
                 PUT: [
-                    { name: 'Actualizar cliente', path: '/clientes/{id}', params: '{ "razon_social": "Nuevo Nombre" }' }
+                    { name: 'Actualizar cliente', path: '/clientes/{id}', params: '{ "id": 1, "rut": "98765432-1", "razon_social": "Empresa 2", "direccion": "Calle 456", "comuna": "Comuna", "ciudad": "Ciudad", "giro": "Servicios", "email": "cliente2@mail.com", "telefono": "912345679" }' }
                 ],
                 DELETE: [
                     { name: 'Eliminar cliente', path: '/clientes/{id}', params: '{ "id": 2 }' }
@@ -131,7 +131,7 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     { name: 'Crear múltiples facturas', path: '/facturas/bulk', params: '[{ "cliente_id": 1, "vendedor_id": 1, "condicion_pago_id": 1, "detalles": [ { "producto_id": 1, "cantidad": 2, "precio_unitario": 100 } ] }]' }
                 ],
                 PUT: [
-                    { name: 'Actualizar factura', path: '/facturas/{id}', params: '{ "estado": "emitida" }' }
+                    { name: 'Actualizar factura', path: '/facturas/{id}', params: '{ "id": 1, "estado": "emitida" }' }
                 ],
                 PATCH: [
                     { name: 'Asignar folios a borrador', path: '/facturas/asignar-folios-borrador', params: '' }
@@ -185,16 +185,20 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     let paramId = `${verb}_${currentModel}_${idx}_param`;
                     let btnDisabled = false;
 
+                    // SOLO para GET y DELETE se muestra input de parámetro
                     if ((verb === 'GET' || verb === 'DELETE') && needsParams) {
-                        // Extrae el primer parámetro entre llaves, ej: "{codigo}" → "codigo"
                         const match = ep.path.match(/{(\w+)}/);
                         const paramName = match ? match[1] : 'valor';
-                        const example = `Ej: ${paramName.toUpperCase()}123`; // ejemplo genérico
-                        const exampleValue = ep.params ? `Ejemplo: ${JSON.parse(ep.params)[paramName]}` || example : example;
-                    
-                        // Determinar el tipo de input basado en el nombre del parámetro
+                        let exampleValue = 'Ejemplo: 1';
+                        if (ep.params) {
+                            try {
+                                const parsed = JSON.parse(ep.params);
+                                if (parsed && typeof parsed === 'object' && paramName in parsed && parsed[paramName] !== undefined) {
+                                    exampleValue = `Ejemplo: ${parsed[paramName]}`;
+                                }
+                            } catch {}
+                        }
                         const inputType = paramName === 'fecha' ? 'date' : 'text';
-                    
                         paramPlaceholder = `
                             <input type="${inputType}" class="form-control param-inline" id="${paramId}" 
                                 placeholder="${exampleValue}" 
@@ -204,24 +208,23 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                         btnDisabled = true;
                     }
 
-
+                    // PUT: solo muestra el formulario, el id se tomará del form al enviar
                     container.innerHTML += `
                         <div class="endpoint-row">
                             <button class="btn btn-outline-${verb === 'GET' ? 'primary' : verb === 'POST' ? 'success' : verb === 'PUT' ? 'warning' : verb === 'PATCH' ? 'info' : 'danger'} btn-sm"
                                 id="btn_${paramId}"
                                 data-paramid="${paramId}"
-                                 onclick="${
+                                onclick="${
                                     verb === 'GET' && currentModel === 'factura'
                                         ? `mostrarFactura(); callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}')`
                                         : (verb === 'POST' || verb === 'PUT')
                                         ? `showFormOrJson('${verb}', ${idx}, 'form');ocultarFactura();  scrollToResultsIfMobile();`
                                         : `callEndpoint('${verb}', '${ep.path}', ${idx}, '${paramId}');ocultarFactura();`
-                                    }"
-                                    ${btnDisabled ? 'disabled' : ''}>
-                                    ${ep.name}
-                                </button>
+                                }"
+                                ${btnDisabled ? 'disabled' : ''}>
+                                ${ep.name}
+                            </button>
                             ${paramPlaceholder}
-                            
                         </div>
                     `;
                 });
@@ -275,6 +278,12 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
     try {
         example = ep.params ? JSON.parse(ep.params) : {};
     } catch { example = {}; }
+
+if (Array.isArray(example) && example.length > 0 && typeof example[0] === 'object') {
+    example = example[0];
+}
+
+
     const jsonToShow = lastResult ? lastResult : example;
     let formBtn = `<button class="btn btn-outline-primary btn-sm mb-2${formMode==='form'?' active':''}" type="button" onclick="setFormMode('form')">Formulario</button>`;
     let jsonBtn = `<button class="btn btn-outline-success btn-sm mb-2${formMode==='json'?' active':''}" type="button" onclick="setFormMode('json')">JSON</button>`;
@@ -352,7 +361,6 @@ let currentEndpointIdx = null;    // Índice del endpoint actualmente selecciona
                     </div>
                 `).join('')}
                 <div class="d-flex justify-content-between align-items-center mt-2">
-                    <button type="button" class="btn btn-outline-info btn-sm px-2 py-1" style="font-size:1.2rem;line-height:1;" title="Agregar registro" onclick="agregarRegistroBulk('${bulkKey}')">+</button>
                     <div class="d-flex gap-2 ms-auto">
                         <button type="button" class="btn btn-secondary btn-sm" onclick="agregarRegistroAlArrayBulk('${bulkKey}')">Añadir registro</button>
                         <button type="button" class="btn btn-success btn-sm" onclick="submitFormOrJsonBulk('${bulkKey}')">Enviar todos</button>
@@ -443,6 +451,8 @@ function syncFormToJsonBulk(bulkKey) {
     }
     document.getElementById('jsonInput').value = JSON.stringify(registros.filter(r => r), null, 2);
 }
+// --- Lógica para facturas bulk ---
+
 function submitFormOrJsonBulk(bulkKey) {
     const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
     let url = apiBase + ep.path;
@@ -543,44 +553,77 @@ function crearFacturas(facturas) {
 
 
 
-//Rellena los campos de la factura: fecha, cliente, vendedor, condición de pago, productos.
-      function renderFactura(factura) {
-      const container = document.getElementById('facturaSection');
-console.log("renderFactura: ", factura);
-      // Rellenar factura si aún no se ha hecho
-      document.getElementById('fecha').textContent = `Fecha: ${new Date(factura.fecha).toLocaleDateString()}`;
-      document.getElementById('cliente').innerHTML = `
-        <strong>${factura.cliente.razon_social}</strong><br>
-        RUT: ${factura.cliente.rut}<br>
-        Dirección: ${factura.cliente.direccion}<br>
-        Giro: ${factura.cliente.giro}
-      `;
-      document.getElementById('vendedor').textContent = factura.vendedore.nombre;
-      document.getElementById('condicionPago').textContent = factura.CondicionPago.descripcion;
-
-      const detalleContainer = document.getElementById('detalleProductos');
-      detalleContainer.innerHTML = ''; // limpia si ya está renderizado
-
-      //Convierte cada detalle en una fila de tabla.
-      factura.detalles_facturas.forEach(det => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${det.producto.codigo}</td>
-          <td>${det.producto.nombre}</td>
-          <td>${det.cantidad}</td>
-          <td>$${det.precio_unitario.toFixed(2)}</td>
-          <td>$${det.subtotal.toFixed(2)}</td>
-        `;
-
-        detalleContainer.appendChild(row);
-      });
-
-      document.getElementById('subtotal').textContent = factura.subtotal.toFixed(2);
-      document.getElementById('iva').textContent = factura.iva.toFixed(2);
-      document.getElementById('total').textContent = factura.total.toFixed(2);
+// Rellena los campos de la factura: fecha, cliente, vendedor, condición de pago, productos.
+function renderFactura(factura) {
+    const container = document.getElementById('facturaSection');
+    // Validar y mostrar fecha
+    if (factura.fecha) {
+        document.getElementById('fecha').textContent = `Fecha: ${new Date(factura.fecha).toLocaleDateString()}`;
+    } else {
+        document.getElementById('fecha').textContent = 'Fecha: -';
     }
 
-      //Muestra los botones "Anterior" y "Siguiente" para cambiar de factura. 
+    // Validar y mostrar datos del cliente
+    if (factura.cliente) {
+        document.getElementById('cliente').innerHTML = `
+            <strong>${factura.cliente.razon_social || '-'}</strong><br>
+            RUT: ${factura.cliente.rut || '-'}<br>
+            Dirección: ${factura.cliente.direccion || '-'}<br>
+            Giro: ${factura.cliente.giro || '-'}
+        `;
+    } else {
+        document.getElementById('cliente').innerHTML = '<span class="text-danger">Sin datos de cliente</span>';
+    }
+
+    // Validar y mostrar vendedor
+    if (factura.vendedore && factura.vendedore.nombre) {
+        document.getElementById('vendedor').textContent = factura.vendedore.nombre;
+    } else {
+        document.getElementById('vendedor').textContent = '-';
+    }
+
+    // Validar y mostrar condición de pago
+    if (factura.CondicionPago && factura.CondicionPago.descripcion) {
+        document.getElementById('condicionPago').textContent = factura.CondicionPago.descripcion;
+    } else {
+        document.getElementById('condicionPago').textContent = '-';
+    }
+
+    // Renderizar detalles de productos
+    const detalleContainer = document.getElementById('detalleProductos');
+    detalleContainer.innerHTML = '';
+    if (Array.isArray(factura.detalles_facturas) && factura.detalles_facturas.length > 0) {
+        factura.detalles_facturas.forEach(det => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${det.producto && det.producto.codigo ? det.producto.codigo : '-'}</td>
+                <td>${det.producto && det.producto.nombre ? det.producto.nombre : '-'}</td>
+                <td>${det.cantidad !== undefined ? det.cantidad : '-'}</td>
+                <td>$${det.precio_unitario !== undefined ? Number(det.precio_unitario).toFixed(2) : '-'}</td>
+                <td>$${det.subtotal !== undefined ? Number(det.subtotal).toFixed(2) : '-'}</td>
+            `;
+            detalleContainer.appendChild(row);
+        });
+    } else {
+        // Si no hay detalles, mostrar una fila vacía
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="5" class="text-center text-muted">Sin detalles de productos</td>`;
+        detalleContainer.appendChild(row);
+    }
+
+    // Mostrar totales, validando existencia
+    document.getElementById('subtotal').textContent = factura.subtotal !== undefined ? Number(factura.subtotal).toFixed(2) : '-';
+    document.getElementById('iva').textContent = factura.iva !== undefined ? Number(factura.iva).toFixed(2) : '-';
+    document.getElementById('total').textContent = factura.total !== undefined ? Number(factura.total).toFixed(2) : '-';
+
+    // Mostrar JSON crudo de la factura actual
+    const jsonView = document.getElementById('jsonView');
+    if (jsonView) {
+        jsonView.innerHTML = `<textarea class='form-control' style='height:300px'>${JSON.stringify(factura, null, 2)}</textarea>`;
+    }
+}
+
+//Muestra los botones "Anterior" y "Siguiente" para cambiar de factura. 
 function renderFacturaPagination() {
   const container = document.getElementById('paginacionFacturas');
   container.innerHTML = `
@@ -619,6 +662,8 @@ function clearResults() {
     document.getElementById('attrList').innerHTML = '';
     document.getElementById('jsonView').innerHTML = '';
 }
+
+// Sincroniza el formulario simple con el JSON mostrado en el textarea de la derecha
 function syncFormToJson() {
     // Sincroniza el formulario simple con el JSON (puedes personalizar si quieres mostrar el JSON en tiempo real)
     const form = document.getElementById('mainForm');
@@ -632,6 +677,7 @@ function syncFormToJson() {
     if (jsonInput) jsonInput.value = JSON.stringify(data, null, 2);
 }
 
+// Envía los datos del formulario o JSON al endpoint correspondiente y maneja la respuesta
 function submitFormOrJson(mode) {
     const ep = endpoints[currentModel][currentVerb][currentEndpointIdx];
     let url = apiBase + ep.path;
@@ -644,6 +690,27 @@ function submitFormOrJson(mode) {
         formData.forEach((value, key) => {
             data[key] = value;
         });
+        // Si es PUT y la ruta tiene parámetro, reemplazarlo por el valor del form
+        if (currentVerb === 'PUT') {
+            // Filtrar campos vacíos para PUT
+            Object.keys(data).forEach(key => {
+                if (data[key] === '' || data[key] === null || data[key] === undefined) {
+                    delete data[key];
+                }
+            });
+            const match = ep.path.match(/{(\w+)}/);
+            if (match) {
+                const paramName = match[1];
+                if (data[paramName]) {
+                    url = apiBase + ep.path.replace(/{(\w+)}/, data[paramName]);
+                    // Opcional: eliminar el campo id del body si no se debe enviar
+                    // delete data[paramName];
+                } else {
+                    alert('Debes completar el campo ' + paramName + ' en el formulario.');
+                    return;
+                }
+            }
+        }
     } else if (mode === 'json') {
         const jsonInput = document.getElementById('jsonInput');
         try {
@@ -656,12 +723,69 @@ function submitFormOrJson(mode) {
     let options = { method: currentVerb, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) };
     fetch(url, options)
         .then(async r => {
+            // Intenta parsear la respuesta como JSON, si falla intenta como texto
             let resp;
             try {
                 resp = await r.json();
             } catch {
                 try {
-                    // Si no es JSON, intenta leer como texto
+                    const text = await r.text();
+                    resp = { message: text };
+                } catch {
+                    resp = {};
+                }
+            }
+            return { status: r.status, data: resp };
+        })
+        .then(({ status, data }) => {
+            // Actualiza el resultado y muestra feedback visual y alertas según éxito o error
+            lastResult = data;
+            currentPage = 1;
+            renderResult(data, status);
+            if (status >= 200 && status < 300) {
+                alert('Registro exitoso');
+                const form = document.getElementById('mainForm');
+                if (mode === 'form' && form) form.reset();
+            } else {
+                let msg = data?.message || data?.error || JSON.stringify(data);
+                if (!msg || msg === '{}' || msg === '""') msg = 'Error desconocido';
+                document.getElementById('attrList').innerHTML = `<div class='text-danger'>${msg}</div>`;
+                alert(msg);
+            }
+        })
+        .catch(async err => {
+            // Manejo de errores de red o inesperados
+            let msg = 'Error en la petición';
+            if (err && err.message) msg = err.message;
+            document.getElementById('attrList').innerHTML = `<div class="text-danger">${msg}</div>`;
+            document.getElementById('jsonView').innerHTML = '';
+            alert(msg);
+        });
+}
+
+// Llama a un endpoint GET o DELETE, resolviendo parámetros de la ruta si es necesario
+function callEndpoint(verb, path, idx, paramId) {
+    let url = apiBase + path;
+    // Si la ruta tiene parámetro, reemplazarlo por el valor del input
+    const needsParams = path.match(/{(\w+)}/g);
+    if (needsParams && paramId) {
+        const input = document.getElementById(paramId);
+        if (!input || !input.value.trim()) {
+            const msg = document.getElementById('msg_' + paramId);
+            if (msg) msg.classList.remove('d-none');
+            alert('Debes completar el campo requerido.');
+            return;
+        }
+        url = apiBase + path.replace(/{(\w+)}/, input.value.trim());
+    }
+    let options = { method: verb };
+    fetch(url, options)
+        .then(async r => {
+            let resp;
+            try {
+                resp = await r.json();
+            } catch {
+                try {
                     const text = await r.text();
                     resp = { message: text };
                 } catch {
@@ -673,20 +797,17 @@ function submitFormOrJson(mode) {
         .then(({ status, data }) => {
             lastResult = data;
             currentPage = 1;
-            renderResult(data, status);
-            if (status >= 200 && status < 300) {
-                alert('Registro exitoso');
-                if (mode === 'form') document.getElementById('mainForm').reset();
+            // Mostrar factura si corresponde
+            if (currentModel === 'factura' && verb === 'GET') {
+                crearFacturas(data);
+                mostrarFactura();
             } else {
-                let msg = data?.message || data?.error || JSON.stringify(data);
-                if (!msg || msg === '{}' || msg === '""') msg = 'Error desconocido';
-                document.getElementById('attrList').innerHTML = `<div class='text-danger'>${msg}</div>`;
-                alert(msg);
+                renderResult(data, status);
             }
+            scrollToResultsIfMobile();
         })
         .catch(async err => {
             let msg = 'Error en la petición';
-            // Intenta extraer mensaje de error de la respuesta si existe
             if (err && err.message) msg = err.message;
             document.getElementById('attrList').innerHTML = `<div class="text-danger">${msg}</div>`;
             document.getElementById('jsonView').innerHTML = '';
@@ -694,6 +815,7 @@ function submitFormOrJson(mode) {
         });
 }
 
+// Renderiza el resultado de la API en formato tabla, lista o JSON según el tipo de datos recibido
 function renderResult(data, status) {
     // Muestra el resultado en formato JSON y tabla simple si es posible
     const attrList = document.getElementById('attrList');
@@ -705,7 +827,8 @@ function renderResult(data, status) {
         let table = `<table class='table table-bordered table-sm'><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
         table += data.map(row => `<tr>${headers.map(h=>`<td>${row[h]}</td>`).join('')}</tr>`).join('');
         table += '</tbody></table>';
-        attrList.innerHTML = table;
+        // Contenedor responsivo con scroll horizontal
+        attrList.innerHTML = `<div style="overflow-x:auto; width:100%">${table}</div>`;
     } else if (typeof data === 'object' && data !== null) {
         // Mostrar como lista de atributos
         let list = '<ul class="list-group">';
