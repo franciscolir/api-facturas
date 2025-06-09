@@ -4,9 +4,10 @@ const CACHE_NAME = 'mi-pwa-cache-v1';
 const urlsToCache = [
   '/',
   '/index-pwa.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json'
+  '/appPwa.js',
+  '/manifest.json',
+  '/icons/favicon.ico',
+  '/icons/apple-touch-icon.png'
 ];
 
 // Evento de instalación: guardar archivos en caché
