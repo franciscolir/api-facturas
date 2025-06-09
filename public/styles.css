@@ -1,0 +1,29 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  background: #f0f0f0;
+  color: #333;
+}
+
+form {
+  background: white;
+  padding: 1rem;
+  border-radius: 5px;
+  max-width: 400px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label, input {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+button {
+  padding: 0.5rem;
+  background: #2F3BA2;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
