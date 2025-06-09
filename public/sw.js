@@ -5,9 +5,7 @@ const urlsToCache = [
   '/',
   '/index-pwa.html',
   '/appPwa.js',
-  '/manifest.json',
-  '/icons/favicon.ico',
-  '/icons/apple-touch-icon.png'
+  '/manifest.json'
 ];
 
 // Evento de instalación: guardar archivos en caché

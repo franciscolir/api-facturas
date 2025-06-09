@@ -5,6 +5,16 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.error('❌ Error al registrar SW', err));
 }
 
+// Función para obtener la URL base del servidor
+function getBaseUrl() {
+  // Si estamos en desarrollo, usa localhost
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:3001';
+  }
+  // En producción, usa la URL relativa
+  return '';
+}
+
 // Manejar el envío del formulario
 document.getElementById('register-form').addEventListener('submit', async function (e) {
   e.preventDefault();
@@ -19,14 +29,17 @@ document.getElementById('register-form').addEventListener('submit', async functi
   statusEl.textContent = 'Registrando...';
 
   try {
-    // Simulamos el registro con una API pública (jsonplaceholder no acepta más campos, pero esto es para aprender)
-    const response = await fetch('http://localhost:3001/api/usuarios/', {
+    const baseUrl = getBaseUrl();
+    const response = await fetch(`${baseUrl}/api/usuarios/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({
         nombre,
         email,
-        password, // en API reales esto debería ir cifrado en backend
+        password,
         rol
       })
     });
@@ -39,8 +52,12 @@ document.getElementById('register-form').addEventListener('submit', async functi
     const data = await response.json();
     statusEl.textContent = `✅ Usuario registrado con ID ${data.id}`;
   } catch (err) {
-    console.error(err);
-    statusEl.textContent = `❌ ${err.message}`;
+    console.error('Error completo:', err);
+    if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+      statusEl.textContent = '❌ Error de conexión. Verifica tu conexión a internet o que el servidor esté disponible.';
+    } else {
+      statusEl.textContent = `❌ ${err.message}`;
+    }
   }
 });
 
