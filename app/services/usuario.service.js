@@ -21,6 +21,13 @@ class UsuarioService extends BaseService {
         if (existingEmail) {
             throw new Error('Ya existe un usuario con este email');
         }
+
+        // Validar que el rol sea uno de los permitidos
+        const rolesPermitidos = ['usuario', 'admin'];
+        if (!rolesPermitidos.includes(data.rol)) {
+            throw new Error('El rol asignado no es valido');
+        }
+        
         return await super.create(data);
     }
 

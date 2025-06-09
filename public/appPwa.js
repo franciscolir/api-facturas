@@ -31,13 +31,16 @@ document.getElementById('register-form').addEventListener('submit', async functi
       })
     });
 
-    if (!response.ok) throw new Error('Error en el registro');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || errorData.error || 'Error en el registro');
+    }
 
     const data = await response.json();
     statusEl.textContent = `✅ Usuario registrado con ID ${data.id}`;
   } catch (err) {
     console.error(err);
-    statusEl.textContent = '❌ Error al registrar usuario';
+    statusEl.textContent = `❌ ${err.message}`;
   }
 });
 
